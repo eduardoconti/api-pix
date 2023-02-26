@@ -1,4 +1,5 @@
 version: '3.7'
+
 services:
   api-pix:
     container_name: api-pix
@@ -11,3 +12,28 @@ services:
     env_file:
       - .env
     command: yarn start:dev
+    networks:
+      - api-pix
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:alpine
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    container_name: postgres
+    volumes:
+      - pg-apipix-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - api-pix
+    restart: always
+
+networks:
+  api-pix:
+    driver: bridge
+
+volumes:
+  pg-apipix-data:
