@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { HealthCheckController } from '@presentation/controllers';
 import { configValidationSchema } from './config';
 
 @Module({
@@ -11,7 +10,6 @@ import { configValidationSchema } from './config';
       validationSchema: configValidationSchema,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [HealthCheckController],
 })
 export class AppModule {}

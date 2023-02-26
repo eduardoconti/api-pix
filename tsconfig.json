@@ -24,8 +24,25 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "paths": {
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@infra/*": [
+        "src/infra/*"
+      ],
+      "@main/*": [
+        "src/main/*"
+      ],
+      "@presentation/*": [
+        "src/presentation/*"
+      ],
+    },
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["node_modules"]
 }
