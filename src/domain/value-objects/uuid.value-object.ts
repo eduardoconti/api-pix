@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto';
+
 import { DomainPrimitive } from '../core';
 import { ID } from './id.value-object';
 

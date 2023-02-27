@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
 import { HealthCheckController } from '@presentation/controllers';
+
 import { configValidationSchema } from './config';
 
 @Module({
