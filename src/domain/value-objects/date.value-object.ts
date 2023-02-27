@@ -1,3 +1,5 @@
+import { ArgumentInvalidException } from '@domain/exceptions';
+
 import { DomainPrimitive, ValueObject } from '../core';
 
 export class DateVO extends ValueObject<Date> {
@@ -15,7 +17,7 @@ export class DateVO extends ValueObject<Date> {
 
   protected validate({ value }: DomainPrimitive<Date>): void {
     if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
-      throw new Error('Incorrect date');
+      throw new ArgumentInvalidException('Incorrect date');
     }
   }
 }

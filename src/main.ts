@@ -1,18 +1,32 @@
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import {
+  BaseExceptionFilter,
+  HttpExceptionFilter,
+  UnknownExceptionFilter,
+} from '@infra/exception-filter';
+import { LoggingInterceptor } from '@infra/interceptors';
+
 import { EnvironmentVariables } from './main/config';
-import { AppModule } from './main/main.module';
+import { MainModule } from './main/main.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(MainModule);
+  const logger = app.get(Logger);
+  app.useGlobalInterceptors(new LoggingInterceptor(logger));
+  app.useGlobalFilters(new UnknownExceptionFilter(logger));
+  app.useGlobalFilters(new BaseExceptionFilter(logger));
+  app.useGlobalFilters(new HttpExceptionFilter(logger));
   const configService = app.get(ConfigService<EnvironmentVariables>);
   const config = new DocumentBuilder()
     .setTitle('API Pix')
     .setDescription('API para gerar QrCode e processar pagamentos com `PIX`')
     .setVersion('1.0')
-    .addTag('health-check')
+    .addTag('health-check', 'Endpoints para monitoramento da api')
+    .addTag('charge', 'Endpoints para gerenciamento de cobrança pix')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

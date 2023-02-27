@@ -20,12 +20,15 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
+    "axios": "^1.3.4",
     "joi": "^17.8.3",
+    "nanoid": "3.3.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },
@@ -65,7 +68,14 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!<rootDir>/**/index.ts",
+      "!<rootDir>/**/*.dto.ts",
+      "!<rootDir>/**/*.module.ts",
+      "!<rootDir>/infra/aplication-problem/**",
+      "!<rootDir>/infra/exception-filter/**",
+      "!<rootDir>/infra/interceptors/**",
+      "!<rootDir>/main.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",

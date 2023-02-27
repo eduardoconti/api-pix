@@ -16,6 +16,8 @@ services:
       - api-pix
     depends_on:
       - postgres
+    dns:
+      - 8.8.8.8
 
   postgres:
     image: postgres:alpine
@@ -30,10 +32,10 @@ services:
     networks:
       - api-pix
     restart: always
-
+    dns:
+      - 8.8.8.8
 networks:
   api-pix:
-    driver: bridge
 
 volumes:
   pg-apipix-data:

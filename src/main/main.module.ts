@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 
-import { HealthCheckController } from '@presentation/controllers';
+import { AppModule } from '@app/app.module';
 
-import { configValidationSchema } from './config';
+import { InfraModule } from '@infra/infra.module';
+
+import { PresentationModule } from '@presentation/presentation.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      validationSchema: configValidationSchema,
-    }),
-  ],
-  controllers: [HealthCheckController],
+  imports: [InfraModule, AppModule, PresentationModule],
 })
-export class AppModule {}
+export class MainModule {}
