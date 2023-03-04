@@ -16,7 +16,7 @@ export type CelcoinLocationRequest = {
 };
 
 export type CelcoinLocationResponse = {
-  status: string;
+  status: 'CREATED';
   clientRequestId: string;
   merchant: {
     postalCode: string;
@@ -53,11 +53,17 @@ export type CelcoinImmediateChargeRequest = {
   }[];
 };
 
+export type CelcoinImmediateChargeResponseStatus =
+  | 'ACTIVE'
+  | 'COMPLETE'
+  | 'DELETED_ BY_RECEIVING_USER'
+  | 'DELETED_ BY_PSP';
+
 export type CelcoinImmediateChargeResponse = {
   revision: number;
   transactionId: number;
   clientRequestId?: string;
-  status: string;
+  status: CelcoinImmediateChargeResponseStatus;
   lastUpdate: string;
   payerQuestion?: string;
   additionalInformation?: string;

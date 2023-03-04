@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import {
@@ -8,6 +8,7 @@ import {
 
 import {
   ApiInternalServerErrorResponse,
+  ApiServiceUnavailableErrorResponse,
   ApiSuccessResponse,
 } from '@presentation/__docs__';
 import {
@@ -22,11 +23,18 @@ export class CreateImmediateChargeController {
     private readonly createImmediateChargeUseCase: ICreateImmediateChargeUseCase,
   ) {}
   @Post()
-  @ApiSuccessResponse({ model: CreateImmediateChargeOutput })
-  @ApiInternalServerErrorResponse(
-    'ArgumentNotProvidedException',
-    'Property cannot be empty',
-  )
+  @ApiSuccessResponse({
+    model: CreateImmediateChargeOutput,
+    statusCode: HttpStatus.CREATED,
+  })
+  @ApiInternalServerErrorResponse({
+    title: 'ArgumentInvalidException',
+    detail: 'Property cannot be empty',
+  })
+  @ApiServiceUnavailableErrorResponse({
+    title: 'CreateImmediateChargeException',
+    detail: 'failed to create imediate cob on Celcoin',
+  })
   async handle(
     @Body() data: CreateImmediateChargeInput,
   ): Promise<CreateImmediateChargeOutput> {

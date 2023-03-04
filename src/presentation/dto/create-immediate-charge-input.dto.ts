@@ -9,11 +9,6 @@ import { MerchantInput } from './merchant-input.dto';
 
 const DEFAULT_EXPIRATION = 86400; //1day
 export class CreateImmediateChargeInput {
-  @ApiProperty({
-    example: 'testepix@celcoin.com.br',
-    description: 'chave pix.',
-  })
-  key!: string;
   @DebtorInputProperty()
   debtor!: DebtorInput;
   @ApiProperty({
@@ -33,14 +28,12 @@ export class CreateImmediateChargeInput {
     input: CreateImmediateChargeInput,
   ): CreateImmediateChargeOnPspInput {
     const {
-      key,
       debtor,
       amount,
       expiration,
       merchant: { postal_code, city, category_code = '0000', name },
     } = input;
     return {
-      key,
       debtor,
       amount,
       calendar: {

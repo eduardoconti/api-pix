@@ -18,7 +18,7 @@ export class PspService implements IPspService {
   async createImmediateCharge(
     data: CreateImmediateChargeOnPspInput,
   ): Promise<CreateImmediateChargeOnPSPResponse> {
-    const { merchant, key, debtor, amount, calendar } = data;
+    const { merchant, debtor, amount, calendar } = data;
 
     const { accessToken } = await this.celcoin.auth();
     const { locationId } = await this.celcoin.createLocation(
@@ -30,17 +30,18 @@ export class PspService implements IPspService {
       },
     );
 
-    return await this.celcoin.createImmediateCharge(
+    const pspResult = await this.celcoin.createImmediateCharge(
       {
         token: accessToken,
       },
       {
         locationId,
-        key,
         debtor,
         amount,
         calendar,
       },
     );
+
+    return pspResult;
   }
 }

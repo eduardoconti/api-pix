@@ -15,6 +15,7 @@ export const mockCreateImmediateChargeOnPSPResponse: CreateImmediateChargeOnPSPR
     transactionId: '817401748',
     status: 'ACTIVE',
     lastUpdate: '2023-02-27T10:52:49.6804856+00:00',
+    emv: '00020101021226930014br.gov.bcb.pix2571api-h.developer.btgpactual.com/v1/p/v2/4dc211df499941e08d6c18c16344eb495204000053039865802BR5910Gazin Tech6008Marialva61088699000062070503***63041229',
     amount: 810,
     merchant: {
       postalCode: '01201005',
@@ -23,7 +24,6 @@ export const mockCreateImmediateChargeOnPSPResponse: CreateImmediateChargeOnPSPR
       name: 'Celcoin Pagamentos',
     },
     url: 'api-h.developer.btgpactual.com/v1/p/v2/b8bafcee036943a4b490fe94eea0744e',
-    emv: '00020101021226930014br.gov.bcb.pix2571api-h.developer.btgpactual.com/v1/p/v2/b8bafcee036943a4b490fe94eea0744e5204000053039865802BR5918Celcoin Pagamentos6007Barueri61080120100562070503***63045DB2',
     type: 'COB',
     locationId: '12867694',
     id: undefined,
@@ -41,7 +41,6 @@ export const mockCreateLocationOnPSPResponse: CreateLocationOnPSPResponse = {
 };
 export const mockCreateImmediateChargeOnPspInput: CreateImmediateChargeOnPspInput =
   {
-    key: 'testepix@celcoin.com.br',
     debtor: {
       name: 'Eduardo Ferreira Conti',
       cpf: '50673646459',

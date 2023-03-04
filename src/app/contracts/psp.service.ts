@@ -33,9 +33,9 @@ export type CreateImmediateChargeOnPSPResponse = {
   status: string;
   amount: number;
   url: string;
-  emv: string;
   type: 'COB';
   locationId: string;
+  emv: string;
   id?: string;
   merchant: {
     postalCode: string;
@@ -43,7 +43,6 @@ export type CreateImmediateChargeOnPSPResponse = {
     merchantCategoryCode: string;
     name: string;
   };
-
   calendar: {
     expiration: number;
   };
@@ -58,7 +57,6 @@ export interface IPspService {
 }
 
 export type CreateImmediateChargeOnPspInput = {
-  key: string;
   debtor: {
     name: string;
     cpf: string;

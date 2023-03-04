@@ -39,7 +39,7 @@ export class CelcoinApi
     ICreateLocationOnPSP<CelcoinAuth, CelcoinLocationRequest>,
     ICreateImmediateChargeOnPSP<
       CelcoinAuth,
-      Omit<CelcoinImmediateChargeRequest, 'amount'> & { amount: number }
+      Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & { amount: number }
     >
 {
   constructor(
@@ -131,7 +131,9 @@ export class CelcoinApi
 
   async createImmediateCharge(
     auth: CelcoinAuth,
-    data: Omit<CelcoinImmediateChargeRequest, 'amount'> & { amount: number },
+    data: Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & {
+      amount: number;
+    },
   ): Promise<CreateImmediateChargeOnPSPResponse> {
     const { locationId, amount: amountReq, ...rest } = data;
     const headers = {
@@ -143,8 +145,9 @@ export class CelcoinApi
         original: new Amount(amountReq).toBrlString(),
         changeType: NOT_CHANGE_VALUE,
       },
-      ...rest,
       locationId,
+      key: this.configService.getOrThrow<string>('CELCOIN_PIX_KEY'),
+      ...rest,
     };
     const celcoinResponse = await this.httpService
       .post<CelcoinImmediateChargeResponse>({

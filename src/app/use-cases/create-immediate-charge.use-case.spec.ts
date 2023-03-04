@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { mockCreateImmediateChargeOnPSPResponse } from '@app/__mocks__';
+import {
+  mockCreateImmediateChargeOnPspInput,
+  mockCreateImmediateChargeOnPSPResponse,
+} from '@app/__mocks__';
 import { IPspService } from '@app/contracts';
+import { CreateChargeException } from '@app/exceptions';
 import { PspService } from '@app/services';
 import {
   CreateImmediateChargeUseCase,
@@ -40,8 +44,22 @@ describe('CreateImmediateChargeUseCase', () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
-      const result = await createImmediateChargeUseCase.execute();
+      const result = await createImmediateChargeUseCase.execute(
+        mockCreateImmediateChargeOnPspInput,
+      );
       expect(result).toBeDefined();
+      expect(pspService.createImmediateCharge).toBeCalled();
+    });
+
+    it('should throw error when pspService failed', async () => {
+      jest
+        .spyOn(pspService, 'createImmediateCharge')
+        .mockRejectedValue(new Error('any'));
+      await expect(
+        createImmediateChargeUseCase.execute(
+          mockCreateImmediateChargeOnPspInput,
+        ),
+      ).rejects.toThrowError(CreateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();
     });
   });

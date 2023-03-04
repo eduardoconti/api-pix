@@ -40,9 +40,11 @@ describe('CreateImmediateChargeController', () => {
     expect(createImmediateChargeController).toBeDefined();
   });
   it('should execute successfully', async () => {
-    jest
-      .spyOn(createImmediateChargeUseCase, 'execute')
-      .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
+    jest.spyOn(createImmediateChargeUseCase, 'execute').mockResolvedValue({
+      ...mockCreateImmediateChargeOnPSPResponse,
+      qrCode: 'any',
+      emv: 'any',
+    });
     const result = await createImmediateChargeController.handle(
       mockCreateImmediateChargeInput,
     );

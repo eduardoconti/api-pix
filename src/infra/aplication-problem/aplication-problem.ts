@@ -53,6 +53,9 @@ export class AplicationProblem {
   static aplicationStatusToHttp(code: string): number {
     if (code === Status.UNAUTHORIZED) return HttpStatus.UNAUTHORIZED;
     if (code === Status.INVALID_REQUEST) return HttpStatus.BAD_REQUEST;
+    if (code === Status.SERVICE_UNAVAILABLE)
+      return HttpStatus.SERVICE_UNAVAILABLE;
+
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 

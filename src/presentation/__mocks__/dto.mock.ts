@@ -1,7 +1,6 @@
 import { CreateImmediateChargeInput } from '@presentation/dto';
 
 export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
-  key: 'testepix@celcoin.com.br',
   debtor: {
     name: 'Eduardo Ferreira Conti',
     cpf: '50673646459',

@@ -5,12 +5,12 @@ import {
   ApiErrorResponseProps,
 } from './api-error-response.decorator';
 
-export const ApiInternalServerErrorResponse = (
+export const ApiServiceUnavailableErrorResponse = (
   props: Omit<ApiErrorResponseProps, 'status'>,
 ) => {
   return applyDecorators(
     ApiErrorResponse({
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      status: HttpStatus.SERVICE_UNAVAILABLE,
       title: props.title,
       detail: props.detail,
     }),
