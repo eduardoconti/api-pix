@@ -11,8 +11,10 @@ import {
   CreateImmediateChargeOnPSPResponse,
 } from '@app/contracts';
 
+import { ICacheManager } from '@domain/core';
 import { Amount } from '@domain/value-objects';
 
+import { CacheManager } from '@infra/cache/cache-manager';
 import {
   CreateImmediateChargeException,
   PspAuthenticationException,
@@ -32,6 +34,8 @@ import {
 } from './contracts';
 
 const NOT_CHANGE_VALUE = 0;
+const TOKEN_CACHE_KEY = 'celcoin_token';
+const TOKEN_CACHE_TTL = 2400;
 @Injectable()
 export class CelcoinApi
   implements
@@ -46,9 +50,17 @@ export class CelcoinApi
     @Inject(HttpService)
     private readonly httpService: IHttpService,
     private readonly configService: ConfigService<EnvironmentVariables>,
+    @Inject(CacheManager)
+    private readonly cacheMamager: ICacheManager,
   ) {}
 
   async auth(): Promise<AuthenticateOnPSPResponse> {
+    const cachedToken = await this.cacheMamager.get<AuthenticateOnPSPResponse>(
+      TOKEN_CACHE_KEY,
+    );
+    if (cachedToken) {
+      return cachedToken;
+    }
     const data = new URLSearchParams();
     data.append('grant_type', 'client_credentials');
     data.append(
@@ -85,10 +97,16 @@ export class CelcoinApi
         );
       });
 
-    return {
+    const response = {
       accessToken: access_token,
       expiresIn: expires_in,
     };
+    await this.cacheMamager.set<AuthenticateOnPSPResponse>(
+      TOKEN_CACHE_KEY,
+      response,
+      TOKEN_CACHE_TTL,
+    );
+    return response;
   }
 
   async createLocation(

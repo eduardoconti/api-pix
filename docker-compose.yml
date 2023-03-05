@@ -34,8 +34,21 @@ services:
     restart: always
     dns:
       - 8.8.8.8
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server --save 20 1 --loglevel warning
+    volumes: 
+      - redis:/data
+    networks:
+      - api-pix
+    dns:
+      - 8.8.8.8
 networks:
   api-pix:
 
 volumes:
   pg-apipix-data:
+  redis:
