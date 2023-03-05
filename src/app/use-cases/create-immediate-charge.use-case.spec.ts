@@ -1,3 +1,4 @@
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
@@ -12,9 +13,12 @@ import {
   ICreateImmediateChargeUseCase,
 } from '@app/use-cases';
 
+import { IEventEmitter } from '@domain/core';
+
 describe('CreateImmediateChargeUseCase', () => {
   let pspService: IPspService;
   let createImmediateChargeUseCase: ICreateImmediateChargeUseCase;
+  let eventEmitter: IEventEmitter;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -26,6 +30,12 @@ describe('CreateImmediateChargeUseCase', () => {
             createImmediateCharge: jest.fn(),
           },
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emitAsync: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -33,12 +43,14 @@ describe('CreateImmediateChargeUseCase', () => {
     createImmediateChargeUseCase = app.get<ICreateImmediateChargeUseCase>(
       CreateImmediateChargeUseCase,
     );
+    eventEmitter = app.get<IEventEmitter>(EventEmitter2);
   });
 
   describe('CreateImmediateChargeUseCase', () => {
     it('should be defined', () => {
       expect(createImmediateChargeUseCase).toBeDefined();
       expect(pspService).toBeDefined();
+      expect(eventEmitter).toBeDefined();
     });
     it('should execute successfully', async () => {
       jest
