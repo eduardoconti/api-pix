@@ -9,6 +9,7 @@ export class ChargeCreatedDomainEvent extends DomainEvent {
     this.provider = props.provider;
     this.status = props.status;
     this.providerId = props.providerId;
+    this.qrCode = props.qrCode;
   }
 
   readonly amount: number;
@@ -16,4 +17,5 @@ export class ChargeCreatedDomainEvent extends DomainEvent {
   readonly provider: ChargeProvider;
   readonly status: ChargeStatus;
   readonly providerId: string;
+  readonly qrCode: string;
 }

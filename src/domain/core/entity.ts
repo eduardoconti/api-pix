@@ -5,6 +5,11 @@ const isEntity = (v: any): v is Entity<any> => {
 };
 export type UniqueEntityID = string;
 
+export interface BaseEntityProps {
+  id: ID;
+  createdAt: DateVO;
+  updatedAt: DateVO;
+}
 export interface CreateEntityProps<EntityProps> {
   props: EntityProps;
   id: ID;

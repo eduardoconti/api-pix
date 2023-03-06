@@ -12,6 +12,8 @@ import { CacheManager } from './cache/cache-manager';
 import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service/http-service';
+import { ChargeRepository } from './prisma/charge.repository';
+import { PrismaService } from './prisma/prisma.service';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -56,7 +58,23 @@ import { HttpService } from './http-service/http-service';
       inject: [ConfigService],
     }),
   ],
-  providers: [CelcoinApi, HttpService, Logger, CacheManager, ElasticSearch],
-  exports: [CelcoinApi, HttpService, CacheManager, Logger, ElasticSearch],
+  providers: [
+    CelcoinApi,
+    HttpService,
+    Logger,
+    CacheManager,
+    ElasticSearch,
+    PrismaService,
+    ChargeRepository,
+  ],
+  exports: [
+    CelcoinApi,
+    HttpService,
+    CacheManager,
+    Logger,
+    ElasticSearch,
+    PrismaService,
+    ChargeRepository,
+  ],
 })
 export class InfraModule {}

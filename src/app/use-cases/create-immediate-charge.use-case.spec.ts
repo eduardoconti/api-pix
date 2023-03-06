@@ -13,14 +13,18 @@ import {
   ICreateImmediateChargeUseCase,
 } from '@app/use-cases';
 
+import { mockChargeEntity } from '@domain/__mocks__';
 import { IEventEmitter } from '@domain/core';
+import { IChargeRepository } from '@domain/core/repository';
 
 import { CreateImmediateChargeException } from '@infra/exceptions';
+import { ChargeRepository } from '@infra/prisma';
 
 describe('CreateImmediateChargeUseCase', () => {
   let pspService: IPspService;
   let createImmediateChargeUseCase: ICreateImmediateChargeUseCase;
   let eventEmitter: IEventEmitter;
+  let chargeRepository: IChargeRepository;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -38,6 +42,12 @@ describe('CreateImmediateChargeUseCase', () => {
             emitAsync: jest.fn(),
           },
         },
+        {
+          provide: ChargeRepository,
+          useValue: {
+            save: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -46,6 +56,9 @@ describe('CreateImmediateChargeUseCase', () => {
       CreateImmediateChargeUseCase,
     );
     eventEmitter = app.get<IEventEmitter>(EventEmitter2);
+    chargeRepository = app.get<IChargeRepository>(ChargeRepository);
+
+    jest.spyOn(chargeRepository, 'save').mockResolvedValue(mockChargeEntity);
   });
 
   describe('CreateImmediateChargeUseCase', () => {
@@ -53,18 +66,21 @@ describe('CreateImmediateChargeUseCase', () => {
       expect(createImmediateChargeUseCase).toBeDefined();
       expect(pspService).toBeDefined();
       expect(eventEmitter).toBeDefined();
+      expect(chargeRepository).toBeDefined();
     });
     it('should execute successfully', async () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
       jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
+
       const result = await createImmediateChargeUseCase.execute(
         mockCreateImmediateChargeOnPspInput,
       );
       expect(result).toBeDefined();
       expect(pspService.createImmediateCharge).toBeCalled();
       expect(eventEmitter.emitAsync).toBeCalled();
+      expect(chargeRepository.save).toBeCalled();
     });
 
     it('should throw error when pspService failed', async () => {
@@ -77,6 +93,8 @@ describe('CreateImmediateChargeUseCase', () => {
         ),
       ).rejects.toThrowError(CreateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();
+      expect(chargeRepository.save).not.toBeCalled();
+      expect(eventEmitter.emitAsync).not.toBeCalled();
     });
 
     it('should throw error when pspService failed with BaseException', async () => {
@@ -89,6 +107,8 @@ describe('CreateImmediateChargeUseCase', () => {
         ),
       ).rejects.toThrowError(CreateImmediateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();
+      expect(chargeRepository.save).not.toBeCalled();
+      expect(eventEmitter.emitAsync).not.toBeCalled();
     });
   });
 });

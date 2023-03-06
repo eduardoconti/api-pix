@@ -9,6 +9,7 @@ import {
   UnknownExceptionFilter,
 } from '@infra/exception-filter';
 import { LoggingInterceptor } from '@infra/interceptors';
+import { PrismaService } from '@infra/prisma';
 
 import { EnvironmentVariables } from './main/config';
 import { MainModule } from './main/main.module';
@@ -20,6 +21,10 @@ async function bootstrap() {
   app.useGlobalFilters(new UnknownExceptionFilter(logger));
   app.useGlobalFilters(new BaseExceptionFilter(logger));
   app.useGlobalFilters(new HttpExceptionFilter(logger));
+
+  const prismaService = app.get(PrismaService);
+  await prismaService.enableShutdownHooks(app);
+
   const configService = app.get(ConfigService<EnvironmentVariables>);
   const config = new DocumentBuilder()
     .setTitle('API Pix')
@@ -30,6 +35,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+
   await app.listen(configService.get('PORT') | 3000);
 }
 bootstrap();

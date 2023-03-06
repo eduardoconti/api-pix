@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { mockChargeCreatedDomainEvent } from '@domain/__mocks__';
 import { IExternalLog } from '@domain/core/external-log';
-import { ChargeCreatedDomainEvent } from '@domain/events';
 
 import { ElasticSearch } from '@infra/elastic';
 
@@ -37,21 +37,15 @@ describe('ChargeCreatedListener', () => {
 
   describe('LogChargeCreated', () => {
     it('should call the external log service with correct arguments', async () => {
-      const event = new ChargeCreatedDomainEvent({
-        aggregateId: 'asdf',
-        amount: 200,
-        emv: '',
-        provider: 'CELCOIN',
-        providerId: 'asdf',
-        status: 'ACTIVE',
-      });
       expect(
-        await chargeCreatedListener.LogChargeCreated(event),
+        await chargeCreatedListener.LogChargeCreated(
+          mockChargeCreatedDomainEvent,
+        ),
       ).toBeUndefined();
       const expectedLog = {
         index: 'charge',
         body: {
-          event,
+          event: mockChargeCreatedDomainEvent,
           service: 'ChargeCreatedDomainEvent',
           createdAt: expect.any(Date),
         },
