@@ -2,6 +2,7 @@ import { AggregateRoot } from '@domain/core';
 import { UUID } from '@domain/value-objects';
 
 export type OutboxAggregateType = 'WEBHOOK' | 'CHARGE';
+
 export type OutboxProps = {
   aggregateId: UUID;
   aggregateType: OutboxAggregateType;

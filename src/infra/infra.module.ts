@@ -14,10 +14,15 @@ import { CacheManager } from './cache/cache-manager';
 import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service/http-service';
-import { WebhookRepository, ChargeRepository } from './prisma';
+import {
+  WebhookRepository,
+  ChargeRepository,
+  OutboxRepository,
+} from './prisma';
 import { PrismaService } from './prisma/prisma.service';
 import { ElasticSearchConsumer } from './processors';
 import { WebhookConsumer } from './processors/webhook.processor';
+import { OutboxWebhookService } from './scheduler';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -108,6 +113,8 @@ import { WebhookConsumer } from './processors/webhook.processor';
     ElasticSearchConsumer,
     WebhookRepository,
     WebhookConsumer,
+    OutboxWebhookService,
+    OutboxRepository,
   ],
   exports: [
     CelcoinApi,
@@ -121,6 +128,7 @@ import { WebhookConsumer } from './processors/webhook.processor';
     BullModule,
     WebhookRepository,
     WebhookConsumer,
+    OutboxRepository,
   ],
 })
 export class InfraModule {}

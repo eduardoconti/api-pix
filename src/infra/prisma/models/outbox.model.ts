@@ -1,4 +1,5 @@
 import { OutboxAggregateType, OutboxEntity } from '@domain/entities';
+import { DateVO, UUID } from '@domain/value-objects';
 
 export class OutBoxModel {
   id!: string;
@@ -21,5 +22,30 @@ export class OutBoxModel {
       created_at: entity.createdAt.value,
       updated_at: entity.updatedAt.value,
     };
+  }
+
+  static toEntity(model: OutBoxModel): OutboxEntity {
+    const {
+      id,
+      created_at,
+      updated_at,
+      aggregate_id,
+      aggregate_type,
+      event_id,
+      payload,
+      published,
+    } = model;
+    return new OutboxEntity({
+      id: new UUID(id),
+      createdAt: new DateVO(created_at),
+      updatedAt: new DateVO(updated_at),
+      props: {
+        aggregateId: new UUID(aggregate_id),
+        aggregateType: aggregate_type,
+        eventId: event_id,
+        payload: payload,
+        published,
+      },
+    });
   }
 }

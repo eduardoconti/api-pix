@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { IChargeRepository } from '@domain/core/repository';
 import { ChargeEntity, ChargeProps } from '@domain/entities';
 
-import { ChargeRepositoryException } from '@infra/exceptions';
+import {
+  ChargeNotFoundException,
+  ChargeRepositoryException,
+} from '@infra/exceptions';
 
 import { ChargeModel } from './models';
 import { PrismaService } from './prisma.service';
@@ -19,7 +22,6 @@ export class ChargeRepository implements IChargeRepository {
       });
       return ChargeModel.toEntity(saved);
     } catch (e) {
-      console.log(e);
       throw new ChargeRepositoryException(
         'failed to create charge on database',
         e,
@@ -28,22 +30,22 @@ export class ChargeRepository implements IChargeRepository {
   }
 
   async findOne(props: ChargeProps): Promise<ChargeEntity> {
-    try {
-      const model = await this.prismaService.charge.findFirst({
+    const model = await this.prismaService.charge
+      .findFirst({
         where: {
           provider_id: props.providerId,
         },
+      })
+      .catch((error) => {
+        throw new ChargeRepositoryException(
+          'failed to find charge on database',
+          error,
+        );
       });
-      if (!model) {
-        throw new ChargeRepositoryException('charge not found!');
-      }
-      return ChargeModel.toEntity(model as any);
-    } catch (error) {
-      throw new ChargeRepositoryException(
-        'failed to find charge on database',
-        error,
-      );
+    if (!model) {
+      throw new ChargeNotFoundException('charge not found!');
     }
+    return ChargeModel.toEntity(model as any);
   }
 
   async update(entity: ChargeEntity): Promise<ChargeEntity> {

@@ -2,6 +2,7 @@ import {
   ChargeEntity,
   ChargeProps,
   OutboxEntity,
+  OutboxProps,
   WebhookEntity,
 } from '@domain/entities';
 
@@ -55,4 +56,8 @@ export interface IChargeRepository
 export interface IWebhookRepository
   extends ISave<WebhookEntity>,
     ISaveWithOutbox<WebhookEntity, OutboxEntity> {}
-export type IOutboxRepository = ISave<OutboxEntity>;
+export interface IOutboxRepository
+  extends ISave<OutboxEntity>,
+    IUpdate<OutboxEntity>,
+    IFindMany<OutboxEntity, OutboxProps>,
+    IFindOne<OutboxEntity, OutboxProps> {}

@@ -11,6 +11,7 @@ import {
 } from '@domain/entities';
 
 import { WebhookRepository } from '@infra/prisma';
+import { WebhookModel } from '@infra/prisma/models';
 
 export type ReceiveWebhookUseCaseOutput = string;
 export type ReceiveWebhookUseCaseInput = {
@@ -41,7 +42,7 @@ export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
 
     const outBox = OutboxEntity.create({
       aggregateId: webhookEntity.id.value,
-      payload: JSON.stringify(data),
+      payload: JSON.stringify(WebhookModel.fromEntity(webhookEntity)),
       aggregateType: 'WEBHOOK',
       eventId: nanoid(),
     });
