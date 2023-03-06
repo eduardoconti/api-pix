@@ -203,7 +203,7 @@ export class CelcoinApi
     } = celcoinResponse;
 
     return {
-      transactionId: transactionId.toString(),
+      providerTransactionId: transactionId.toString(),
       status,
       lastUpdate,
       amount: Amount.fromBrlString(amount.original),

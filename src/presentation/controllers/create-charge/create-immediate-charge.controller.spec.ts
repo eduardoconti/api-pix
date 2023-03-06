@@ -44,6 +44,7 @@ describe('CreateImmediateChargeController', () => {
       ...mockCreateImmediateChargeOnPSPResponse,
       qrCode: 'any',
       emv: 'any',
+      transactionId: '83ef6455-f9aa-472f-a705-a87baa87489a',
     });
     const result = await createImmediateChargeController.handle(
       mockCreateImmediateChargeInput,

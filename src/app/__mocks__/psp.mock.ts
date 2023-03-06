@@ -12,7 +12,7 @@ export const mockAuthenticateOnPSPResponse: AuthenticateOnPSPResponse = {
 };
 export const mockCreateImmediateChargeOnPSPResponse: CreateImmediateChargeOnPSPResponse =
   {
-    transactionId: '817401748',
+    providerTransactionId: '817401748',
     status: 'ACTIVE',
     lastUpdate: '2023-02-27T10:52:49.6804856+00:00',
     emv: '00020101021226930014br.gov.bcb.pix2571api-h.developer.btgpactual.com/v1/p/v2/4dc211df499941e08d6c18c16344eb495204000053039865802BR5910Gazin Tech6008Marialva61088699000062070503***63041229',

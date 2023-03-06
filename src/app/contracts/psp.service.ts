@@ -29,7 +29,7 @@ export type CreateLocationOnPSPResponse = {
 };
 
 export type CreateImmediateChargeOnPSPResponse = {
-  transactionId: string;
+  providerTransactionId: string;
   status: string;
   amount: number;
   url: string;

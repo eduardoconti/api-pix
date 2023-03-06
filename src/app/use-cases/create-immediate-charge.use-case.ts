@@ -1,11 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import {
-  CreateImmediateChargeOnPspInput,
-  CreateImmediateChargeOnPSPResponse,
-  IPspService,
-} from '@app/contracts';
+import { CreateImmediateChargeOnPspInput, IPspService } from '@app/contracts';
 import { CreateChargeException } from '@app/exceptions';
 import { PspService } from '@app/services';
 
@@ -17,8 +13,27 @@ import { QrCode64 } from '@domain/value-objects';
 
 import { ChargeRepository } from '@infra/prisma';
 
-export type CreateImmediateChargeUseCaseOutput =
-  CreateImmediateChargeOnPSPResponse & { qrCode: string; emv: string };
+export type CreateImmediateChargeUseCaseOutput = {
+  transactionId: string;
+  providerTransactionId: string;
+  status: string;
+  amount: number;
+  url: string;
+  locationId: string;
+  merchant: {
+    postalCode: string;
+    city: string;
+    merchantCategoryCode: string;
+    name: string;
+  };
+  calendar: {
+    expiration: number;
+  };
+  lastUpdate: string;
+  createAt: string;
+  qrCode: string;
+  emv: string;
+};
 
 export type ICreateImmediateChargeUseCase = IUseCase<
   CreateImmediateChargeOnPspInput,
@@ -49,7 +64,7 @@ export class CreateImmediateChargeUseCase
       amount: data.amount,
       emv: pspResult.emv,
       provider: 'CELCOIN',
-      providerId: pspResult.transactionId,
+      providerId: pspResult.providerTransactionId,
       status: 'ACTIVE',
       qrCode: qrCode.value,
     });
@@ -61,6 +76,10 @@ export class CreateImmediateChargeUseCase
       }),
     );
 
-    return { ...pspResult, qrCode: qrCode.value };
+    return {
+      ...pspResult,
+      qrCode: qrCode.value,
+      transactionId: charge.id.value,
+    };
   }
 }

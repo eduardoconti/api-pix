@@ -4,6 +4,11 @@ import { CreateImmediateChargeUseCaseOutput } from '@app/use-cases';
 
 export class CreateImmediateChargeOutput {
   @ApiProperty({
+    example: '8883c972-059e-4ad6-998d-241c333757bc',
+  })
+  transaction_id!: string;
+
+  @ApiProperty({
     example: '817414434',
   })
   psp_transaction_id!: string;
@@ -61,9 +66,11 @@ export class CreateImmediateChargeOutput {
       url,
       createAt,
       qrCode,
+      providerTransactionId,
     } = useCaseOutput;
     return {
-      psp_transaction_id: transactionId,
+      transaction_id: transactionId,
+      psp_transaction_id: providerTransactionId,
       status,
       amount,
       expiration,
