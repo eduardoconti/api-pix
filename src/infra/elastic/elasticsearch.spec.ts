@@ -75,7 +75,9 @@ describe('ElasticSearch', () => {
     jest.spyOn(elasticsearchService, 'index').mockImplementation(() => {
       throw new Error('elastic error');
     });
-    await elasticSearch.send<FakeData>(sendExternalLogsProps);
+    await expect(
+      elasticSearch.send<FakeData>(sendExternalLogsProps),
+    ).rejects.toThrow();
 
     expect(elasticsearchService.index).toHaveBeenCalledWith({
       index,
