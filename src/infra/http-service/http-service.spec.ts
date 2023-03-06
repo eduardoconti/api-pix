@@ -50,6 +50,9 @@ describe('HttpService', () => {
     mockLogger = app.get<LoggerService>(Logger);
     axiosService = app.get(Axios);
   });
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should be defined', () => {
     expect(httpService).toBeDefined();
@@ -94,7 +97,10 @@ describe('HttpService', () => {
       .mockResolvedValueOnce({ data: mockResponseData });
     axiosService.axiosRef.post.mockImplementation(mockPost);
 
-    const result = await httpService.post({ ...props, body: undefined });
+    const result = await httpService.post({
+      url: 'http://example.com',
+      headers: { Authorization: 'Bearer token' },
+    });
 
     expect(result).toEqual(mockResponseData);
 

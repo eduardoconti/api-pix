@@ -1,4 +1,4 @@
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ICacheManager } from '@domain/core';
@@ -18,7 +18,6 @@ import {
   PspAuthenticationException,
 } from '@infra/exceptions';
 import { HttpService, IHttpService } from '@infra/http-service';
-import { InfraModule } from '@infra/infra.module';
 
 import { CelcoinApi } from './celcoin-api';
 
@@ -29,7 +28,11 @@ describe('CelcoinApi', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [InfraModule],
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: '.env',
+        }),
+      ],
       providers: [
         CelcoinApi,
         ConfigService,

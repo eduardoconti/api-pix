@@ -13,6 +13,8 @@ export interface EnvironmentVariables {
   CELCOIN_HOST: string;
   REDIS_HOST: number;
   REDIS_PORT: string;
+  ELASTIC_HOST: number;
+  ELASTIC_PORT: string;
 }
 
 export const configValidationSchema = Joi.object({
@@ -30,6 +32,10 @@ export const configValidationSchema = Joi.object({
   CELCOIN_CLIENT_ID: Joi.string().required(),
   CELCOIN_CLIENT_SECRET: Joi.string().required(),
   CELCOIN_HOST: Joi.string().required(),
+  // REDIS
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
+  //ELASTIC
+  ELASTIC_HOST: Joi.string().required(),
+  ELASTIC_PORT: Joi.number().required(),
 });

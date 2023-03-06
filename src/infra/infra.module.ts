@@ -1,6 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { CacheModule, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
@@ -9,6 +10,7 @@ import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache/cache-manager';
 import { CelcoinApi } from './celcoin';
+import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service/http-service';
 @Module({
   imports: [
@@ -45,8 +47,16 @@ import { HttpService } from './http-service/http-service';
       // disable throwing uncaughtException if an error event is emitted and it has no listeners
       ignoreErrors: false,
     }),
+    ElasticsearchModule.registerAsync({
+      useFactory: async (config: ConfigService<EnvironmentVariables>) => ({
+        node: config.getOrThrow('ELASTIC_HOST'),
+        name: 'elastic',
+        maxRetries: 5,
+      }),
+      inject: [ConfigService],
+    }),
   ],
-  providers: [CelcoinApi, HttpService, Logger, CacheManager],
-  exports: [CelcoinApi, HttpService, CacheManager],
+  providers: [CelcoinApi, HttpService, Logger, CacheManager, ElasticSearch],
+  exports: [CelcoinApi, HttpService, CacheManager, Logger, ElasticSearch],
 })
 export class InfraModule {}

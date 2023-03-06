@@ -20,10 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "7.13.0",
     "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/elasticsearch": "8.0.0",
     "@nestjs/event-emitter": "^1.4.1",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
@@ -81,7 +83,8 @@
       "!<rootDir>/infra/aplication-problem/**",
       "!<rootDir>/infra/exception-filter/**",
       "!<rootDir>/infra/interceptors/**",
-      "!<rootDir>/main.ts"
+      "!<rootDir>/main.ts",
+      "!<rootDir>/main/**"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",

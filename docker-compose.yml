@@ -34,6 +34,7 @@ services:
     restart: always
     dns:
       - 8.8.8.8
+
   redis:
     image: redis:6.2-alpine
     restart: always
@@ -46,9 +47,41 @@ services:
       - api-pix
     dns:
       - 8.8.8.8
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - ${ELASTIC_PORT}:${ELASTIC_PORT}
+    networks:
+      - api-pix
+    dns:
+      - 8.8.8.8
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.12.1
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks:
+      - api-pix
+    dns:
+      - 8.8.8.8
 networks:
   api-pix:
 
 volumes:
   pg-apipix-data:
   redis:
+  es-data:

@@ -15,6 +15,8 @@ import {
 
 import { IEventEmitter } from '@domain/core';
 
+import { CreateImmediateChargeException } from '@infra/exceptions';
+
 describe('CreateImmediateChargeUseCase', () => {
   let pspService: IPspService;
   let createImmediateChargeUseCase: ICreateImmediateChargeUseCase;
@@ -56,11 +58,13 @@ describe('CreateImmediateChargeUseCase', () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
+      jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
       const result = await createImmediateChargeUseCase.execute(
         mockCreateImmediateChargeOnPspInput,
       );
       expect(result).toBeDefined();
       expect(pspService.createImmediateCharge).toBeCalled();
+      expect(eventEmitter.emitAsync).toBeCalled();
     });
 
     it('should throw error when pspService failed', async () => {
@@ -72,6 +76,18 @@ describe('CreateImmediateChargeUseCase', () => {
           mockCreateImmediateChargeOnPspInput,
         ),
       ).rejects.toThrowError(CreateChargeException);
+      expect(pspService.createImmediateCharge).toBeCalled();
+    });
+
+    it('should throw error when pspService failed with BaseException', async () => {
+      jest
+        .spyOn(pspService, 'createImmediateCharge')
+        .mockRejectedValue(new CreateImmediateChargeException('any'));
+      await expect(
+        createImmediateChargeUseCase.execute(
+          mockCreateImmediateChargeOnPspInput,
+        ),
+      ).rejects.toThrowError(CreateImmediateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();
     });
   });
