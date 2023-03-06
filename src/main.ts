@@ -36,6 +36,7 @@ async function bootstrap() {
     .addServer(`http://localhost:${configService.get('PORT')}`, 'Local')
     .addTag('health-check', 'Endpoints para monitoramento da api')
     .addTag('charge', 'Endpoints para gerenciamento de cobrança pix')
+    .addTag('webhook', 'Endpoints para gerenciamento de webhook')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

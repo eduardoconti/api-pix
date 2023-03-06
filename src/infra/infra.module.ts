@@ -13,7 +13,7 @@ import { CacheManager } from './cache/cache-manager';
 import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service/http-service';
-import { ChargeRepository } from './prisma/charge.repository';
+import { WebhookRepository, ChargeRepository } from './prisma';
 import { PrismaService } from './prisma/prisma.service';
 import { ElasticSearchConsumer } from './processors';
 @Module({
@@ -91,6 +91,7 @@ import { ElasticSearchConsumer } from './processors';
     PrismaService,
     ChargeRepository,
     ElasticSearchConsumer,
+    WebhookRepository,
   ],
   exports: [
     CelcoinApi,
@@ -102,6 +103,7 @@ import { ElasticSearchConsumer } from './processors';
     ChargeRepository,
     ElasticSearchConsumer,
     BullModule,
+    WebhookRepository,
   ],
 })
 export class InfraModule {}

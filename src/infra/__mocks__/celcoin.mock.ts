@@ -3,6 +3,8 @@ import {
   CelcoinImmediateChargeRequest,
 } from '@infra/celcoin/contracts';
 
+import { WebhookCelcoinInput } from '@presentation/dto';
+
 export const mockCelcoinAuthResponse = {
   access_token:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnRfaWQiOiI0MWI0NGFiOWE1NjQ0MC50ZXN0ZS5jZWxjb2luYXBpLnY1IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InRlc3RlIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6ImQ3MzY1MGZjZjg3ZDQ4MmU5ODE1IiwiZXhwIjoxNjc3NjA1MDU1LCJpc3MiOiJDZWxjb2luQVBJIiwiYXVkIjoiQ2VsY29pbkFQSSJ9.fZD6cTjh9UdqUtCRS3RItqAo4NtSpQZb34q5-jcRcQw',
@@ -82,4 +84,34 @@ export const mockCelcoinAuth = {
 export const mockCelcoinErrorResponse: CelcoinErrorResponse = {
   errorCode: '012545',
   message: 'any error',
+};
+
+export const mockCelcoinWebhook: WebhookCelcoinInput = {
+  RequestBody: {
+    TransactionType: 'RECEIVEPIX',
+    TransactionId: 56762766,
+    Amount: 150.55,
+    DebitParty: {
+      Account: '416781236',
+      Bank: '18236120',
+      Branch: '1',
+      PersonType: 'NATURAL_PERSON',
+      TaxId: '01234567890',
+      AccountType: 'CACC',
+      Name: 'Fulano de Tal',
+    },
+    CreditParty: {
+      Bank: '13935893',
+      Branch: '1',
+      Account: '123456789',
+      PersonType: 'NATURAL_PERSON',
+      TaxId: '09876543210',
+      AccountType: 'CACC',
+      Name: 'Cicrano de Outro',
+      Key: '8ea152b1-ddee-ssaa-aass-ce98245349aa',
+    },
+    EndToEndId: 'E18236120202001199999s0149012FPC',
+    transactionIdentification: 'kk6g232xel65a0daee4dd13kk54578675',
+    transactionIdBRCode: '54578675',
+  },
 };

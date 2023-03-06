@@ -1,4 +1,4 @@
-import { ChargeEntity } from '@domain/entities';
+import { ChargeEntity, OutboxEntity, WebhookEntity } from '@domain/entities';
 
 import { ID } from '../value-objects/id.value-object';
 import { BaseEntityProps } from './entity';
@@ -13,6 +13,10 @@ export type QueryParams<EntityProps> = DeepPartial<
 
 export interface ISave<Entity> {
   save(entity: Entity): Promise<Entity>;
+}
+
+export interface ISaveWithOutbox<Entity, OutboxEntity> {
+  saveWithOutbox(entity: Entity, outboxEntity: OutboxEntity): Promise<Entity>;
 }
 
 export interface ISaveMultiple<Entity> {
@@ -40,3 +44,7 @@ export interface IDelete<Entity> {
 }
 
 export type IChargeRepository = ISave<ChargeEntity>;
+export interface IWebhookRepository
+  extends ISave<WebhookEntity>,
+    ISaveWithOutbox<WebhookEntity, OutboxEntity> {}
+export type IOutboxRepository = ISave<OutboxEntity>;
