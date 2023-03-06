@@ -47,12 +47,13 @@ model webhook {
 
 enum webhookType {
   CHARGE_PAYED
+  CHARGE_REFUNDED
 }
 
 model outbox {
   id             String   @id
   aggregate_id   String
-  aggregate_type String
+  aggregate_type outboxAggregateType
   event_id       String
   payload        Json
   published      Boolean
@@ -60,4 +61,9 @@ model outbox {
   updated_at     DateTime @updatedAt
 
   @@index([published], type: Hash)
+}
+
+enum outboxAggregateType {
+  WEBHOOK
+  CHARGE
 }

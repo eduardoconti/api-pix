@@ -1,7 +1,7 @@
 import { AggregateRoot } from '@domain/core';
 import { UUID } from '@domain/value-objects';
 
-export type WebhookTypes = 'CHARGE_PAYED';
+export type WebhookTypes = 'CHARGE_PAYED' | 'CHARGE_REFUNDED';
 export type WebhookProps = {
   providerId: string;
   provider: string;

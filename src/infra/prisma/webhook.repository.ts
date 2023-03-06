@@ -20,7 +20,7 @@ export class WebhookRepository implements IWebhookRepository {
     } catch (e) {
       console.log(e);
       throw new WebhookRepositoryException(
-        'failed to create charge on database',
+        'failed to create webhook on database',
         e,
       );
     }
@@ -42,9 +42,8 @@ export class WebhookRepository implements IWebhookRepository {
 
       await this.prismaService.$transaction([webhookEntity, outBoxEntity]);
     } catch (e) {
-      console.log(e);
       throw new WebhookRepositoryException(
-        'failed to create charge on database',
+        'failed to create webhook with outbox on database',
         e,
       );
     }

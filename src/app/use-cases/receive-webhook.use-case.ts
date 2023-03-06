@@ -37,7 +37,7 @@ export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
     const outBox = OutboxEntity.create({
       aggregateId: webhookEntity.id.value,
       payload: JSON.stringify(data),
-      aggregateType: type,
+      aggregateType: 'WEBHOOK',
       eventId: nanoid(),
     });
     await this.webhookRepository.saveWithOutbox(webhookEntity, outBox);

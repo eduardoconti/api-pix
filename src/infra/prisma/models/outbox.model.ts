@@ -1,9 +1,9 @@
-import { OutboxEntity } from '@domain/entities';
+import { OutboxAggregateType, OutboxEntity } from '@domain/entities';
 
 export class OutBoxModel {
   id!: string;
   aggregate_id!: string;
-  aggregate_type!: string;
+  aggregate_type!: OutboxAggregateType;
   event_id!: string;
   payload!: string;
   published!: boolean;
