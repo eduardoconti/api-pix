@@ -4,6 +4,7 @@ import { CacheModule, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
 
@@ -94,6 +95,7 @@ import { WebhookConsumer } from './processors/webhook.processor';
         },
       },
     }),
+    ScheduleModule.forRoot(),
   ],
   providers: [
     CelcoinApi,
