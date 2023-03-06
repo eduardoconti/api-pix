@@ -7,6 +7,8 @@ export class OutBoxModel {
   event_id!: string;
   payload!: string;
   published!: boolean;
+  created_at!: Date;
+  updated_at!: Date;
 
   static fromEntity(entity: OutboxEntity): OutBoxModel {
     return {
@@ -16,6 +18,8 @@ export class OutBoxModel {
       event_id: entity.props.eventId,
       payload: entity.props.payload,
       published: entity.props.published,
+      created_at: entity.createdAt.value,
+      updated_at: entity.updatedAt.value,
     };
   }
 }

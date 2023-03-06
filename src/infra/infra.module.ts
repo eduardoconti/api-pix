@@ -16,6 +16,7 @@ import { HttpService } from './http-service/http-service';
 import { WebhookRepository, ChargeRepository } from './prisma';
 import { PrismaService } from './prisma/prisma.service';
 import { ElasticSearchConsumer } from './processors';
+import { WebhookConsumer } from './processors/webhook.processor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -81,6 +82,18 @@ import { ElasticSearchConsumer } from './processors';
         },
       },
     }),
+    BullModule.registerQueue({
+      name: `webhook`,
+      defaultJobOptions: {
+        attempts: 20,
+        removeOnComplete: true,
+        removeOnFail: false,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+      },
+    }),
   ],
   providers: [
     CelcoinApi,
@@ -92,6 +105,7 @@ import { ElasticSearchConsumer } from './processors';
     ChargeRepository,
     ElasticSearchConsumer,
     WebhookRepository,
+    WebhookConsumer,
   ],
   exports: [
     CelcoinApi,
@@ -104,6 +118,7 @@ import { ElasticSearchConsumer } from './processors';
     ElasticSearchConsumer,
     BullModule,
     WebhookRepository,
+    WebhookConsumer,
   ],
 })
 export class InfraModule {}

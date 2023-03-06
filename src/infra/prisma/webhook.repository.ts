@@ -18,7 +18,6 @@ export class WebhookRepository implements IWebhookRepository {
         data: WebhookModel.fromEntity(entity),
       });
     } catch (e) {
-      console.log(e);
       throw new WebhookRepositoryException(
         'failed to create webhook on database',
         e,

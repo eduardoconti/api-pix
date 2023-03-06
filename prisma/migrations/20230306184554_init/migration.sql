@@ -7,12 +7,15 @@ CREATE TYPE "webhookType" AS ENUM ('CHARGE_PAYED', 'CHARGE_REFUNDED');
 -- CreateEnum
 CREATE TYPE "outboxAggregateType" AS ENUM ('WEBHOOK', 'CHARGE');
 
+-- CreateEnum
+CREATE TYPE "provider" AS ENUM ('CELCOIN');
+
 -- CreateTable
 CREATE TABLE "charge" (
     "id" TEXT NOT NULL,
     "status" "chargeStatus" NOT NULL,
     "emv" TEXT NOT NULL,
-    "provider" TEXT NOT NULL,
+    "provider" "provider" NOT NULL,
     "provider_id" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
     "qr_code" TEXT NOT NULL,
@@ -26,7 +29,7 @@ CREATE TABLE "charge" (
 CREATE TABLE "webhook" (
     "id" TEXT NOT NULL,
     "type" "webhookType" NOT NULL,
-    "provider" TEXT NOT NULL,
+    "provider" "provider" NOT NULL,
     "provider_id" TEXT NOT NULL,
     "payload" JSONB NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -3,13 +3,18 @@ import { nanoid } from 'nanoid';
 
 import { IUseCase } from '@domain/core';
 import { IWebhookRepository } from '@domain/core/repository';
-import { OutboxEntity, WebhookEntity, WebhookTypes } from '@domain/entities';
+import {
+  ChargeProvider,
+  OutboxEntity,
+  WebhookEntity,
+  WebhookTypes,
+} from '@domain/entities';
 
 import { WebhookRepository } from '@infra/prisma';
 
 export type ReceiveWebhookUseCaseOutput = string;
 export type ReceiveWebhookUseCaseInput = {
-  provider: string;
+  provider: ChargeProvider;
   providerId: string;
   providerJson: string;
   endToEndId: string;

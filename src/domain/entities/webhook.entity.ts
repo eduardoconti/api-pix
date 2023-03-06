@@ -1,10 +1,12 @@
 import { AggregateRoot } from '@domain/core';
 import { UUID } from '@domain/value-objects';
 
+import { ChargeProvider } from './charge.entity';
+
 export type WebhookTypes = 'CHARGE_PAYED' | 'CHARGE_REFUNDED';
 export type WebhookProps = {
   providerId: string;
-  provider: string;
+  provider: ChargeProvider;
   type: WebhookTypes;
   payload: string;
 };
@@ -12,7 +14,7 @@ export type WebhookProps = {
 export type WebhookPrimitiveProps = {
   id: string;
   providerId: string;
-  provider: string;
+  provider: ChargeProvider;
   type: WebhookTypes;
   payload: string;
 };
@@ -34,5 +36,9 @@ export class WebhookEntity extends AggregateRoot<WebhookProps> {
     });
 
     return entity;
+  }
+
+  isPayedCharge(): boolean {
+    return this.props.type === 'CHARGE_PAYED';
   }
 }

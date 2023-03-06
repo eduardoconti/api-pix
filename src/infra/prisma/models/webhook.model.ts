@@ -1,11 +1,13 @@
-import { WebhookEntity, WebhookTypes } from '@domain/entities';
+import { ChargeProvider, WebhookEntity, WebhookTypes } from '@domain/entities';
 
 export class WebhookModel {
   id!: string;
-  provider!: string;
+  provider!: ChargeProvider;
   provider_id!: string;
   payload!: string;
   type!: WebhookTypes;
+  created_at!: Date;
+  updated_at!: Date;
 
   static fromEntity(entity: WebhookEntity): WebhookModel {
     return {
@@ -14,6 +16,8 @@ export class WebhookModel {
       provider: entity.props.provider,
       provider_id: entity.props.providerId,
       type: entity.props.type,
+      created_at: entity.createdAt.value,
+      updated_at: entity.updatedAt.value,
     };
   }
 }

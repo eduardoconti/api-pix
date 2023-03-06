@@ -1,4 +1,9 @@
-import { ChargeEntity, OutboxEntity, WebhookEntity } from '@domain/entities';
+import {
+  ChargeEntity,
+  ChargeProps,
+  OutboxEntity,
+  WebhookEntity,
+} from '@domain/entities';
 
 import { ID } from '../value-objects/id.value-object';
 import { BaseEntityProps } from './entity';
@@ -43,7 +48,10 @@ export interface IDelete<Entity> {
   delete(entity: Entity): Promise<Entity>;
 }
 
-export type IChargeRepository = ISave<ChargeEntity>;
+export interface IChargeRepository
+  extends ISave<ChargeEntity>,
+    IFindOne<ChargeEntity, ChargeProps>,
+    IUpdate<ChargeEntity> {}
 export interface IWebhookRepository
   extends ISave<WebhookEntity>,
     ISaveWithOutbox<WebhookEntity, OutboxEntity> {}

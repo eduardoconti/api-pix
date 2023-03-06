@@ -13,7 +13,7 @@ model charge {
   id          String       @id
   status      chargeStatus
   emv         String
-  provider    String
+  provider    provider
   provider_id String
   amount      Int
   qr_code     String
@@ -34,7 +34,7 @@ enum chargeStatus {
 model webhook {
   id          String      @id
   type        webhookType
-  provider    String
+  provider    provider
   provider_id String
   payload     Json
   created_at  DateTime    @default(now())
@@ -66,4 +66,8 @@ model outbox {
 enum outboxAggregateType {
   WEBHOOK
   CHARGE
+}
+
+enum provider {
+  CELCOIN
 }

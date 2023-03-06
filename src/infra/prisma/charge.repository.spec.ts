@@ -36,6 +36,7 @@ describe('ChargeRepository', () => {
   describe('save', () => {
     it('should create a new charge using PrismaService', async () => {
       const model = ChargeModel.fromEntity(mockChargeEntity);
+      jest.spyOn(prismaService.charge, 'create').mockResolvedValue(model);
       await repository.save(mockChargeEntity);
       expect(prismaService.charge.create).toHaveBeenCalledWith({ data: model });
     });

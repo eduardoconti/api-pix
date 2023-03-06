@@ -1,5 +1,6 @@
 import { AggregateRoot } from '@domain/core';
 import { ChargeCreatedDomainEvent } from '@domain/events';
+import { ArgumentInvalidException } from '@domain/exceptions';
 import { Amount, QrCode64, UUID } from '@domain/value-objects';
 
 export type ChargeProvider = 'CELCOIN';
@@ -54,5 +55,17 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
       }),
     );
     return entity;
+  }
+
+  pay(): void {
+    if (this.isPayed()) {
+      throw new ArgumentInvalidException('this charge is payed');
+    }
+
+    this.props.status = 'PAYED';
+  }
+
+  isPayed(): boolean {
+    return this.props.status === 'PAYED';
   }
 }

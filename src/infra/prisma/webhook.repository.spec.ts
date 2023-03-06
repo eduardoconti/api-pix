@@ -45,6 +45,8 @@ describe('WebhookRepository', () => {
   describe('save', () => {
     it('should create a new webhook using PrismaService', async () => {
       const model = WebhookModel.fromEntity(mockWebhookEntity);
+      jest.spyOn(prismaService.webhook, 'create').mockResolvedValue(model);
+
       await repository.save(mockWebhookEntity);
       expect(prismaService.webhook.create).toHaveBeenCalledWith({
         data: model,
