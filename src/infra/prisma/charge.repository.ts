@@ -13,16 +13,16 @@ export class ChargeRepository implements IChargeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async save(entity: ChargeEntity): Promise<ChargeEntity> {
-    await this.prismaService.charge
-      .create({
+    try {
+      await this.prismaService.charge.create({
         data: ChargeModel.fromEntity(entity),
-      })
-      .catch((e) => {
-        throw new ChargeRepositoryException(
-          'failed to create charge on database',
-          e,
-        );
       });
+    } catch (e) {
+      throw new ChargeRepositoryException(
+        'failed to create charge on database',
+        e,
+      );
+    }
     return entity;
   }
 }

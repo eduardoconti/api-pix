@@ -4,6 +4,7 @@ export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
   debtor: {
     name: 'Eduardo Ferreira Conti',
     cpf: '50673646459',
+    cnpj: '50673646459025',
   },
   amount: 811,
   merchant: {

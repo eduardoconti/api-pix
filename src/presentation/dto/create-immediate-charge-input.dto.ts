@@ -1,4 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsInt, IsPositive, ValidateNested } from 'class-validator';
 
 import { CreateImmediateChargeOnPspInput } from '@app/contracts';
 
@@ -10,18 +12,28 @@ import { MerchantInput } from './merchant-input.dto';
 const DEFAULT_EXPIRATION = 86400; //1day
 export class CreateImmediateChargeInput {
   @DebtorInputProperty()
+  @ValidateNested()
+  @Type(() => DebtorInput)
   debtor!: DebtorInput;
+
   @ApiProperty({
     example: 8000,
     description: 'valor em centavos.',
   })
+  @IsInt()
+  @IsPositive()
   amount!: number;
+
   @ApiProperty()
+  @ValidateNested()
+  @Type(() => MerchantInput)
   merchant!: MerchantInput;
+
   @ApiPropertyOptional({
     default: 86400,
     description: 'valor em segundos.',
   })
+  @IsInt()
   expiration?: number;
 
   static mapToUseCaseInput(

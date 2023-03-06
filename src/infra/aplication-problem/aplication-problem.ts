@@ -2,6 +2,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 
 import { BaseException, Status } from '@domain/exceptions';
 
+import { InvalidRequestBodyException } from '@infra/exceptions';
+
 export class AplicationProblem {
   status: number;
   title: string;
@@ -39,14 +41,14 @@ export class AplicationProblem {
     const { message } = error.toJSON();
     const status = AplicationProblem.aplicationStatusToHttp(error.code);
 
-    // if (error instanceof InvalidRequestBodyException) {
-    //   return new AplicationProblem({
-    //     title,
-    //     detail: message,
-    //     status,
-    //     invalidFields: error.invalidFields,
-    //   });
-    // }
+    if (error instanceof InvalidRequestBodyException) {
+      return new AplicationProblem({
+        title,
+        detail: message,
+        status,
+        invalidFields: error.invalidFields,
+      });
+    }
     return new AplicationProblem({ title, detail: message, status });
   }
 

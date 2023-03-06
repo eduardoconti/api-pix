@@ -9,6 +9,7 @@ import {
   UnknownExceptionFilter,
 } from '@infra/exception-filter';
 import { LoggingInterceptor } from '@infra/interceptors';
+import { ValidationPipe } from '@infra/pipes';
 import { PrismaService } from '@infra/prisma';
 
 import { EnvironmentVariables } from './main/config';
@@ -22,6 +23,8 @@ async function bootstrap() {
   app.useGlobalFilters(new BaseExceptionFilter(logger));
   app.useGlobalFilters(new HttpExceptionFilter(logger));
 
+  app.useGlobalPipes(new ValidationPipe());
+
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
@@ -30,6 +33,7 @@ async function bootstrap() {
     .setTitle('API Pix')
     .setDescription('API para gerar QrCode e processar pagamentos com `PIX`')
     .setVersion('1.0')
+    .addServer(`http://localhost:${configService.get('PORT')}`, 'Local')
     .addTag('health-check', 'Endpoints para monitoramento da api')
     .addTag('charge', 'Endpoints para gerenciamento de cobrança pix')
     .build();
