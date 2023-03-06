@@ -1,4 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
+import { BullModule } from '@nestjs/bull';
 import { CacheModule, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
@@ -14,6 +15,7 @@ import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service/http-service';
 import { ChargeRepository } from './prisma/charge.repository';
 import { PrismaService } from './prisma/prisma.service';
+import { ElasticSearchConsumer } from './processors';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -57,6 +59,28 @@ import { PrismaService } from './prisma/prisma.service';
       }),
       inject: [ConfigService],
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule.forRoot()],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: configService.get('REDIS_PORT'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    BullModule.registerQueue({
+      name: `elasticsearch`,
+      defaultJobOptions: {
+        attempts: 10,
+        removeOnComplete: true,
+        removeOnFail: false,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+      },
+    }),
   ],
   providers: [
     CelcoinApi,
@@ -66,6 +90,7 @@ import { PrismaService } from './prisma/prisma.service';
     ElasticSearch,
     PrismaService,
     ChargeRepository,
+    ElasticSearchConsumer,
   ],
   exports: [
     CelcoinApi,
@@ -75,6 +100,8 @@ import { PrismaService } from './prisma/prisma.service';
     ElasticSearch,
     PrismaService,
     ChargeRepository,
+    ElasticSearchConsumer,
+    BullModule,
   ],
 })
 export class InfraModule {}

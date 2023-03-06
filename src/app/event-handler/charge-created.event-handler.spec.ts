@@ -1,56 +1,49 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { Queue } from 'bull';
 
 import { mockChargeCreatedDomainEvent } from '@domain/__mocks__';
-import { IExternalLog } from '@domain/core/external-log';
-
-import { ElasticSearch } from '@infra/elastic';
 
 import { ChargeCreatedListener } from './charge-created.event-handler';
 
 describe('ChargeCreatedListener', () => {
-  let chargeCreatedListener: ChargeCreatedListener;
-  let elasticSearchService: IExternalLog;
+  let listener: ChargeCreatedListener;
+  let queue: Queue;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ChargeCreatedListener,
         {
-          provide: ElasticSearch,
+          provide: 'BullQueue_elasticsearch',
           useValue: {
-            send: jest.fn(),
+            add: jest.fn(),
           },
         },
       ],
     }).compile();
 
-    chargeCreatedListener = module.get<ChargeCreatedListener>(
-      ChargeCreatedListener,
-    );
-    elasticSearchService = module.get<IExternalLog>(ElasticSearch);
+    listener = module.get<ChargeCreatedListener>(ChargeCreatedListener);
+    queue = module.get<Queue>('BullQueue_elasticsearch');
   });
 
-  it('should be defined', () => {
-    expect(chargeCreatedListener).toBeDefined();
-    expect(elasticSearchService).toBeDefined();
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
-  describe('LogChargeCreated', () => {
-    it('should call the external log service with correct arguments', async () => {
-      expect(
-        await chargeCreatedListener.LogChargeCreated(
-          mockChargeCreatedDomainEvent,
-        ),
-      ).toBeUndefined();
-      const expectedLog = {
+  it('should add log to elasticsearch queue', async () => {
+    const addSpy = jest.spyOn(queue, 'add');
+
+    await listener.logChargeCreated(mockChargeCreatedDomainEvent);
+
+    expect(addSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
         index: 'charge',
         body: {
           event: mockChargeCreatedDomainEvent,
           service: 'ChargeCreatedDomainEvent',
           createdAt: expect.any(Date),
         },
-      };
-      expect(elasticSearchService.send).toBeCalledWith(expectedLog);
-    });
+      }),
+    );
   });
 });

@@ -19,6 +19,7 @@ export class ElasticSearch implements IExternalLog {
       });
     } catch (error) {
       this.logger.error(JSON.stringify(error), 'ELASTIC SEARCH');
+      throw error;
     }
   }
 }
