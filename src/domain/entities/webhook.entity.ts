@@ -1,5 +1,5 @@
 import { AggregateRoot } from '@domain/core';
-import { UUID } from '@domain/value-objects';
+import { Amount, UUID } from '@domain/value-objects';
 
 import { ChargeProvider } from './charge.entity';
 
@@ -9,6 +9,8 @@ export type WebhookProps = {
   provider: ChargeProvider;
   type: WebhookTypes;
   payload: string;
+  amount: Amount;
+  e2eId: string;
 };
 
 export type WebhookPrimitiveProps = {
@@ -17,6 +19,8 @@ export type WebhookPrimitiveProps = {
   provider: ChargeProvider;
   type: WebhookTypes;
   payload: string;
+  amount: number;
+  e2eId: string;
 };
 
 export class WebhookEntity extends AggregateRoot<WebhookProps> {
@@ -24,7 +28,7 @@ export class WebhookEntity extends AggregateRoot<WebhookProps> {
 
   static create(props: Omit<WebhookPrimitiveProps, 'id'>): WebhookEntity {
     const id = UUID.generate();
-    const { providerId, provider, type, payload } = props;
+    const { providerId, provider, type, payload, amount, e2eId } = props;
     const entity = new WebhookEntity({
       id,
       props: {
@@ -32,6 +36,8 @@ export class WebhookEntity extends AggregateRoot<WebhookProps> {
         provider,
         type,
         payload,
+        amount: new Amount(amount),
+        e2eId,
       },
     });
 

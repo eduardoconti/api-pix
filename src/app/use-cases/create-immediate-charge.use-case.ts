@@ -9,7 +9,6 @@ import { IEventEmitter, IUseCase } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 import { ChargeEntity } from '@domain/entities';
 import { BaseException } from '@domain/exceptions';
-import { QrCode64 } from '@domain/value-objects';
 
 import { ChargeRepository } from '@infra/prisma';
 
@@ -51,25 +50,26 @@ export class CreateImmediateChargeUseCase
     private readonly chargeRepository: IChargeRepository,
   ) {}
   async execute(data: CreateImmediateChargeOnPspInput) {
+    const charge = ChargeEntity.create({
+      amount: data.amount,
+      provider: 'CELCOIN',
+    });
+
+    await this.chargeRepository.save(charge);
     const pspResult = await this.pspSerivce
       .createImmediateCharge(data)
-      .catch((e) => {
+      .catch(async (e) => {
+        charge.markAsFailed();
+        await this.chargeRepository.update(charge);
         if (e instanceof BaseException) throw e;
         throw new CreateChargeException(e.message, e);
       });
 
-    const qrCode = await QrCode64.base64(pspResult.emv);
-
-    const charge = ChargeEntity.create({
-      amount: data.amount,
+    await charge.completeWithPSPResponse({
       emv: pspResult.emv,
-      provider: 'CELCOIN',
       providerId: pspResult.providerTransactionId,
-      status: 'ACTIVE',
-      qrCode: qrCode.value,
     });
-
-    await this.chargeRepository.save(charge);
+    await this.chargeRepository.update(charge);
     await Promise.all(
       charge.domainEvents.map((e) => {
         return this.eventEmitter.emitAsync(e.constructor.name, e);
@@ -78,7 +78,7 @@ export class CreateImmediateChargeUseCase
 
     return {
       ...pspResult,
-      qrCode: qrCode.value,
+      qrCode: charge.props?.qrCode?.value as string,
       transactionId: charge.id.value,
     };
   }

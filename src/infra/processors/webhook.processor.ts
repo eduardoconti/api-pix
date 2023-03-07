@@ -21,11 +21,15 @@ export class WebhookConsumer {
     const { data: webhookModel } = job;
     const charge = await this.chargeRepository.findOne({
       providerId: webhookModel.provider_id,
+      provider: webhookModel.provider,
     });
 
     const webhookEntity = WebhookModel.toEntity(webhookModel);
     if (webhookEntity.isPayedCharge()) {
-      charge.pay();
+      charge.pay({
+        amount: webhookEntity.props.amount.value,
+        e2eId: webhookEntity.props.e2eId,
+      });
     }
 
     await this.chargeRepository.update(charge);

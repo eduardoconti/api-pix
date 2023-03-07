@@ -16,7 +16,10 @@ export class Amount extends ValueObject<number> {
   }
 
   static fromBrlString(value: string): number {
-    return new Amount(parseFloat(value) * 100).value;
+    const newValue = parseFloat(value) * 100;
+    return new Amount(
+      Number.isInteger(newValue) ? newValue : Math.round(newValue),
+    ).value;
   }
 
   protected validate({ value }: DomainPrimitive<number>): void {

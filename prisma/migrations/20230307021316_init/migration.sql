@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "chargeStatus" AS ENUM ('ACTIVE', 'PAYED', 'EXPIRED');
+CREATE TYPE "chargeStatus" AS ENUM ('ACTIVE', 'PAYED', 'EXPIRED', 'FAILED');
 
 -- CreateEnum
 CREATE TYPE "webhookType" AS ENUM ('CHARGE_PAYED', 'CHARGE_REFUNDED');
@@ -14,11 +14,12 @@ CREATE TYPE "provider" AS ENUM ('CELCOIN');
 CREATE TABLE "charge" (
     "id" TEXT NOT NULL,
     "status" "chargeStatus" NOT NULL,
-    "emv" TEXT NOT NULL,
     "provider" "provider" NOT NULL,
-    "provider_id" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
-    "qr_code" TEXT NOT NULL,
+    "provider_id" TEXT,
+    "emv" TEXT,
+    "qr_code" TEXT,
+    "e2e_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -32,6 +33,8 @@ CREATE TABLE "webhook" (
     "provider" "provider" NOT NULL,
     "provider_id" TEXT NOT NULL,
     "payload" JSONB NOT NULL,
+    "amount" INTEGER NOT NULL,
+    "e2e_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -56,19 +59,7 @@ CREATE TABLE "outbox" (
 CREATE INDEX "charge_status_idx" ON "charge" USING HASH ("status");
 
 -- CreateIndex
-CREATE INDEX "charge_provider_idx" ON "charge" USING HASH ("provider");
+CREATE INDEX "charge_provider_provider_id_idx" ON "charge"("provider", "provider_id");
 
 -- CreateIndex
-CREATE INDEX "charge_provider_id_idx" ON "charge" USING HASH ("provider_id");
-
--- CreateIndex
-CREATE INDEX "webhook_type_idx" ON "webhook" USING HASH ("type");
-
--- CreateIndex
-CREATE INDEX "webhook_provider_idx" ON "webhook" USING HASH ("provider");
-
--- CreateIndex
-CREATE INDEX "webhook_provider_id_idx" ON "webhook" USING HASH ("provider_id");
-
--- CreateIndex
-CREATE INDEX "outbox_published_idx" ON "outbox" USING HASH ("published");
+CREATE INDEX "outbox_aggregate_type_published_idx" ON "outbox"("aggregate_type", "published");

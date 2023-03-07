@@ -1,5 +1,4 @@
 import { Inject } from '@nestjs/common';
-import { nanoid } from 'nanoid';
 
 import { IUseCase } from '@domain/core';
 import { IWebhookRepository } from '@domain/core/repository';
@@ -20,6 +19,7 @@ export type ReceiveWebhookUseCaseInput = {
   providerJson: string;
   endToEndId: string;
   type: WebhookTypes;
+  amount: number;
 };
 
 export type IReceiveWebhookUseCase = IUseCase<
@@ -32,19 +32,21 @@ export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
     private readonly webhookRepository: IWebhookRepository,
   ) {}
   async execute(data: ReceiveWebhookUseCaseInput) {
-    const { provider, providerId, providerJson, type } = data;
+    const { provider, providerId, providerJson, type, amount, endToEndId } =
+      data;
     const webhookEntity = WebhookEntity.create({
       provider,
       providerId,
       payload: providerJson,
       type,
+      amount,
+      e2eId: endToEndId,
     });
 
     const outBox = OutboxEntity.create({
       aggregateId: webhookEntity.id.value,
       payload: JSON.stringify(WebhookModel.fromEntity(webhookEntity)),
       aggregateType: 'WEBHOOK',
-      eventId: nanoid(),
     });
     await this.webhookRepository.saveWithOutbox(webhookEntity, outBox);
     return 'success';

@@ -1,3 +1,5 @@
+import { nanoid } from 'nanoid';
+
 import { AggregateRoot } from '@domain/core';
 import { UUID } from '@domain/value-objects';
 
@@ -24,7 +26,9 @@ export class OutboxEntity extends AggregateRoot<OutboxProps> {
   protected readonly _id!: UUID;
 
   static create(
-    props: Omit<OutboxPrimitiveProps, 'id' | 'published'>,
+    props: Omit<OutboxPrimitiveProps, 'id' | 'published' | 'eventId'> & {
+      eventId?: string;
+    },
   ): OutboxEntity {
     const id = UUID.generate();
     const { aggregateId, aggregateType, eventId, payload } = props;
@@ -33,7 +37,7 @@ export class OutboxEntity extends AggregateRoot<OutboxProps> {
       props: {
         aggregateId: new UUID(aggregateId),
         aggregateType,
-        eventId,
+        eventId: eventId ?? nanoid(),
         payload,
         published: false,
       },

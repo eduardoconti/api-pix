@@ -12,23 +12,24 @@ datasource db {
 model charge {
   id          String       @id
   status      chargeStatus
-  emv         String
   provider    provider
-  provider_id String
   amount      Int
-  qr_code     String
+  provider_id String?
+  emv         String?
+  qr_code     String?
+  e2e_id      String?       
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
 
   @@index([status], type: Hash)
-  @@index([provider], type: Hash)
-  @@index([provider_id], type: Hash)
+  @@index([provider, provider_id], type: BTree)
 }
 
 enum chargeStatus {
   ACTIVE
   PAYED
   EXPIRED
+  FAILED
 }
 
 model webhook {
@@ -37,12 +38,10 @@ model webhook {
   provider    provider
   provider_id String
   payload     Json
+  amount      Int
+  e2e_id      String
   created_at  DateTime    @default(now())
   updated_at  DateTime    @updatedAt
-
-  @@index([type], type: Hash)
-  @@index([provider], type: Hash)
-  @@index([provider_id], type: Hash)
 }
 
 enum webhookType {
@@ -60,7 +59,7 @@ model outbox {
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
-  @@index([published], type: Hash)
+  @@index([aggregate_type, published], type: BTree)
 }
 
 enum outboxAggregateType {

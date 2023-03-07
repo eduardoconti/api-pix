@@ -13,7 +13,10 @@ import {
   ICreateImmediateChargeUseCase,
 } from '@app/use-cases';
 
-import { mockChargeEntity } from '@domain/__mocks__';
+import {
+  mockChargeEntity,
+  mockChargeEntityPreRequest,
+} from '@domain/__mocks__';
 import { IEventEmitter } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 
@@ -46,6 +49,7 @@ describe('CreateImmediateChargeUseCase', () => {
           provide: ChargeRepository,
           useValue: {
             save: jest.fn(),
+            update: jest.fn(),
           },
         },
       ],
@@ -58,7 +62,11 @@ describe('CreateImmediateChargeUseCase', () => {
     eventEmitter = app.get<IEventEmitter>(EventEmitter2);
     chargeRepository = app.get<IChargeRepository>(ChargeRepository);
 
-    jest.spyOn(chargeRepository, 'save').mockResolvedValue(mockChargeEntity);
+    jest
+      .spyOn(chargeRepository, 'save')
+      .mockResolvedValue(mockChargeEntityPreRequest);
+    jest.spyOn(chargeRepository, 'update').mockResolvedValue(mockChargeEntity);
+    jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
   });
 
   describe('CreateImmediateChargeUseCase', () => {
@@ -72,7 +80,6 @@ describe('CreateImmediateChargeUseCase', () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
-      jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
 
       const result = await createImmediateChargeUseCase.execute(
         mockCreateImmediateChargeOnPspInput,
@@ -81,9 +88,10 @@ describe('CreateImmediateChargeUseCase', () => {
       expect(pspService.createImmediateCharge).toBeCalled();
       expect(eventEmitter.emitAsync).toBeCalled();
       expect(chargeRepository.save).toBeCalled();
+      expect(chargeRepository.update).toBeCalledTimes(1);
     });
 
-    it('should throw error when pspService failed', async () => {
+    it('should save transaction with status FAILED and throw error when pspService failed', async () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockRejectedValue(new Error('any'));
@@ -92,12 +100,13 @@ describe('CreateImmediateChargeUseCase', () => {
           mockCreateImmediateChargeOnPspInput,
         ),
       ).rejects.toThrowError(CreateChargeException);
+      expect(chargeRepository.save).toBeCalled();
       expect(pspService.createImmediateCharge).toBeCalled();
-      expect(chargeRepository.save).not.toBeCalled();
       expect(eventEmitter.emitAsync).not.toBeCalled();
+      expect(chargeRepository.update).toBeCalledTimes(1);
     });
 
-    it('should throw error when pspService failed with BaseException', async () => {
+    it('should save transaction with status FAILED and throw error when pspService failed with BaseException', async () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockRejectedValue(new CreateImmediateChargeException('any'));
@@ -107,8 +116,9 @@ describe('CreateImmediateChargeUseCase', () => {
         ),
       ).rejects.toThrowError(CreateImmediateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();
-      expect(chargeRepository.save).not.toBeCalled();
+      expect(chargeRepository.save).toBeCalled();
       expect(eventEmitter.emitAsync).not.toBeCalled();
+      expect(chargeRepository.update).toBeCalledTimes(1);
     });
   });
 });

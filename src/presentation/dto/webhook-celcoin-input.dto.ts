@@ -3,6 +3,8 @@ import { ValidateNested } from 'class-validator';
 
 import { ReceiveWebhookUseCaseInput } from '@app/use-cases';
 
+import { Amount } from '@domain/value-objects';
+
 import { WebhookCelcoinBody } from './webhook-celcoin-body.dto';
 
 export class WebhookCelcoinInput {
@@ -14,7 +16,7 @@ export class WebhookCelcoinInput {
     input: WebhookCelcoinInput,
   ): ReceiveWebhookUseCaseInput {
     const {
-      RequestBody: { EndToEndId, TransactionId },
+      RequestBody: { EndToEndId, TransactionId, Amount: amount },
     } = input;
     return {
       endToEndId: EndToEndId,
@@ -22,6 +24,7 @@ export class WebhookCelcoinInput {
       providerId: TransactionId.toString(),
       type: 'CHARGE_PAYED',
       providerJson: JSON.stringify(input),
+      amount: Amount.fromBrlString(amount.toFixed(2)),
     };
   }
 }

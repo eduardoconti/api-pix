@@ -5,17 +5,11 @@ export class ChargeCreatedDomainEvent extends DomainEvent {
   constructor(props: DomainEventProps<ChargeCreatedDomainEvent>) {
     super(props);
     this.amount = props.amount;
-    this.emv = props.emv;
     this.provider = props.provider;
     this.status = props.status;
-    this.providerId = props.providerId;
-    this.qrCode = props.qrCode;
   }
 
   readonly amount: number;
-  readonly emv: string;
   readonly provider: ChargeProvider;
   readonly status: ChargeStatus;
-  readonly providerId: string;
-  readonly qrCode: string;
 }

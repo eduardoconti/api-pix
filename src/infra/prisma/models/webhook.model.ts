@@ -1,5 +1,5 @@
 import { ChargeProvider, WebhookEntity, WebhookTypes } from '@domain/entities';
-import { DateVO, UUID } from '@domain/value-objects';
+import { Amount, DateVO, UUID } from '@domain/value-objects';
 
 export class WebhookModel {
   id!: string;
@@ -7,6 +7,8 @@ export class WebhookModel {
   provider_id!: string;
   payload!: string;
   type!: WebhookTypes;
+  amount!: number;
+  e2e_id!: string;
   created_at!: Date;
   updated_at!: Date;
 
@@ -16,15 +18,26 @@ export class WebhookModel {
       payload: entity.props.payload,
       provider: entity.props.provider,
       provider_id: entity.props.providerId,
+      amount: entity.props.amount.value,
       type: entity.props.type,
       created_at: entity.createdAt.value,
       updated_at: entity.updatedAt.value,
+      e2e_id: entity.props.e2eId,
     };
   }
 
   static toEntity(model: WebhookModel): WebhookEntity {
-    const { id, created_at, updated_at, payload, provider, provider_id, type } =
-      model;
+    const {
+      id,
+      created_at,
+      updated_at,
+      payload,
+      provider,
+      provider_id,
+      type,
+      amount,
+      e2e_id,
+    } = model;
     return new WebhookEntity({
       id: new UUID(id),
       createdAt: new DateVO(created_at),
@@ -34,6 +47,8 @@ export class WebhookModel {
         payload,
         provider,
         providerId: provider_id,
+        amount: new Amount(amount),
+        e2eId: e2e_id,
       },
     });
   }

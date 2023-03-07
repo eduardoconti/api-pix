@@ -4,11 +4,12 @@ import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
 export class ChargeModel {
   id!: string;
   amount!: number;
-  emv!: string;
-  provider!: ChargeProvider;
   status!: ChargeStatus;
-  provider_id!: string;
-  qr_code!: string;
+  provider!: ChargeProvider;
+  emv!: string | null;
+  provider_id!: string | null;
+  qr_code!: string | null;
+  e2e_id!: string | null;
   created_at!: Date;
   updated_at!: Date;
 
@@ -16,13 +17,14 @@ export class ChargeModel {
     return {
       id: entity.id.value,
       amount: entity.props.amount.value,
-      emv: entity.props.emv,
       provider: entity.props.provider,
       status: entity.props.status,
-      provider_id: entity.props.providerId,
-      qr_code: entity.props.qrCode.value,
+      emv: entity.props?.emv ?? null,
+      provider_id: entity.props?.providerId ?? null,
+      qr_code: entity.props?.qrCode?.value ?? null,
       created_at: entity.createdAt.value,
       updated_at: entity.updatedAt.value,
+      e2e_id: entity.props?.e2eId ?? null,
     };
   }
 
@@ -37,6 +39,7 @@ export class ChargeModel {
       qr_code,
       status,
       updated_at,
+      e2e_id,
     } = model;
     return new ChargeEntity({
       id: new UUID(id),
@@ -44,11 +47,12 @@ export class ChargeModel {
       updatedAt: new DateVO(updated_at),
       props: {
         amount: new Amount(amount),
-        emv,
+        emv: emv ?? undefined,
         status,
-        qrCode: new QrCode64(qr_code),
+        qrCode: qr_code ? new QrCode64(qr_code) : undefined,
         provider,
-        providerId: provider_id,
+        providerId: provider_id ?? undefined,
+        e2eId: e2e_id ?? undefined,
       },
     });
   }
