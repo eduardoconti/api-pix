@@ -3,8 +3,18 @@ import { ChargeCreatedDomainEvent } from '@domain/events';
 import { ArgumentInvalidException } from '@domain/exceptions';
 import { Amount, QrCode64, UUID } from '@domain/value-objects';
 
-export type ChargeProvider = 'CELCOIN';
-export type ChargeStatus = 'ACTIVE' | 'PAYED' | 'EXPIRED' | 'FAILED';
+export enum ChargeProviderEnum {
+  CELCOIN = 'CELCOIN',
+}
+
+export enum ChargeStatusEnum {
+  ACTIVE = 'ACTIVE',
+  PAYED = 'PAYED',
+  EXPIRED = 'EXPIRED',
+  FAILED = 'FAILED',
+}
+export type ChargeProvider = keyof typeof ChargeProviderEnum;
+export type ChargeStatus = keyof typeof ChargeStatusEnum;
 
 export type ChargeProps = {
   amount: Amount;
@@ -81,6 +91,13 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
 
   markAsFailed(): void {
     this.props.status = 'FAILED';
+  }
+
+  get qrCodeValue(): string {
+    if (!this.props.qrCode) {
+      throw new ArgumentInvalidException('qrcode not found');
+    }
+    return this.props.qrCode?.value;
   }
 
   async completeWithPSPResponse(

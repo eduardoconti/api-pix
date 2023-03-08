@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { mockOutboxEntity, mockWebhookEntity } from '@domain/__mocks__';
+import { mockOutboxEntityWebhook, mockWebhookEntity } from '@domain/__mocks__';
 import { IWebhookRepository } from '@domain/core/repository';
 
 import { OutBoxModel, WebhookModel } from './models';
@@ -55,8 +55,14 @@ describe('WebhookRepository', () => {
 
     it('should create a new webhook with outbox using PrismaService', async () => {
       const model = WebhookModel.fromEntity(mockWebhookEntity);
-      const outbox = OutBoxModel.fromEntity(mockOutboxEntity);
-      await repository.saveWithOutbox(mockWebhookEntity, mockOutboxEntity);
+      const outbox = OutBoxModel.fromEntity(mockOutboxEntityWebhook);
+      jest
+        .spyOn(prismaService, '$transaction')
+        .mockResolvedValue([model, outbox]);
+      await repository.saveWithOutbox(
+        mockWebhookEntity,
+        mockOutboxEntityWebhook,
+      );
       expect(prismaService.webhook.create).toHaveBeenCalledWith({
         data: model,
       });

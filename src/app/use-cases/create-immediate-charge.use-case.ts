@@ -7,7 +7,7 @@ import { PspService } from '@app/services';
 
 import { IEventEmitter, IUseCase } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
-import { ChargeEntity } from '@domain/entities';
+import { ChargeEntity, ChargeProviderEnum } from '@domain/entities';
 import { BaseException } from '@domain/exceptions';
 
 import { ChargeRepository } from '@infra/prisma';
@@ -52,7 +52,7 @@ export class CreateImmediateChargeUseCase
   async execute(data: CreateImmediateChargeOnPspInput) {
     const charge = ChargeEntity.create({
       amount: data.amount,
-      provider: 'CELCOIN',
+      provider: ChargeProviderEnum.CELCOIN,
     });
 
     await this.chargeRepository.save(charge);
@@ -78,7 +78,7 @@ export class CreateImmediateChargeUseCase
 
     return {
       ...pspResult,
-      qrCode: charge.props?.qrCode?.value as string,
+      qrCode: charge.qrCodeValue,
       transactionId: charge.id.value,
     };
   }

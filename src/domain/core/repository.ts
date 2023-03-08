@@ -48,6 +48,9 @@ export interface IFindMany<Entity, EntityProps> {
 export interface IDelete<Entity> {
   delete(entity: Entity): Promise<Entity>;
 }
+export interface IQuery<Entity> {
+  sql(sql: string): Promise<Entity | Entity[] | void>;
+}
 
 export interface IChargeRepository
   extends ISave<ChargeEntity>,
@@ -60,4 +63,5 @@ export interface IOutboxRepository
   extends ISave<OutboxEntity>,
     IUpdate<OutboxEntity>,
     IFindMany<OutboxEntity, OutboxProps>,
-    IFindOne<OutboxEntity, OutboxProps> {}
+    IFindOne<OutboxEntity, OutboxProps>,
+    IQuery<OutboxEntity> {}

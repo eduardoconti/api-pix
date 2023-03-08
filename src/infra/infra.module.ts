@@ -10,19 +10,18 @@ import type { ClientOpts } from 'redis';
 
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
-import { CacheManager } from './cache/cache-manager';
+import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
-import { HttpService } from './http-service/http-service';
+import { HttpService } from './http-service';
 import {
   WebhookRepository,
   ChargeRepository,
   OutboxRepository,
 } from './prisma';
-import { PrismaService } from './prisma/prisma.service';
-import { ElasticSearchConsumer } from './processors';
-import { WebhookConsumer } from './processors/webhook.processor';
-import { OutboxWebhookService } from './scheduler';
+import { PrismaService } from './prisma';
+import { ElasticSearchConsumer, WebhookConsumer } from './processors';
+import { OutboxWebhookService, CleanOutboxService } from './scheduler';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -91,7 +90,7 @@ import { OutboxWebhookService } from './scheduler';
     BullModule.registerQueue({
       name: `webhook`,
       defaultJobOptions: {
-        attempts: 20,
+        attempts: 10,
         removeOnComplete: true,
         removeOnFail: false,
         backoff: {
@@ -115,6 +114,7 @@ import { OutboxWebhookService } from './scheduler';
     WebhookConsumer,
     OutboxWebhookService,
     OutboxRepository,
+    CleanOutboxService,
   ],
   exports: [
     CelcoinApi,

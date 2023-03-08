@@ -16,7 +16,7 @@ export const mockWebhookEntity = new WebhookEntity({
   },
 });
 
-export const mockOutboxEntity = new OutboxEntity({
+export const mockOutboxEntityWebhook = new OutboxEntity({
   id: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
   createdAt: new DateVO(new Date()),
   updatedAt: new DateVO(new Date()),

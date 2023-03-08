@@ -5,3 +5,4 @@ export * from './invalid-request-body.exception';
 export * from './outbox-repository.exception';
 export * from './psp-authentication.exception';
 export * from './webhook-repository.exception';
+export * from './outbox-not-found.exception';

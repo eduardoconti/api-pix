@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { IChargeRepository } from '@domain/core/repository';
+import { IChargeRepository, QueryParams } from '@domain/core/repository';
 import { ChargeEntity, ChargeProps } from '@domain/entities';
+import { DateVO } from '@domain/value-objects';
 
 import {
   ChargeNotFoundException,
@@ -29,7 +30,7 @@ export class ChargeRepository implements IChargeRepository {
     }
   }
 
-  async findOne(props: ChargeProps): Promise<ChargeEntity> {
+  async findOne(props: QueryParams<ChargeProps>): Promise<ChargeEntity> {
     const model = await this.prismaService.charge
       .findFirst({
         where: {
@@ -51,7 +52,10 @@ export class ChargeRepository implements IChargeRepository {
   async update(entity: ChargeEntity): Promise<ChargeEntity> {
     try {
       const updated = await this.prismaService.charge.update({
-        data: ChargeModel.fromEntity(entity),
+        data: {
+          ...ChargeModel.fromEntity(entity),
+          updated_at: DateVO.now().value,
+        },
         where: {
           id: entity.id.value,
         },

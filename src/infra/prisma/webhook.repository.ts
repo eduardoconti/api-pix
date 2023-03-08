@@ -39,13 +39,16 @@ export class WebhookRepository implements IWebhookRepository {
         data: OutBoxModel.fromEntity(outBox),
       });
 
-      await this.prismaService.$transaction([webhookEntity, outBoxEntity]);
+      const [webhook] = await this.prismaService.$transaction([
+        webhookEntity,
+        outBoxEntity,
+      ]);
+      return WebhookModel.toEntity(webhook as WebhookModel);
     } catch (e) {
       throw new WebhookRepositoryException(
         'failed to create webhook with outbox on database',
         e,
       );
     }
-    return entity;
   }
 }
