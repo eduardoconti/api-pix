@@ -1,22 +1,17 @@
-import { InjectQueue } from '@nestjs/bull';
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { LoggerService } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { Queue } from 'bull';
 
+import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 import { AggregateTypeEnum } from '@domain/entities';
 
-import { OutboxRepository } from '@infra/prisma';
 import { WebhookModel } from '@infra/prisma/models';
 
-@Injectable()
-export class OutboxWebhookService {
+export class OutboxWebhookService implements ICronService {
   constructor(
-    private readonly logger: Logger,
-    @Inject(OutboxRepository)
+    private readonly logger: LoggerService,
     private readonly outboxRepository: IOutboxRepository,
-    @InjectQueue('webhook')
-    private readonly queue: Queue,
+    private readonly queue: IQueue,
   ) {}
 
   @Cron('*/2 * * * * *')

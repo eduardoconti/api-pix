@@ -13,7 +13,11 @@ import { configValidationSchema, EnvironmentVariables } from '@main/config';
 import { CacheManager } from './cache';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service';
-import { provideCelcoinApi } from './infra.provider';
+import {
+  provideCelcoinApi,
+  provideCleanOutboxService,
+  provideOutboxWebhookService,
+} from './infra.provider';
 import {
   WebhookRepository,
   ChargeRepository,
@@ -21,7 +25,6 @@ import {
 } from './prisma';
 import { PrismaService } from './prisma';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
-import { OutboxWebhookService, CleanOutboxService } from './scheduler';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -102,7 +105,6 @@ import { OutboxWebhookService, CleanOutboxService } from './scheduler';
     ScheduleModule.forRoot(),
   ],
   providers: [
-    provideCelcoinApi,
     HttpService,
     Logger,
     CacheManager,
@@ -112,12 +114,12 @@ import { OutboxWebhookService, CleanOutboxService } from './scheduler';
     ElasticSearchConsumer,
     WebhookRepository,
     WebhookConsumer,
-    OutboxWebhookService,
+    provideCelcoinApi,
     OutboxRepository,
-    CleanOutboxService,
+    provideOutboxWebhookService,
+    provideCleanOutboxService,
   ],
   exports: [
-    provideCelcoinApi,
     HttpService,
     CacheManager,
     Logger,
@@ -129,6 +131,7 @@ import { OutboxWebhookService, CleanOutboxService } from './scheduler';
     WebhookRepository,
     WebhookConsumer,
     OutboxRepository,
+    provideCelcoinApi,
   ],
 })
 export class InfraModule {}

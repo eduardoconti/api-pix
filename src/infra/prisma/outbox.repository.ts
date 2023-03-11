@@ -50,7 +50,9 @@ export class OutboxRepository implements IOutboxRepository {
     return OutBoxModel.toEntity(model as OutBoxModel);
   }
 
-  async findMany(params: QueryParams<OutboxProps>): Promise<OutboxEntity[]> {
+  async findMany(
+    params: QueryParams<OutboxProps>,
+  ): Promise<OutboxEntity[] | []> {
     const models = await this.prismaService.outbox
       .findMany({
         where: {
@@ -66,9 +68,6 @@ export class OutboxRepository implements IOutboxRepository {
         );
       });
 
-    // if (!models || models.length === 0) {
-    //   throw new OutboxNotFoundException('outbox not found');
-    // }
     return models.map((e) => OutBoxModel.toEntity(e as OutBoxModel));
   }
 

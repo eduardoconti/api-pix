@@ -1,8 +1,5 @@
 import { DateVO, ID } from '../value-objects';
 
-const isEntity = (v: any): v is Entity<any> => {
-  return v instanceof Entity;
-};
 export type UniqueEntityID = string;
 
 export interface BaseEntityProps {
@@ -49,21 +46,5 @@ export abstract class Entity<EntityProps> {
 
   get id(): ID {
     return this._id;
-  }
-
-  public equals(object?: Entity<EntityProps>): boolean {
-    if (object == null || object == undefined) {
-      return false;
-    }
-
-    if (this === object) {
-      return true;
-    }
-
-    if (!isEntity(object)) {
-      return false;
-    }
-
-    return this._id === object._id;
   }
 }

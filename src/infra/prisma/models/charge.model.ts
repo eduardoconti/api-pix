@@ -28,19 +28,18 @@ export class ChargeModel {
     };
   }
 
-  static toEntity(model: ChargeModel): ChargeEntity {
-    const {
-      amount,
-      created_at,
-      emv,
-      id,
-      provider,
-      provider_id,
-      qr_code,
-      status,
-      updated_at,
-      e2e_id,
-    } = model;
+  static toEntity({
+    amount,
+    created_at,
+    emv,
+    id,
+    provider,
+    provider_id,
+    qr_code,
+    status,
+    updated_at,
+    e2e_id,
+  }: ChargeModel): ChargeEntity {
     return new ChargeEntity({
       id: new UUID(id),
       createdAt: new DateVO(created_at),

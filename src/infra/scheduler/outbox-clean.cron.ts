@@ -1,15 +1,12 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { LoggerService } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
+import { ICronService } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
-import { OutboxRepository } from '@infra/prisma';
-
-@Injectable()
-export class CleanOutboxService {
+export class CleanOutboxService implements ICronService {
   constructor(
-    private readonly logger: Logger,
-    @Inject(OutboxRepository)
+    private readonly logger: LoggerService,
     private readonly outboxRepository: IOutboxRepository,
   ) {}
 

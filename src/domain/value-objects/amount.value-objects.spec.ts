@@ -9,6 +9,7 @@ describe('Amount', () => {
       expect(amount).toBeDefined();
       expect(amount.value).toBe(100);
       expect(amount.equals(amount)).toBeTruthy();
+      expect(amount.equals(undefined)).toBeFalsy();
     });
   });
 

@@ -95,6 +95,7 @@
       "!<rootDir>/infra/aplication-problem/**",
       "!<rootDir>/infra/exception-filter/**",
       "!<rootDir>/infra/interceptors/**",
+      "!<rootDir>/infra/pipes/**",
       "!<rootDir>/main.ts",
       "!<rootDir>/main/**"
     ],

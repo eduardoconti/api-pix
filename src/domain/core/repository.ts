@@ -42,7 +42,7 @@ export interface IFindOneById<Entity> {
 }
 
 export interface IFindMany<Entity, EntityProps> {
-  findMany(params?: QueryParams<EntityProps>): Promise<Entity[]>;
+  findMany(params?: QueryParams<EntityProps>): Promise<Entity[] | []>;
 }
 
 export interface IDelete<Entity> {

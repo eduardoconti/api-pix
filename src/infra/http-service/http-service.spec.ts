@@ -129,7 +129,9 @@ describe('HttpService', () => {
     const mockPost = jest.fn().mockRejectedValueOnce(mockError);
     axiosService.axiosRef.post.mockImplementation(mockPost);
 
-    await expect(httpService.post(props)).rejects.toThrow();
+    await expect(
+      httpService.post({ ...props, body: undefined }),
+    ).rejects.toThrow();
     expect(mockLogger.log).toBeCalled();
     expect(mockLogger.error).toBeCalledTimes(1);
   });
