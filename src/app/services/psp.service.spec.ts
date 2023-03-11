@@ -6,6 +6,7 @@ import {
   mockCreateImmediateChargeOnPSPResponse,
   mockCreateLocationOnPSPResponse,
 } from '@app/__mocks__';
+import { providePspService } from '@app/app.provider';
 import { IPspService } from '@app/contracts';
 import { PspService } from '@app/services';
 
@@ -26,7 +27,7 @@ describe('PspService', () => {
             createLocation: jest.fn(),
           },
         },
-        PspService,
+        providePspService,
       ],
     }).compile();
 

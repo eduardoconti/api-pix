@@ -5,6 +5,7 @@ import {
   mockCreateImmediateChargeOnPspInput,
   mockCreateImmediateChargeOnPSPResponse,
 } from '@app/__mocks__';
+import { provideCreateImmediateChargeUseCase } from '@app/app.provider';
 import { IPspService } from '@app/contracts';
 import { CreateChargeException } from '@app/exceptions';
 import { PspService } from '@app/services';
@@ -32,7 +33,7 @@ describe('CreateImmediateChargeUseCase', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateImmediateChargeUseCase,
+        provideCreateImmediateChargeUseCase,
         {
           provide: PspService,
           useValue: {

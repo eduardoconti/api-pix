@@ -18,6 +18,7 @@ import {
   PspAuthenticationException,
 } from '@infra/exceptions';
 import { HttpService, IHttpService } from '@infra/http-service';
+import { provideCelcoinApi } from '@infra/infra.provider';
 
 import { CelcoinApi } from './celcoin-api';
 
@@ -34,7 +35,7 @@ describe('CelcoinApi', () => {
         }),
       ],
       providers: [
-        CelcoinApi,
+        provideCelcoinApi,
         ConfigService,
         {
           provide: HttpService,

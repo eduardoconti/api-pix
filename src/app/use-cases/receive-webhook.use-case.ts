@@ -1,15 +1,13 @@
-import { Inject } from '@nestjs/common';
-
 import { IUseCase } from '@domain/core';
 import { IWebhookRepository } from '@domain/core/repository';
 import {
+  AggregateTypeEnum,
   ChargeProvider,
   OutboxEntity,
   WebhookEntity,
   WebhookTypes,
 } from '@domain/entities';
 
-import { WebhookRepository } from '@infra/prisma';
 import { WebhookModel } from '@infra/prisma/models';
 
 export type ReceiveWebhookUseCaseOutput = string;
@@ -27,13 +25,15 @@ export type IReceiveWebhookUseCase = IUseCase<
   ReceiveWebhookUseCaseOutput
 >;
 export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
-  constructor(
-    @Inject(WebhookRepository)
-    private readonly webhookRepository: IWebhookRepository,
-  ) {}
-  async execute(data: ReceiveWebhookUseCaseInput) {
-    const { provider, providerId, providerJson, type, amount, endToEndId } =
-      data;
+  constructor(private readonly webhookRepository: IWebhookRepository) {}
+  async execute({
+    provider,
+    providerId,
+    providerJson,
+    type,
+    amount,
+    endToEndId,
+  }: ReceiveWebhookUseCaseInput) {
     const webhookEntity = WebhookEntity.create({
       provider,
       providerId,
@@ -46,7 +46,7 @@ export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
     const outBox = OutboxEntity.create({
       aggregateId: webhookEntity.id.value,
       payload: JSON.stringify(WebhookModel.fromEntity(webhookEntity)),
-      aggregateType: 'WEBHOOK',
+      aggregateType: AggregateTypeEnum.WEBHOOK,
     });
     await this.webhookRepository.saveWithOutbox(webhookEntity, outBox);
     return 'success';

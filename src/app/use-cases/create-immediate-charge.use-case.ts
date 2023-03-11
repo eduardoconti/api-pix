@@ -1,16 +1,10 @@
-import { Inject } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-
 import { CreateImmediateChargeOnPspInput, IPspService } from '@app/contracts';
 import { CreateChargeException } from '@app/exceptions';
-import { PspService } from '@app/services';
 
 import { IEventEmitter, IUseCase } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 import { ChargeEntity, ChargeProviderEnum } from '@domain/entities';
 import { BaseException } from '@domain/exceptions';
-
-import { ChargeRepository } from '@infra/prisma';
 
 export type CreateImmediateChargeUseCaseOutput = {
   transactionId: string;
@@ -42,22 +36,29 @@ export class CreateImmediateChargeUseCase
   implements ICreateImmediateChargeUseCase
 {
   constructor(
-    @Inject(PspService)
     private readonly pspSerivce: IPspService,
-    @Inject(EventEmitter2)
     private readonly eventEmitter: IEventEmitter,
-    @Inject(ChargeRepository)
     private readonly chargeRepository: IChargeRepository,
   ) {}
-  async execute(data: CreateImmediateChargeOnPspInput) {
+  async execute({
+    amount,
+    calendar,
+    debtor,
+    merchant,
+  }: CreateImmediateChargeOnPspInput) {
     const charge = ChargeEntity.create({
-      amount: data.amount,
+      amount: amount,
       provider: ChargeProviderEnum.CELCOIN,
     });
 
     await this.chargeRepository.save(charge);
     const pspResult = await this.pspSerivce
-      .createImmediateCharge(data)
+      .createImmediateCharge({
+        amount,
+        calendar,
+        debtor,
+        merchant,
+      })
       .catch(async (e) => {
         charge.markAsFailed();
         await this.chargeRepository.update(charge);

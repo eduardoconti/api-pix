@@ -11,9 +11,9 @@ import type { ClientOpts } from 'redis';
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
-import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service';
+import { provideCelcoinApi } from './infra.provider';
 import {
   WebhookRepository,
   ChargeRepository,
@@ -102,7 +102,7 @@ import { OutboxWebhookService, CleanOutboxService } from './scheduler';
     ScheduleModule.forRoot(),
   ],
   providers: [
-    CelcoinApi,
+    provideCelcoinApi,
     HttpService,
     Logger,
     CacheManager,
@@ -117,7 +117,7 @@ import { OutboxWebhookService, CleanOutboxService } from './scheduler';
     CleanOutboxService,
   ],
   exports: [
-    CelcoinApi,
+    provideCelcoinApi,
     HttpService,
     CacheManager,
     Logger,

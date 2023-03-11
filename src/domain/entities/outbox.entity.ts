@@ -3,7 +3,12 @@ import { nanoid } from 'nanoid';
 import { AggregateRoot } from '@domain/core';
 import { UUID } from '@domain/value-objects';
 
-export type OutboxAggregateType = 'WEBHOOK' | 'CHARGE';
+export enum AggregateTypeEnum {
+  WEBHOOK = 'WEBHOOK',
+  CHARGE = 'CHARGE',
+}
+
+export type OutboxAggregateType = keyof typeof AggregateTypeEnum;
 
 export type OutboxProps = {
   aggregateId: UUID;

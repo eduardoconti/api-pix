@@ -5,3 +5,5 @@ export * from './cache-manager';
 export * from './aggregate-root';
 export * from './domain-event';
 export * from './event-emitter';
+export * from './external-log';
+export * from './queue';

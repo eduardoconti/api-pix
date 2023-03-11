@@ -1,14 +1,11 @@
-import { InjectQueue } from '@nestjs/bull';
-import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { Queue } from 'bull';
 
-import { SendExternalLogsProps } from '@domain/core/external-log';
+import { IQueue, SendExternalLogsProps } from '@domain/core';
 import { ChargeCreatedDomainEvent } from '@domain/events';
-
-@Injectable()
 export class ChargeCreatedListener {
-  constructor(@InjectQueue('elasticsearch') private queue: Queue) {}
+  constructor(
+    private queue: IQueue<SendExternalLogsProps<ChargeCreatedDomainEvent>>,
+  ) {}
   @OnEvent('ChargeCreatedDomainEvent', { async: true })
   async logChargeCreated(event: ChargeCreatedDomainEvent) {
     const log: SendExternalLogsProps<ChargeCreatedDomainEvent> = {

@@ -1,25 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
-
 import {
   CreateImmediateChargeOnPspInput,
   CreateImmediateChargeOnPSPResponse,
   IPspService,
 } from '@app/contracts';
 
-import { CelcoinApi } from '@infra/celcoin';
+import { ICelcoinApi } from '@infra/celcoin';
 
-@Injectable()
 export class PspService implements IPspService {
-  constructor(
-    @Inject(CelcoinApi)
-    private readonly celcoin: CelcoinApi,
-  ) {}
+  constructor(private readonly celcoin: ICelcoinApi) {}
 
-  async createImmediateCharge(
-    data: CreateImmediateChargeOnPspInput,
-  ): Promise<CreateImmediateChargeOnPSPResponse> {
-    const { merchant, debtor, amount, calendar } = data;
-
+  async createImmediateCharge({
+    merchant,
+    debtor,
+    amount,
+    calendar,
+  }: CreateImmediateChargeOnPspInput): Promise<CreateImmediateChargeOnPSPResponse> {
     const { accessToken } = await this.celcoin.auth();
     const { locationId } = await this.celcoin.createLocation(
       {

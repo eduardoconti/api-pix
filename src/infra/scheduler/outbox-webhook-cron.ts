@@ -4,6 +4,7 @@ import { Cron } from '@nestjs/schedule';
 import { Queue } from 'bull';
 
 import { IOutboxRepository } from '@domain/core/repository';
+import { AggregateTypeEnum } from '@domain/entities';
 
 import { OutboxRepository } from '@infra/prisma';
 import { WebhookModel } from '@infra/prisma/models';
@@ -24,15 +25,17 @@ export class OutboxWebhookService {
 
     const data = await this.outboxRepository.findMany({
       published: false,
-      aggregateType: 'WEBHOOK',
+      aggregateType: AggregateTypeEnum.WEBHOOK,
     });
     if (data.length === 0) return;
 
-    data.forEach(async (e) => {
-      const payload = JSON.parse(e.props.payload) as WebhookModel;
-      await this.queue.add(payload);
-      e.markAsPublished();
-      await this.outboxRepository.update(e);
-    });
+    await Promise.all(
+      data.map((e) => {
+        const payload = JSON.parse(e.props.payload) as WebhookModel;
+        this.queue.add(payload);
+        e.markAsPublished();
+        this.outboxRepository.update(e);
+      }),
+    );
   }
 }

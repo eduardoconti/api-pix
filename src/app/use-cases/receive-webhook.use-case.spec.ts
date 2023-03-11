@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { provideReceiveWebhookUseCase } from '@app/app.provider';
+
 import { mockWebhookEntity } from '@domain/__mocks__/webhook.mock';
 import { IWebhookRepository } from '@domain/core/repository';
 
@@ -21,7 +23,7 @@ describe('ReceiveWebhookUseCase', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        ReceiveWebhookUseCase,
+        provideReceiveWebhookUseCase,
         {
           provide: WebhookRepository,
           useValue: {

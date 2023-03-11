@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { nanoid } from 'nanoid';
 
@@ -14,12 +14,11 @@ import {
 import { ICacheManager } from '@domain/core';
 import { Amount } from '@domain/value-objects';
 
-import { CacheManager } from '@infra/cache/cache-manager';
 import {
   CreateImmediateChargeException,
   PspAuthenticationException,
 } from '@infra/exceptions';
-import { HttpService, IHttpService } from '@infra/http-service';
+import { IHttpService } from '@infra/http-service';
 
 import { EnvironmentVariables } from '@main/config';
 
@@ -36,21 +35,22 @@ import {
 const NOT_CHANGE_VALUE = 0;
 const TOKEN_CACHE_KEY = 'celcoin_token';
 const TOKEN_CACHE_TTL = 2400;
-@Injectable()
-export class CelcoinApi
-  implements
-    IAuthenticateOnPSP,
-    ICreateLocationOnPSP<CelcoinAuth, CelcoinLocationRequest>,
+
+export interface ICelcoinApi
+  extends IAuthenticateOnPSP,
+    ICreateLocationOnPSP<
+      CelcoinAuth,
+      Omit<CelcoinLocationRequest, 'type' | 'clientRequestId'>
+    >,
     ICreateImmediateChargeOnPSP<
       CelcoinAuth,
       Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & { amount: number }
-    >
-{
+    > {}
+@Injectable()
+export class CelcoinApi implements ICelcoinApi {
   constructor(
-    @Inject(HttpService)
     private readonly httpService: IHttpService,
     private readonly configService: ConfigService<EnvironmentVariables>,
-    @Inject(CacheManager)
     private readonly cacheMamager: ICacheManager,
   ) {}
 

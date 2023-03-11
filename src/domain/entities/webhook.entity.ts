@@ -3,7 +3,13 @@ import { Amount, UUID } from '@domain/value-objects';
 
 import { ChargeProvider } from './charge.entity';
 
-export type WebhookTypes = 'CHARGE_PAYED' | 'CHARGE_REFUNDED';
+export enum WebhookTypesEnum {
+  CHARGE_PAYED = 'CHARGE_PAYED',
+  CHARGE_REFUNDED = 'CHARGE_REFUNDED',
+}
+
+export type WebhookTypes = keyof typeof WebhookTypesEnum;
+
 export type WebhookProps = {
   providerId: string;
   provider: ChargeProvider;

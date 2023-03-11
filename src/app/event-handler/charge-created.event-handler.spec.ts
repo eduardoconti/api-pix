@@ -1,18 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Queue } from 'bull';
+
+import { provideChargeCreatedListener } from '@app/app.provider';
 
 import { mockChargeCreatedDomainEvent } from '@domain/__mocks__';
+import { IQueue } from '@domain/core';
 
 import { ChargeCreatedListener } from './charge-created.event-handler';
 
 describe('ChargeCreatedListener', () => {
   let listener: ChargeCreatedListener;
-  let queue: Queue;
+  let queue: IQueue;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ChargeCreatedListener,
+        provideChargeCreatedListener,
         {
           provide: 'BullQueue_elasticsearch',
           useValue: {
@@ -23,7 +25,7 @@ describe('ChargeCreatedListener', () => {
     }).compile();
 
     listener = module.get<ChargeCreatedListener>(ChargeCreatedListener);
-    queue = module.get<Queue>('BullQueue_elasticsearch');
+    queue = module.get<IQueue>('BullQueue_elasticsearch');
   });
 
   afterEach(() => {
