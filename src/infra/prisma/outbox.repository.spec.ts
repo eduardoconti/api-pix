@@ -4,6 +4,11 @@ import { mockOutboxEntity } from '@domain/__mocks__';
 import { IOutboxRepository } from '@domain/core/repository';
 import { UUID } from '@domain/value-objects';
 
+import {
+  OutboxNotFoundException,
+  OutboxRepositoryException,
+} from '@infra/exceptions';
+
 import { OutBoxModel } from './models';
 import { OutboxRepository } from './outbox.repository';
 import { PrismaService } from './prisma.service';
@@ -53,6 +58,16 @@ describe('OutboxRepository', () => {
         data: outbox,
       });
     });
+
+    it('should throw OutboxRepositoryException when create failed', async () => {
+      jest
+        .spyOn(prismaService.outbox, 'create')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(repository.save(mockOutboxEntity)).rejects.toThrowError(
+        OutboxRepositoryException,
+      );
+    });
   });
 
   describe('findOne', () => {
@@ -64,16 +79,56 @@ describe('OutboxRepository', () => {
       expect(result).toStrictEqual(mockOutboxEntity);
       expect(prismaService.outbox.findFirst).toBeCalled();
     });
+
+    it('should throw OutboxRepositoryException when findOne failed', async () => {
+      jest
+        .spyOn(prismaService.outbox, 'findFirst')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(
+        repository.findOne({
+          id: new UUID(outbox.id),
+        }),
+      ).rejects.toThrowError(OutboxRepositoryException);
+    });
+
+    it('should throw OutboxNotFoundException when findOne failed', async () => {
+      jest.spyOn(prismaService.outbox, 'findFirst').mockResolvedValue(null);
+      await expect(repository.findOne({})).rejects.toThrowError(
+        OutboxNotFoundException,
+      );
+    });
   });
 
   describe('findMany', () => {
-    it('should find many outbox register', async () => {
+    it('should find many outbox register without params', async () => {
+      jest.spyOn(prismaService.outbox, 'findMany').mockResolvedValue([outbox]);
+      const result = await repository.findMany({});
+      expect(result).toStrictEqual([mockOutboxEntity]);
+      expect(prismaService.outbox.findMany).toBeCalled();
+    });
+
+    it('should find many outbox register with params', async () => {
       jest.spyOn(prismaService.outbox, 'findMany').mockResolvedValue([outbox]);
       const result = await repository.findMany({
-        id: new UUID(outbox.id),
+        published: false,
+        aggregateId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
+        aggregateType: 'WEBHOOK',
       });
       expect(result).toStrictEqual([mockOutboxEntity]);
       expect(prismaService.outbox.findMany).toBeCalled();
+    });
+
+    it('should throw OutboxRepositoryException when findMany failed', async () => {
+      jest
+        .spyOn(prismaService.outbox, 'findMany')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(
+        repository.findMany({
+          id: new UUID(outbox.id),
+        }),
+      ).rejects.toThrowError(OutboxRepositoryException);
     });
   });
 
@@ -83,6 +138,16 @@ describe('OutboxRepository', () => {
       const result = await repository.update(mockOutboxEntity);
       expect(result).toStrictEqual(mockOutboxEntity);
       expect(prismaService.outbox.update).toBeCalled();
+    });
+
+    it('should throw OutboxRepositoryException when update failed', async () => {
+      jest
+        .spyOn(prismaService.outbox, 'update')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(repository.update(mockOutboxEntity)).rejects.toThrowError(
+        OutboxRepositoryException,
+      );
     });
   });
 
@@ -94,6 +159,18 @@ describe('OutboxRepository', () => {
       );
       expect(result).toBeUndefined();
       expect(prismaService.$queryRawUnsafe).toBeCalled();
+    });
+
+    it('should throw OutboxRepositoryException when sql failed', async () => {
+      jest
+        .spyOn(prismaService, '$queryRawUnsafe')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(
+        repository.sql(
+          `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+        ),
+      ).rejects.toThrowError(OutboxRepositoryException);
     });
   });
 });

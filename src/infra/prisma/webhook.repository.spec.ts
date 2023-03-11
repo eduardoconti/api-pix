@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { mockOutboxEntityWebhook, mockWebhookEntity } from '@domain/__mocks__';
 import { IWebhookRepository } from '@domain/core/repository';
 
+import { WebhookRepositoryException } from '@infra/exceptions';
+
 import { OutBoxModel, WebhookModel } from './models';
 import { PrismaService } from './prisma.service';
 import { WebhookRepository } from './webhook.repository';
@@ -70,6 +72,26 @@ describe('WebhookRepository', () => {
         data: outbox,
       });
       expect(prismaService.$transaction).toBeCalled();
+    });
+
+    it('should throw OutboxRepositoryException when save failed', async () => {
+      jest
+        .spyOn(prismaService.webhook, 'create')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(repository.save(mockWebhookEntity)).rejects.toThrowError(
+        WebhookRepositoryException,
+      );
+    });
+
+    it('should throw OutboxRepositoryException when saveWithOutbox failed', async () => {
+      jest
+        .spyOn(prismaService, '$transaction')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(
+        repository.saveWithOutbox(mockWebhookEntity, mockOutboxEntityWebhook),
+      ).rejects.toThrowError(WebhookRepositoryException);
     });
   });
 });

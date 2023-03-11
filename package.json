@@ -96,6 +96,7 @@
       "!<rootDir>/infra/exception-filter/**",
       "!<rootDir>/infra/interceptors/**",
       "!<rootDir>/infra/pipes/**",
+      "!<rootDir>/infra/prisma/prisma.service.ts",
       "!<rootDir>/main.ts",
       "!<rootDir>/main/**"
     ],

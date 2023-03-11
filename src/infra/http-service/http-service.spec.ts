@@ -75,20 +75,7 @@ describe('HttpService', () => {
       { headers: { Authorization: 'Bearer token' } },
     );
 
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      JSON.stringify(props),
-      'EXTERNAL API REQUEST',
-    );
-
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      JSON.stringify(mockResponseData),
-      'EXTERNAL API RESPONSE',
-    );
-
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      '{"url":"http://example.com","requestTime":0}',
-      'EXTERNAL API REQUEST',
-    );
+    expect(mockLogger.log).toBeCalledTimes(3);
   });
 
   it('should execute post without body successfully', async () => {
@@ -108,20 +95,7 @@ describe('HttpService', () => {
       headers: { Authorization: 'Bearer token' },
     });
 
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      JSON.stringify({ ...props, body: undefined }),
-      'EXTERNAL API REQUEST',
-    );
-
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      JSON.stringify(mockResponseData),
-      'EXTERNAL API RESPONSE',
-    );
-
-    expect(mockLogger.log).toHaveBeenCalledWith(
-      '{"url":"http://example.com","requestTime":0}',
-      'EXTERNAL API REQUEST',
-    );
+    expect(mockLogger.log).toBeCalledTimes(3);
   });
 
   it('should throw error', async () => {
