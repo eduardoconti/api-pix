@@ -1,15 +1,17 @@
 import { Logger, LoggerService, Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { IQueue } from '@domain/core';
+import { IChargeRepository, IExternalLog, ILogger, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
 import { EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
+import { ElasticSearch } from './elastic';
 import { HttpService, IHttpService } from './http-service';
-import { OutboxRepository } from './prisma';
+import { ChargeRepository, OutboxRepository } from './prisma';
+import { ElasticSearchConsumer, WebhookConsumer } from './processors';
 import { CleanOutboxService, OutboxWebhookService } from './scheduler';
 
 export const provideCelcoinApi: Provider<CelcoinApi> = {
@@ -42,4 +44,20 @@ export const provideCleanOutboxService: Provider<CleanOutboxService> = {
     return new CleanOutboxService(logger, outboxRepository);
   },
   inject: [Logger, OutboxRepository],
+};
+
+export const provideElasticSearchConsumer: Provider<ElasticSearchConsumer> = {
+  provide: ElasticSearchConsumer,
+  useFactory: (logger: ILogger, elastic: IExternalLog) => {
+    return new ElasticSearchConsumer(elastic, logger);
+  },
+  inject: [Logger, ElasticSearch],
+};
+
+export const provideWebhookConsumer: Provider<WebhookConsumer> = {
+  provide: WebhookConsumer,
+  useFactory: (logger: ILogger, chargeRepository: IChargeRepository) => {
+    return new WebhookConsumer(logger, chargeRepository);
+  },
+  inject: [Logger, ChargeRepository],
 };

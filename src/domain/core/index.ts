@@ -9,3 +9,4 @@ export * from './external-log';
 export * from './queue';
 export * from './repository';
 export * from './use-case';
+export * from './logger';

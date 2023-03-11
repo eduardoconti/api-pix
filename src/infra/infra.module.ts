@@ -16,7 +16,9 @@ import { HttpService } from './http-service';
 import {
   provideCelcoinApi,
   provideCleanOutboxService,
+  provideElasticSearchConsumer,
   provideOutboxWebhookService,
+  provideWebhookConsumer,
 } from './infra.provider';
 import {
   WebhookRepository,
@@ -24,7 +26,6 @@ import {
   OutboxRepository,
 } from './prisma';
 import { PrismaService } from './prisma';
-import { ElasticSearchConsumer, WebhookConsumer } from './processors';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -111,11 +112,11 @@ import { ElasticSearchConsumer, WebhookConsumer } from './processors';
     ElasticSearch,
     PrismaService,
     ChargeRepository,
-    ElasticSearchConsumer,
     WebhookRepository,
-    WebhookConsumer,
     provideCelcoinApi,
     OutboxRepository,
+    provideWebhookConsumer,
+    provideElasticSearchConsumer,
     provideOutboxWebhookService,
     provideCleanOutboxService,
   ],
@@ -126,10 +127,8 @@ import { ElasticSearchConsumer, WebhookConsumer } from './processors';
     ElasticSearch,
     PrismaService,
     ChargeRepository,
-    ElasticSearchConsumer,
     BullModule,
     WebhookRepository,
-    WebhookConsumer,
     OutboxRepository,
     provideCelcoinApi,
   ],

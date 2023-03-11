@@ -1,23 +1,21 @@
 import { OnQueueActive, OnQueueFailed, Process, Processor } from '@nestjs/bull';
-import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
+import { ILogger } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { ChargeNotFoundException } from '@infra/exceptions';
-import { ChargeRepository } from '@infra/prisma';
 import { WebhookModel } from '@infra/prisma/models';
 
 @Processor('webhook')
 export class WebhookConsumer {
   constructor(
-    private readonly logger: Logger,
-    @Inject(ChargeRepository)
+    private readonly logger: ILogger,
     private readonly chargeRepository: IChargeRepository,
   ) {}
   @Process()
-  async processWebhook(job: Job<WebhookModel>) {
+  async process(job: Job<WebhookModel>) {
     const { data: webhookModel } = job;
     const charge = await this.chargeRepository.findOne({
       providerId: webhookModel.provider_id,
@@ -30,9 +28,8 @@ export class WebhookConsumer {
         amount: webhookEntity.props.amount.value,
         e2eId: webhookEntity.props.e2eId,
       });
+      await this.chargeRepository.update(charge);
     }
-
-    await this.chargeRepository.update(charge);
   }
 
   @OnQueueActive()

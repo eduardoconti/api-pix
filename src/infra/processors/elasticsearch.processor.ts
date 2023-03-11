@@ -1,20 +1,17 @@
 import { OnQueueActive, OnQueueFailed, Process, Processor } from '@nestjs/bull';
-import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 
+import { ILogger } from '@domain/core';
 import { IExternalLog, SendExternalLogsProps } from '@domain/core/external-log';
-
-import { ElasticSearch } from '@infra/elastic';
 
 @Processor('elasticsearch')
 export class ElasticSearchConsumer {
   constructor(
-    @Inject(ElasticSearch)
     private readonly elasticsearchService: IExternalLog,
-    private readonly logger: Logger,
+    private readonly logger: ILogger,
   ) {}
   @Process()
-  async sendLog(job: Job<SendExternalLogsProps<any>>) {
+  async process(job: Job<SendExternalLogsProps<any>>) {
     const { data } = job;
     await this.elasticsearchService.send<any>(data);
   }

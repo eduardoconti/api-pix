@@ -20,7 +20,6 @@ export class HttpService implements IHttpService {
   async post<Response>(props: PostProps) {
     this.nestLogger.log(JSON.stringify(props), 'EXTERNAL API REQUEST');
     const startedAt = DateVO.now().value.getTime();
-    console.log(props);
     try {
       const { data } = await this.httpService.axiosRef.post<Response>(
         props.url,
