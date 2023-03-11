@@ -76,6 +76,7 @@ export class CreateImmediateChargeUseCase
         return this.eventEmitter.emitAsync(e.constructor.name, e);
       }),
     );
+    charge.clearEvents();
 
     return {
       ...pspResult,
