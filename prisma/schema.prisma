@@ -17,7 +17,7 @@ model charge {
   provider_id String?
   emv         String?
   qr_code     String?
-  e2e_id      String?       
+  e2e_id      String?
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
 
@@ -50,14 +50,14 @@ enum webhookType {
 }
 
 model outbox {
-  id             String   @id
+  id             String              @id
   aggregate_id   String
   aggregate_type outboxAggregateType
   event_id       String
   payload        Json
   published      Boolean
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
+  created_at     DateTime            @default(now())
+  updated_at     DateTime            @updatedAt
 
   @@index([aggregate_type, published], type: BTree)
 }
@@ -65,8 +65,36 @@ model outbox {
 enum outboxAggregateType {
   WEBHOOK
   CHARGE
+  USER
 }
 
 enum provider {
   CELCOIN
+}
+
+model user {
+  id              String            @id
+  name            String
+  email           String            @unique
+  password        String
+  status          userStatus
+  created_at      DateTime          @default(now())
+  updated_at      DateTime          @updatedAt
+  userWebhookHost userWebhookHost[]
+}
+
+model userWebhookHost {
+  id           String      @id
+  user_id      String
+  webhook_host String      @unique
+  password     String
+  type         webhookType
+  created_at   DateTime    @default(now())
+  updated_at   DateTime    @updatedAt
+  user         user        @relation(fields: [user_id], references: [id])
+}
+
+enum userStatus {
+  ACTIVE
+  DISABLED
 }
