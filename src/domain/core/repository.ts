@@ -55,7 +55,8 @@ export interface IQuery<Entity> {
 export interface IChargeRepository
   extends ISave<ChargeEntity>,
     IFindOne<ChargeEntity, ChargeProps>,
-    IUpdate<ChargeEntity> {}
+    IUpdate<ChargeEntity>,
+    IFindMany<ChargeEntity, ChargeProps> {}
 export interface IWebhookRepository
   extends ISave<WebhookEntity>,
     ISaveWithOutbox<WebhookEntity, OutboxEntity> {}

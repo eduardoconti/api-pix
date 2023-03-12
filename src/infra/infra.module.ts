@@ -1,12 +1,14 @@
 import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
-import { CacheModule, Logger, Module } from '@nestjs/common';
+import { CacheModule, forwardRef, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
+
+import { AppModule } from '@app/app.module';
 
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
@@ -18,6 +20,7 @@ import {
   provideCleanOutboxService,
   provideElasticSearchConsumer,
   provideOutboxWebhookService,
+  providePayChargeService,
   provideWebhookConsumer,
 } from './infra.provider';
 import {
@@ -104,6 +107,7 @@ import { PrismaService } from './prisma';
       },
     }),
     ScheduleModule.forRoot(),
+    forwardRef(() => AppModule),
   ],
   providers: [
     HttpService,
@@ -119,6 +123,7 @@ import { PrismaService } from './prisma';
     provideElasticSearchConsumer,
     provideOutboxWebhookService,
     provideCleanOutboxService,
+    providePayChargeService,
   ],
   exports: [
     HttpService,

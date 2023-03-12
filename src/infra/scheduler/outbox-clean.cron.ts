@@ -14,8 +14,12 @@ export class CleanOutboxService implements ICronService {
   async handleCron() {
     this.logger.log('Called every 4 hours', 'CleanOutboxService');
 
-    await this.outboxRepository.sql(
-      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
-    );
+    await this.outboxRepository
+      .sql(
+        `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+      )
+      .catch((e) => {
+        this.logger.error(`failed to execute cron CleanOutboxService`, e);
+      });
   }
 }

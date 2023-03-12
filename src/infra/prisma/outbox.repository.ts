@@ -67,7 +67,6 @@ export class OutboxRepository implements IOutboxRepository {
           e,
         );
       });
-
     return models.map((e) => OutBoxModel.toEntity(e as OutBoxModel));
   }
 

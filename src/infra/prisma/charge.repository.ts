@@ -68,4 +68,23 @@ export class ChargeRepository implements IChargeRepository {
       );
     }
   }
+
+  async findMany(
+    params: QueryParams<ChargeProps>,
+  ): Promise<ChargeEntity[] | []> {
+    const model = await this.prismaService.charge
+      .findMany({
+        where: {
+          status: params.status,
+        },
+      })
+      .catch((error) => {
+        throw new ChargeRepositoryException(
+          'failed to find many charge on database',
+          error,
+        );
+      });
+
+    return model.map((e) => ChargeModel.toEntity(e));
+  }
 }

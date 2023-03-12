@@ -1,6 +1,8 @@
 import { Logger, LoggerService, Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
+
 import { IChargeRepository, IExternalLog, ILogger, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
@@ -13,6 +15,7 @@ import { HttpService, IHttpService } from './http-service';
 import { ChargeRepository, OutboxRepository } from './prisma';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
 import { CleanOutboxService, OutboxWebhookService } from './scheduler';
+import { PayChargeService } from './scheduler/pay-charge.cron';
 
 export const provideCelcoinApi: Provider<CelcoinApi> = {
   provide: CelcoinApi,
@@ -60,4 +63,16 @@ export const provideWebhookConsumer: Provider<WebhookConsumer> = {
     return new WebhookConsumer(logger, chargeRepository);
   },
   inject: [Logger, ChargeRepository],
+};
+
+export const providePayChargeService: Provider<PayChargeService> = {
+  provide: PayChargeService,
+  useFactory: (
+    logger: ILogger,
+    chargeRepository: IChargeRepository,
+    webhookUseCase: IReceiveWebhookUseCase,
+  ) => {
+    return new PayChargeService(logger, chargeRepository, webhookUseCase);
+  },
+  inject: [Logger, ChargeRepository, ReceiveWebhookUseCase],
 };

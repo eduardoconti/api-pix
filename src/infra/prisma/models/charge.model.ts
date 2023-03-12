@@ -1,6 +1,5 @@
 import { ChargeEntity, ChargeProvider, ChargeStatus } from '@domain/entities';
 import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
-
 export class ChargeModel {
   id!: string;
   amount!: number;

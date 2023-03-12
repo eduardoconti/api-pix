@@ -21,6 +21,7 @@ describe('CleanOutboxService', () => {
           provide: Logger,
           useValue: {
             log: jest.fn(),
+            error: jest.fn(),
           },
         },
         {
@@ -50,5 +51,15 @@ describe('CleanOutboxService', () => {
     expect(outboxRepository.sql).toBeCalledWith(
       `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
     );
+  });
+
+  it('should log error when sql failed', async () => {
+    jest.spyOn(outboxRepository, 'sql').mockRejectedValue(new Error(''));
+
+    await cleanOutboxService.handleCron();
+    expect(outboxRepository.sql).toBeCalledWith(
+      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+    );
+    expect(logger.error).toBeCalledTimes(1);
   });
 });

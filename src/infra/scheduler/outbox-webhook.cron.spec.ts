@@ -80,4 +80,18 @@ describe('OutboxWebhookService', () => {
     expect(outboxRepository.update).not.toBeCalled();
     expect(queue.add).not.toBeCalled();
   });
+
+  it('should log error when error ocurred', async () => {
+    jest
+      .spyOn(outboxRepository, 'findMany')
+      .mockResolvedValue([mockOutboxEntity]);
+
+    jest.spyOn(queue, 'add').mockRejectedValue(new Error('any'));
+
+    await outboxWebhookService.handleCron();
+    expect(outboxRepository.findMany).toBeCalled();
+    expect(queue.add).toBeCalled();
+    expect(outboxRepository.update).not.toBeCalled();
+    expect(logger.error).toBeCalledTimes(1);
+  });
 });

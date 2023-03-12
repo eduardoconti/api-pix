@@ -24,13 +24,18 @@ export class OutboxWebhookService implements ICronService {
     });
     if (data.length === 0) return;
 
-    await Promise.all(
-      data.map((e) => {
+    data.forEach(async (e) => {
+      try {
         const payload = JSON.parse(e.props.payload) as WebhookModel;
-        this.queue.add(payload);
+        await this.queue.add(payload);
         e.markAsPublished();
-        this.outboxRepository.update(e);
-      }),
-    );
+        await this.outboxRepository.update(e);
+      } catch (error) {
+        this.logger.error(
+          `failed to execute cron OutboxWebhookService for Outbox ${e.id.value}`,
+          error,
+        );
+      }
+    });
   }
 }

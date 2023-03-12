@@ -28,6 +28,7 @@ describe('ChargeRepository', () => {
               create: jest.fn(),
               findFirst: jest.fn(),
               update: jest.fn(),
+              findMany: jest.fn(),
             },
           },
         },
@@ -110,6 +111,27 @@ describe('ChargeRepository', () => {
       await expect(repository.update(mockChargeEntity)).rejects.toThrowError(
         ChargeRepositoryException,
       );
+    });
+  });
+
+  describe('findMany', () => {
+    it('should find charge register', async () => {
+      jest.spyOn(prismaService.charge, 'findMany').mockResolvedValue([model]);
+      const result = await repository.findMany({});
+      expect(result).toStrictEqual([mockChargeEntity]);
+      expect(prismaService.charge.findMany).toBeCalled();
+    });
+
+    it('should throw ChargeRepositoryException when findMany failed', async () => {
+      jest
+        .spyOn(prismaService.charge, 'findMany')
+        .mockRejectedValue(new Error('any'));
+
+      await expect(
+        repository.findMany({
+          id: new UUID(model.id),
+        }),
+      ).rejects.toThrowError(ChargeRepositoryException);
     });
   });
 });
