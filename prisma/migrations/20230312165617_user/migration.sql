@@ -22,7 +22,6 @@ CREATE TABLE "userWebhookHost" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
     "webhook_host" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
     "type" "webhookType" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,

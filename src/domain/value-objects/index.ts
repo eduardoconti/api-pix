@@ -3,3 +3,7 @@ export * from './id.value-object';
 export * from './uuid.value-object';
 export * from './amount.value-object';
 export * from './qr-code-64.value-object';
+export * from './name.value-object';
+export * from './email.value-object';
+export * from './password.value-object';
+export * from './host.value-object';

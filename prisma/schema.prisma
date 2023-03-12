@@ -87,7 +87,6 @@ model userWebhookHost {
   id           String      @id
   user_id      String
   webhook_host String      @unique
-  password     String
   type         webhookType
   created_at   DateTime    @default(now())
   updated_at   DateTime    @updatedAt
