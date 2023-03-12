@@ -15,8 +15,13 @@ export abstract class ExceptionFilter implements NestExceptionFilter {
     const response = ctx.getResponse<Response>();
     const aplicationProblem = this.createAplicationProblem(exception);
 
-    this.logger.error('Aplication Error', aplicationProblem);
-    this.logger.error('Aplication Error', exception.stack);
+    this.logger.error(
+      {
+        ...aplicationProblem,
+        stack: exception.stack,
+      },
+      'CONTROLLER',
+    );
 
     return HttpErrorResponse.send(response, aplicationProblem);
   }
