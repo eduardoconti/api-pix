@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Job } from 'bull';
 
 import {
-  mockChargeEntity,
+  mockPendingChargeEntity,
   mockChargeEntityExpired,
   mockChargeEntityPayed,
   mockWebhookEntity,
@@ -64,7 +64,7 @@ describe('WebhookConsumer', () => {
       const { data, ...rest } = fakeJob;
       jest
         .spyOn(chargeRepository, 'findOne')
-        .mockResolvedValue(mockChargeEntity);
+        .mockResolvedValue(mockPendingChargeEntity);
       await expect(
         webhookConsumer.process({
           ...rest,
@@ -80,11 +80,11 @@ describe('WebhookConsumer', () => {
     it('should process successfully if webhook type is CHARGE_PAYED', async () => {
       jest
         .spyOn(chargeRepository, 'findOne')
-        .mockResolvedValue(mockChargeEntity);
+        .mockResolvedValue(mockPendingChargeEntity);
 
       jest
         .spyOn(chargeRepository, 'update')
-        .mockResolvedValue(mockChargeEntity);
+        .mockResolvedValue(mockPendingChargeEntity);
 
       await webhookConsumer.process(fakeJob);
       expect(chargeRepository.findOne).toBeCalled();
@@ -95,7 +95,7 @@ describe('WebhookConsumer', () => {
       const { data, ...rest } = fakeJob;
       jest
         .spyOn(chargeRepository, 'findOne')
-        .mockResolvedValue(mockChargeEntity);
+        .mockResolvedValue(mockPendingChargeEntity);
 
       await webhookConsumer.process({
         ...rest,

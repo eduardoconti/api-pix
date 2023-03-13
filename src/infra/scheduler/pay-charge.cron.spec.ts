@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
 
-import { mockChargeEntityPayed } from '@domain/__mocks__';
+import { mockActiveChargeEntity } from '@domain/__mocks__';
 import { IChargeRepository, ICronService } from '@domain/core';
 
 import { providePayChargeService } from '@infra/infra.provider';
@@ -61,7 +61,7 @@ describe('PayChargeService', () => {
   it('should handleCron successfully', async () => {
     jest
       .spyOn(chargeRepository, 'findMany')
-      .mockResolvedValue([mockChargeEntityPayed]);
+      .mockResolvedValue([mockActiveChargeEntity]);
 
     await payChargeService.handleCron();
     expect(chargeRepository.findMany).toBeCalledWith({
@@ -80,7 +80,7 @@ describe('PayChargeService', () => {
   it('should log error when usecase failed', async () => {
     jest
       .spyOn(chargeRepository, 'findMany')
-      .mockResolvedValue([mockChargeEntityPayed]);
+      .mockResolvedValue([mockActiveChargeEntity]);
 
     jest
       .spyOn(receiveWebhookUseCase, 'execute')

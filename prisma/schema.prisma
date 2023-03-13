@@ -30,6 +30,7 @@ enum chargeStatus {
   PAYED
   EXPIRED
   FAILED
+  PENDING
 }
 
 model webhook {

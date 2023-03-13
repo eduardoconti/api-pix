@@ -14,7 +14,7 @@ export class RegisterUserWebhookHostInput {
 
   @MaxLength(255)
   @ApiProperty({
-    example: 'http://localhost:3005/pix',
+    example: 'http://api-pix.com.br/pix',
     description:
       'Endpoint para receber notificações de mudança do status da cobrança',
   })

@@ -12,6 +12,7 @@ export enum ChargeStatusEnum {
   PAYED = 'PAYED',
   EXPIRED = 'EXPIRED',
   FAILED = 'FAILED',
+  PENDING = 'PENDING',
 }
 export type ChargeProvider = keyof typeof ChargeProviderEnum;
 export type ChargeStatus = keyof typeof ChargeStatusEnum;
@@ -49,7 +50,7 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
       id,
       props: {
         amount: new Amount(amount),
-        status: 'ACTIVE',
+        status: ChargeStatusEnum.PENDING,
         provider,
       },
     });
@@ -59,7 +60,7 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
         aggregateId: entity.id.value,
         amount,
         provider,
-        status: 'ACTIVE',
+        status: entity.props.status,
       }),
     );
     return entity;
@@ -106,5 +107,6 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
     this.props.emv = props.emv;
     this.props.providerId = props.providerId;
     this.props.qrCode = await QrCode64.base64(props.emv);
+    this.props.status = ChargeStatusEnum.ACTIVE;
   }
 }
