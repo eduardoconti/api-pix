@@ -21,6 +21,7 @@ import {
   provideElasticSearchConsumer,
   provideOutboxWebhookService,
   providePayChargeService,
+  provideUserRepository,
   provideWebhookConsumer,
 } from './infra.provider';
 import {
@@ -124,6 +125,7 @@ import { PrismaService } from './prisma';
     provideOutboxWebhookService,
     provideCleanOutboxService,
     providePayChargeService,
+    provideUserRepository,
   ],
   exports: [
     HttpService,
@@ -136,6 +138,7 @@ import { PrismaService } from './prisma';
     WebhookRepository,
     OutboxRepository,
     provideCelcoinApi,
+    provideUserRepository,
   ],
 })
 export class InfraModule {}

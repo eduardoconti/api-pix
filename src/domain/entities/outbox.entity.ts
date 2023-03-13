@@ -6,6 +6,7 @@ import { UUID } from '@domain/value-objects';
 export enum AggregateTypeEnum {
   WEBHOOK = 'WEBHOOK',
   CHARGE = 'CHARGE',
+  USER = 'USER',
 }
 
 export type OutboxAggregateType = keyof typeof AggregateTypeEnum;

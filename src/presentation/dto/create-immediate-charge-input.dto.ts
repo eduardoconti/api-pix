@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsPositive, ValidateNested } from 'class-validator';
+import { IsInt, IsOptional, IsPositive, ValidateNested } from 'class-validator';
 
 import { CreateImmediateChargeOnPspInput } from '@app/contracts';
 
@@ -34,6 +34,7 @@ export class CreateImmediateChargeInput {
     description: 'valor em segundos.',
   })
   @IsInt()
+  @IsOptional()
   expiration?: number;
 
   static mapToUseCaseInput(

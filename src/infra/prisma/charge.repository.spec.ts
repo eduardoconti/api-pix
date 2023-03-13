@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { mockChargeEntity } from '@domain/__mocks__';
+import { mockPendingChargeEntity } from '@domain/__mocks__';
 import { UUID } from '@domain/value-objects';
 
 import {
@@ -12,7 +12,7 @@ import { ChargeRepository } from './charge.repository';
 import { ChargeModel } from './models';
 import { PrismaService } from './prisma.service';
 
-const model = ChargeModel.fromEntity(mockChargeEntity);
+const model = ChargeModel.fromEntity(mockPendingChargeEntity);
 describe('ChargeRepository', () => {
   let repository: ChargeRepository;
   let prismaService: PrismaService;
@@ -47,7 +47,7 @@ describe('ChargeRepository', () => {
     it('should create a new charge using PrismaService', async () => {
       jest.spyOn(prismaService.charge, 'create').mockResolvedValue(model);
 
-      await repository.save(mockChargeEntity);
+      await repository.save(mockPendingChargeEntity);
       expect(prismaService.charge.create).toHaveBeenCalledWith({ data: model });
     });
 
@@ -56,9 +56,9 @@ describe('ChargeRepository', () => {
         .spyOn(prismaService.charge, 'create')
         .mockRejectedValue(new Error('any'));
 
-      await expect(repository.save(mockChargeEntity)).rejects.toThrowError(
-        ChargeRepositoryException,
-      );
+      await expect(
+        repository.save(mockPendingChargeEntity),
+      ).rejects.toThrowError(ChargeRepositoryException);
     });
   });
 
@@ -68,7 +68,7 @@ describe('ChargeRepository', () => {
       const result = await repository.findOne({
         id: new UUID(model.id),
       });
-      expect(result).toStrictEqual(mockChargeEntity);
+      expect(result).toStrictEqual(mockPendingChargeEntity);
       expect(prismaService.charge.findFirst).toBeCalled();
     });
 
@@ -98,8 +98,8 @@ describe('ChargeRepository', () => {
   describe('update', () => {
     it('should update charge register', async () => {
       jest.spyOn(prismaService.charge, 'update').mockResolvedValue(model);
-      const result = await repository.update(mockChargeEntity);
-      expect(result).toStrictEqual(mockChargeEntity);
+      const result = await repository.update(mockPendingChargeEntity);
+      expect(result).toStrictEqual(mockPendingChargeEntity);
       expect(prismaService.charge.update).toBeCalled();
     });
 
@@ -108,9 +108,9 @@ describe('ChargeRepository', () => {
         .spyOn(prismaService.charge, 'update')
         .mockRejectedValue(new Error('any'));
 
-      await expect(repository.update(mockChargeEntity)).rejects.toThrowError(
-        ChargeRepositoryException,
-      );
+      await expect(
+        repository.update(mockPendingChargeEntity),
+      ).rejects.toThrowError(ChargeRepositoryException);
     });
   });
 
@@ -118,7 +118,7 @@ describe('ChargeRepository', () => {
     it('should find charge register', async () => {
       jest.spyOn(prismaService.charge, 'findMany').mockResolvedValue([model]);
       const result = await repository.findMany({});
-      expect(result).toStrictEqual([mockChargeEntity]);
+      expect(result).toStrictEqual([mockPendingChargeEntity]);
       expect(prismaService.charge.findMany).toBeCalled();
     });
 

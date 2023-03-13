@@ -3,8 +3,11 @@ import {
   ChargeProps,
   OutboxEntity,
   OutboxProps,
+  UserEntity,
+  UserProps,
   WebhookEntity,
 } from '@domain/entities';
+import { Email } from '@domain/value-objects';
 
 import { ID } from '../value-objects/id.value-object';
 import { BaseEntityProps } from './entity';
@@ -66,3 +69,11 @@ export interface IOutboxRepository
     IFindMany<OutboxEntity, OutboxProps>,
     IFindOne<OutboxEntity, OutboxProps>,
     IQuery<OutboxEntity> {}
+
+export interface IUserRepository
+  extends ISave<UserEntity>,
+    IUpdate<UserEntity>,
+    IFindMany<UserEntity, UserProps>,
+    IFindOne<UserEntity, UserProps> {
+  exists(email: Email): Promise<boolean>;
+}

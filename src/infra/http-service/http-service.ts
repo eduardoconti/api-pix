@@ -7,6 +7,7 @@ type PostProps = {
   url: string;
   body?: any;
   headers?: any;
+  timeOut?: number;
 };
 export interface IHttpService {
   post<Response>(props: PostProps): Promise<Response>;
@@ -26,6 +27,7 @@ export class HttpService implements IHttpService {
         props.body,
         {
           headers: props.headers,
+          timeout: props.timeOut ?? 5000,
         },
       );
 

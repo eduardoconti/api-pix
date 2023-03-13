@@ -7,6 +7,7 @@ import {
   provideCreateImmediateChargeUseCase,
   providePspService,
   provideReceiveWebhookUseCase,
+  provideRegisterUserUseCase,
 } from './app.provider';
 @Module({
   imports: [InfraModule],
@@ -15,11 +16,13 @@ import {
     provideCreateImmediateChargeUseCase,
     provideChargeCreatedListener,
     provideReceiveWebhookUseCase,
+    provideRegisterUserUseCase,
   ],
   exports: [
     providePspService,
     provideCreateImmediateChargeUseCase,
     provideReceiveWebhookUseCase,
+    provideRegisterUserUseCase,
   ],
 })
 export class AppModule {}
