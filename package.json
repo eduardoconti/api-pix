@@ -58,6 +58,7 @@
     "@semantic-release/commit-analyzer": "^9.0.2",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^8.0.7",
+    "@semantic-release/npm": "^9.0.2",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/bcrypt": "^5.0.0",
     "@types/bull": "^4.10.0",
@@ -118,5 +119,15 @@
       "^@main/(.*)$": "<rootDir>/../src/main/$1",
       "^@presentation/(.*)$": "<rootDir>/../src/presentation/$1"
     }
+  },
+  "release": {
+    "branches": ["master", "actions"],
+    "repositoryUrl": "https://github.com/eduardoconti/api-pix.git",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
   }
 }
