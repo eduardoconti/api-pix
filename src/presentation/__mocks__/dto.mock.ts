@@ -1,4 +1,7 @@
-import { CreateImmediateChargeInput } from '@presentation/dto';
+import {
+  CreateImmediateChargeInput,
+  RegisterUserInput,
+} from '@presentation/dto';
 
 export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
   debtor: {
@@ -13,4 +16,16 @@ export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
     name: 'Eduardo Dev',
   },
   expiration: 3600,
+};
+
+export const mockRegisterUserInput: RegisterUserInput = {
+  name: 'Eduardo Ferreira Conti',
+  email: 'es.eduardoconti@gmail.com',
+  password: 'teste@123',
+  webhook_host: [
+    {
+      type: 'CHARGE_PAYED',
+      host: 'http://localhost:3000/pix',
+    },
+  ],
 };

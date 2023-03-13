@@ -12,7 +12,12 @@ import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
 import { ElasticSearch } from './elastic';
 import { HttpService, IHttpService } from './http-service';
-import { ChargeRepository, OutboxRepository } from './prisma';
+import {
+  ChargeRepository,
+  OutboxRepository,
+  PrismaService,
+  UserRepository,
+} from './prisma';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
 import { CleanOutboxService, OutboxWebhookService } from './scheduler';
 import { PayChargeService } from './scheduler/pay-charge.cron';
@@ -75,4 +80,12 @@ export const providePayChargeService: Provider<PayChargeService> = {
     return new PayChargeService(logger, chargeRepository, webhookUseCase);
   },
   inject: [Logger, ChargeRepository, ReceiveWebhookUseCase],
+};
+
+export const provideUserRepository: Provider<UserRepository> = {
+  provide: UserRepository,
+  useFactory: (prismaService: PrismaService) => {
+    return new UserRepository(prismaService);
+  },
+  inject: [PrismaService],
 };

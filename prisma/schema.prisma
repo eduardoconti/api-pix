@@ -86,7 +86,7 @@ model user {
 model userWebhookHost {
   id           String      @id
   user_id      String
-  webhook_host String      @unique
+  webhook_host String      
   type         webhookType
   created_at   DateTime    @default(now())
   updated_at   DateTime    @updatedAt

@@ -23,6 +23,7 @@ export class PayChargeService implements ICronService {
     if (data.length === 0) return;
 
     data.forEach(async (e) => {
+      if (!e.props.providerId) return;
       try {
         await this.webhookUseCase.execute({
           amount: e.props.amount.value,

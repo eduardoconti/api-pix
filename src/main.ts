@@ -35,6 +35,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addServer(`http://localhost:${configService.get('PORT')}`, 'Local')
     .addTag('health-check', 'Endpoints para monitoramento da api')
+    .addTag('user', 'Endpoints para gerenciamento de usuário')
     .addTag('charge', 'Endpoints para gerenciamento de cobrança pix')
     .addTag('webhook', 'Endpoints para gerenciamento de webhook')
     .build();

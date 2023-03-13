@@ -32,8 +32,5 @@ CREATE TABLE "userWebhookHost" (
 -- CreateIndex
 CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
 
--- CreateIndex
-CREATE UNIQUE INDEX "userWebhookHost_webhook_host_key" ON "userWebhookHost"("webhook_host");
-
 -- AddForeignKey
 ALTER TABLE "userWebhookHost" ADD CONSTRAINT "userWebhookHost_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

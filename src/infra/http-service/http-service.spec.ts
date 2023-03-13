@@ -72,7 +72,7 @@ describe('HttpService', () => {
     expect(mockPost).toHaveBeenCalledWith(
       'http://example.com',
       { foo: 'bar' },
-      { headers: { Authorization: 'Bearer token' } },
+      { headers: { Authorization: 'Bearer token' }, timeout: 5000 },
     );
 
     expect(mockLogger.log).toBeCalledTimes(3);
@@ -93,6 +93,7 @@ describe('HttpService', () => {
 
     expect(mockPost).toHaveBeenCalledWith('http://example.com', undefined, {
       headers: { Authorization: 'Bearer token' },
+      timeout: 5000,
     });
 
     expect(mockLogger.log).toBeCalledTimes(3);

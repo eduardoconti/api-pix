@@ -6,3 +6,5 @@ export * from './outbox-repository.exception';
 export * from './psp-authentication.exception';
 export * from './webhook-repository.exception';
 export * from './outbox-not-found.exception';
+export * from './user-not-found.exception';
+export * from './user-repository.exception';

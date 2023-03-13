@@ -14,6 +14,8 @@ export type UserWebhookHosPrimitivesProps = {
   userId: string;
   host: string;
   type: WebhookTypes;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export class UserWebhookHost extends Entity<UserWebhookHostProps> {
@@ -23,7 +25,10 @@ export class UserWebhookHost extends Entity<UserWebhookHostProps> {
     userId,
     host,
     type,
-  }: Omit<UserWebhookHosPrimitivesProps, 'id'>): UserWebhookHost {
+  }: Omit<
+    UserWebhookHosPrimitivesProps,
+    'id' | 'createdAt' | 'updatedAt'
+  >): UserWebhookHost {
     const id = UUID.generate();
     return new UserWebhookHost({
       id,

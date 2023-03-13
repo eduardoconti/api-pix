@@ -4,6 +4,7 @@ import { AppModule } from '@app/app.module';
 
 import { CreateImmediateChargeController } from './controllers/create-charge';
 import { HealthCheckController } from './controllers/health-check';
+import { RegisterUserController } from './controllers/user';
 import { ReceiveCelcoinWebhookController } from './controllers/webhook';
 
 @Module({
@@ -12,6 +13,7 @@ import { ReceiveCelcoinWebhookController } from './controllers/webhook';
     HealthCheckController,
     CreateImmediateChargeController,
     ReceiveCelcoinWebhookController,
+    RegisterUserController,
   ],
 })
 export class PresentationModule {}
