@@ -21,15 +21,18 @@ export class UserRepository implements IUserRepository {
       const { userWebhookHost, ...rest } = UserModel.fromEntity(entity);
       const prismaModel = {
         ...rest,
-        userWebhookHost: {
-          create: [
-            ...userWebhookHost.map(
-              ({ created_at, id, type, updated_at, webhook_host }) => {
-                return { created_at, id, type, updated_at, webhook_host };
-              },
-            ),
-          ],
-        },
+
+        userWebhookHost: userWebhookHost
+          ? {
+              create: [
+                ...userWebhookHost.map(
+                  ({ created_at, id, type, updated_at, webhook_host }) => {
+                    return { created_at, id, type, updated_at, webhook_host };
+                  },
+                ),
+              ],
+            }
+          : undefined,
       };
       const saved = await this.prismaService.user.create({
         data: prismaModel,

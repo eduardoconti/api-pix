@@ -12,7 +12,7 @@ export type RegisterUserUseCaseInput = {
   name: string;
   email: string;
   password: string;
-  webhookHost: { type: WebhookTypes; host: string }[];
+  webhookHost?: { type: WebhookTypes; host: string }[];
 };
 
 export type IRegisterUserUseCase = IUseCase<
@@ -43,7 +43,7 @@ export class RegisterUserUseCase implements IRegisterUserUseCase {
     return {
       name: userProps.name,
       email: userProps.email,
-      webhookHost: userProps.webhookHost.map(({ type, host }) => {
+      webhookHost: userProps.webhookHost?.map(({ type, host }) => {
         return {
           type,
           host,

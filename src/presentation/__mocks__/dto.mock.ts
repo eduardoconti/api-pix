@@ -29,3 +29,9 @@ export const mockRegisterUserInput: RegisterUserInput = {
     },
   ],
 };
+
+export const mockRegisterUserInputRequiredFields: RegisterUserInput = {
+  name: 'Eduardo Ferreira Conti',
+  email: 'es.eduardoconti@gmail.com',
+  password: 'teste@123',
+};

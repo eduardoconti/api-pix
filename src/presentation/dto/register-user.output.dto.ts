@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { RegisterUserUseCaseOutput } from '@app/use-cases';
 
@@ -20,11 +20,11 @@ export class RegisterUserOutput {
   })
   email!: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     isArray: true,
     type: RegisterUserWebhookHostInput,
   })
-  webhook_host!: RegisterUserWebhookHostInput[];
+  webhook_host?: RegisterUserWebhookHostInput[];
 
   static fromUseCaseOutput({
     name,

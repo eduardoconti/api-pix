@@ -1,5 +1,5 @@
 # Primeira etapa: etapa de construção
-FROM node:16.16-alpine3.16 AS build
+FROM node:18.12.0-alpine AS build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY . .
 RUN yarn build
 
 # Segunda etapa: etapa de execução
-FROM node:16.16-alpine3.16
+FROM node:18.12.0-alpine
 
 WORKDIR /app
 

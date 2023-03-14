@@ -18,7 +18,7 @@ export class UserModel {
   status!: UserStatus;
   created_at!: Date;
   updated_at!: Date;
-  userWebhookHost!: UserWebhookHostModel[];
+  userWebhookHost?: UserWebhookHostModel[];
 
   static fromEntity(userEntity: UserEntity): UserModel {
     const {
@@ -38,7 +38,7 @@ export class UserModel {
       email,
       password,
       status,
-      userWebhookHost: webhookHost.map((e) => {
+      userWebhookHost: webhookHost?.map((e) => {
         return {
           id: e.id,
           webhook_host: e.host,
@@ -72,7 +72,7 @@ export class UserModel {
         email: new Email(email),
         password: new Password(password),
         status,
-        webhookHost: userWebhookHost.map(
+        webhookHost: userWebhookHost?.map(
           ({ id, webhook_host, created_at, type, updated_at, user_id }) => {
             return new UserWebhookHost({
               id: new UUID(id),

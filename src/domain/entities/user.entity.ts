@@ -1,10 +1,12 @@
 import { AggregateRoot } from '@domain/core';
+import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { Email, Name, Password, UUID } from '../value-objects';
 import {
   UserWebhookHosPrimitivesProps,
   UserWebhookHost,
 } from './user-webhook-host.entity';
+import { WebhookTypesEnum } from './webhook.entity';
 
 export enum UserStatusEnum {
   ACTIVE = 'ACTIVE',
@@ -18,7 +20,7 @@ export type UserProps = {
   email: Email;
   password: Password;
   status: UserStatus;
-  webhookHost: UserWebhookHost[];
+  webhookHost?: UserWebhookHost[];
 };
 
 export type UserPrimitivesProps = {
@@ -27,7 +29,7 @@ export type UserPrimitivesProps = {
   email: string;
   password: string;
   status: UserStatus;
-  webhookHost: UserWebhookHosPrimitivesProps[];
+  webhookHost?: UserWebhookHosPrimitivesProps[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -36,7 +38,7 @@ type CreateUserEntity = Pick<
   UserPrimitivesProps,
   'name' | 'email' | 'password'
 > & {
-  webhookHost: Pick<UserWebhookHosPrimitivesProps, 'host' | 'type'>[];
+  webhookHost?: Pick<UserWebhookHosPrimitivesProps, 'host' | 'type'>[];
 };
 
 export class UserEntity extends AggregateRoot<UserProps> {
@@ -49,22 +51,20 @@ export class UserEntity extends AggregateRoot<UserProps> {
     webhookHost,
   }: CreateUserEntity): Promise<UserEntity> {
     const id = UUID.generate();
-    return new UserEntity({
+    const entity = new UserEntity({
       id,
       props: {
         name: new Name(name),
         email: new Email(email),
         password: await Password.hash(password),
         status: UserStatusEnum.ACTIVE,
-        webhookHost: webhookHost?.map(({ host, type }) =>
-          UserWebhookHost.create({
-            userId: id.value,
-            host,
-            type,
-          }),
-        ),
       },
     });
+
+    if (webhookHost && webhookHost.length) {
+      entity.addWebhookHost(webhookHost);
+    }
+    return entity;
   }
 
   static toPrimitives({
@@ -79,7 +79,7 @@ export class UserEntity extends AggregateRoot<UserProps> {
       email: props.email.value,
       password: props.password.value,
       status: props.status,
-      webhookHost: props.webhookHost.map(
+      webhookHost: props.webhookHost?.map(
         ({ props: { host, type, userId }, createdAt, updatedAt, id }) => {
           return {
             id: id.value,
@@ -94,5 +94,30 @@ export class UserEntity extends AggregateRoot<UserProps> {
       createdAt: createdAt.value,
       updatedAt: updatedAt.value,
     };
+  }
+
+  addWebhookHost(
+    webhookHost: Pick<UserWebhookHosPrimitivesProps, 'host' | 'type'>[],
+  ): void {
+    const webhookTypesUtilized: Record<WebhookTypesEnum, boolean> = {
+      CHARGE_PAYED: false,
+      CHARGE_REFUNDED: false,
+    };
+
+    webhookHost.forEach(({ type }) => {
+      if (webhookTypesUtilized[type]) {
+        throw new ArgumentInvalidException(`duplicated webhook type ${type}`);
+      }
+
+      webhookTypesUtilized[type] = true;
+
+      this.props.webhookHost = webhookHost.map(({ host, type }) =>
+        UserWebhookHost.create({
+          userId: this.id.value,
+          host,
+          type,
+        }),
+      );
+    });
   }
 }

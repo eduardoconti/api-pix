@@ -1,6 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
@@ -40,11 +42,13 @@ export class RegisterUserInput {
     each: true,
   })
   @Type(() => RegisterUserWebhookHostInput)
-  @ApiProperty({
+  @IsOptional()
+  @ArrayMinSize(1)
+  @ApiPropertyOptional({
     isArray: true,
     type: RegisterUserWebhookHostInput,
   })
-  webhook_host!: RegisterUserWebhookHostInput[];
+  webhook_host?: RegisterUserWebhookHostInput[];
 
   static toUseCaseInput({
     name,

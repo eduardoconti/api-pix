@@ -20,7 +20,7 @@ export class RegisterUserController {
 
   @Post('')
   @ApiOperation({
-    summary: 'Registra novo usuáro',
+    summary: 'Registra novo usuário',
     description: 'Rota para registrar um novo usuário',
   })
   @ApiSuccessResponse({
@@ -36,7 +36,6 @@ export class RegisterUserController {
       await this.registerUserUseCase.execute(
         RegisterUserInput.toUseCaseInput(data),
       );
-
     return { id, email, name, webhook_host: webhookHost };
   }
 }
