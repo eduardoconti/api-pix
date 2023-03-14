@@ -2,13 +2,21 @@ import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule, forwardRef, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
+import { PrismaClient } from '@prisma/client';
+import * as Sentry from '@sentry/node';
+import { ProfilingIntegration } from '@sentry/profiling-node';
+import * as Tracing from '@sentry/tracing';
 import * as redisStore from 'cache-manager-redis-store';
 import type { ClientOpts } from 'redis';
 
 import { AppModule } from '@app/app.module';
+
+import { BaseException } from '@domain/exceptions';
 
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
@@ -30,6 +38,7 @@ import {
   OutboxRepository,
 } from './prisma';
 import { PrismaService } from './prisma';
+import { SentryMonitorError } from './sentry';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -109,6 +118,38 @@ import { PrismaService } from './prisma';
     }),
     ScheduleModule.forRoot(),
     forwardRef(() => AppModule),
+    SentryModule.forRootAsync({
+      inject: [ConfigService],
+      imports: [],
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
+        dsn: configService.get('SENTRY_DSN'),
+        debug: true,
+        tracesSampleRate: 1.0,
+        profilesSampleRate: 1.0,
+        attachStacktrace: true,
+        environment: configService.get('NODE_ENV'),
+        integrations: [
+          new Sentry.Integrations.Http({ tracing: true }),
+          new Tracing.Integrations.Express(),
+          new ProfilingIntegration(),
+          new Tracing.Integrations.Prisma({ client: new PrismaClient() }),
+        ],
+        logLevels: ['debug'],
+        beforeSend(event, hint) {
+          const exception = hint?.originalException;
+          if (exception instanceof BaseException) {
+            event.extra = {
+              message: exception.message,
+              metadata: exception?.metadata,
+            };
+          }
+
+          return event;
+        },
+      }),
+    }),
   ],
   providers: [
     HttpService,
@@ -126,6 +167,11 @@ import { PrismaService } from './prisma';
     provideCleanOutboxService,
     providePayChargeService,
     provideUserRepository,
+    SentryMonitorError,
+    {
+      provide: APP_INTERCEPTOR,
+      useFactory: () => new SentryInterceptor(),
+    },
   ],
   exports: [
     HttpService,
@@ -139,6 +185,7 @@ import { PrismaService } from './prisma';
     OutboxRepository,
     provideCelcoinApi,
     provideUserRepository,
+    SentryMonitorError,
   ],
 })
 export class InfraModule {}

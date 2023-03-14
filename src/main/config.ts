@@ -1,6 +1,7 @@
 import * as Joi from 'joi';
 
 export interface EnvironmentVariables {
+  NODE_ENV: string;
   PORT: number;
   DB_HOST: string;
   DB_USER: string;
@@ -15,11 +16,13 @@ export interface EnvironmentVariables {
   REDIS_PORT: string;
   ELASTIC_HOST: number;
   ELASTIC_PORT: string;
+  SENTRY_DSN: string;
 }
 
 export const configValidationSchema = Joi.object({
   // APP
   PORT: Joi.number().required().default(3000),
+  NODE_ENV: Joi.string().required(),
   // DB
   DB_HOST: Joi.string().required(),
   DB_PORT: Joi.number().required().default(5432),
@@ -38,4 +41,6 @@ export const configValidationSchema = Joi.object({
   //ELASTIC
   ELASTIC_HOST: Joi.string().required(),
   ELASTIC_PORT: Joi.number().required(),
+  //SENTRY
+  SENTRY_DSN: Joi.string(),
 });
