@@ -66,7 +66,9 @@ describe('CreateImmediateChargeUseCase', () => {
     jest
       .spyOn(chargeRepository, 'save')
       .mockResolvedValue(mockChargeEntityPreRequest);
-    jest.spyOn(chargeRepository, 'update').mockResolvedValue(mockPendingChargeEntity);
+    jest
+      .spyOn(chargeRepository, 'update')
+      .mockResolvedValue(mockPendingChargeEntity);
     jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
   });
 
