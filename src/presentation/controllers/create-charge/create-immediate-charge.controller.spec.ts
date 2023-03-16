@@ -6,7 +6,10 @@ import {
   ICreateImmediateChargeUseCase,
 } from '@app/use-cases';
 
-import { mockCreateImmediateChargeInput } from '@presentation/__mocks__/dto.mock';
+import {
+  mockCreateImmediateChargeInput,
+  mockTokenPayload,
+} from '@presentation/__mocks__';
 
 import { CreateImmediateChargeController } from './create-immediate-charge.controller';
 
@@ -48,6 +51,7 @@ describe('CreateImmediateChargeController', () => {
     });
     const result = await createImmediateChargeController.handle(
       mockCreateImmediateChargeInput,
+      mockTokenPayload,
     );
     expect(result).toBeDefined();
     expect(result).toEqual(

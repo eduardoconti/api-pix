@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
 import { PrismaClient } from '@prisma/client';
@@ -39,6 +41,8 @@ import {
 } from './prisma';
 import { PrismaService } from './prisma';
 import { SentryMonitorError } from './sentry';
+import { JwtStrategy } from './strategy/auth';
+import { LocalStrategy } from './strategy/auth/local.strategy';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -150,6 +154,16 @@ import { SentryMonitorError } from './sentry';
         },
       }),
     }),
+    PassportModule,
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
+        secret: configService.getOrThrow('JWT_KEY'),
+        signOptions: { expiresIn: '1d' },
+      }),
+    }),
   ],
   providers: [
     HttpService,
@@ -172,6 +186,8 @@ import { SentryMonitorError } from './sentry';
       provide: APP_INTERCEPTOR,
       useFactory: () => new SentryInterceptor(),
     },
+    LocalStrategy,
+    JwtStrategy,
   ],
   exports: [
     HttpService,
@@ -186,6 +202,7 @@ import { SentryMonitorError } from './sentry';
     provideCelcoinApi,
     provideUserRepository,
     SentryMonitorError,
+    JwtModule,
   ],
 })
 export class InfraModule {}

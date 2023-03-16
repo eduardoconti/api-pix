@@ -16,6 +16,7 @@ import {
   CreateImmediateChargeUseCase,
   ReceiveWebhookUseCase,
   RegisterUserUseCase,
+  UserAuthUseCase,
 } from './use-cases';
 
 export const provideCreateImmediateChargeUseCase: Provider<CreateImmediateChargeUseCase> =
@@ -63,6 +64,14 @@ export const provideRegisterUserUseCase: Provider<RegisterUserUseCase> = {
   provide: RegisterUserUseCase,
   useFactory: (userRepository: IUserRepository) => {
     return new RegisterUserUseCase(userRepository);
+  },
+  inject: [UserRepository],
+};
+
+export const provideUserAuthUseCase: Provider<UserAuthUseCase> = {
+  provide: UserAuthUseCase,
+  useFactory: (userRepository: IUserRepository) => {
+    return new UserAuthUseCase(userRepository);
   },
   inject: [UserRepository],
 };

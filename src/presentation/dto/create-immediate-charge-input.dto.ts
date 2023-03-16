@@ -1,6 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, IsPositive, ValidateNested } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmptyObject,
+  IsOptional,
+  IsPositive,
+  ValidateNested,
+} from 'class-validator';
 
 import { CreateImmediateChargeOnPspInput } from '@app/contracts';
 
@@ -14,6 +20,7 @@ export class CreateImmediateChargeInput {
   @DebtorInputProperty()
   @ValidateNested()
   @Type(() => DebtorInput)
+  @IsNotEmptyObject()
   debtor!: DebtorInput;
 
   @ApiProperty({
@@ -27,6 +34,7 @@ export class CreateImmediateChargeInput {
   @ApiProperty()
   @ValidateNested()
   @Type(() => MerchantInput)
+  @IsNotEmptyObject()
   merchant!: MerchantInput;
 
   @ApiPropertyOptional({

@@ -1,10 +1,21 @@
-import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  Inject,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { TokenPayload } from '@app/contracts';
 import {
   CreateImmediateChargeUseCase,
   ICreateImmediateChargeUseCase,
 } from '@app/use-cases';
+
+import { User } from '@infra/decorators/user.decorator';
+import { JwtAuthGuard } from '@infra/guard';
 
 import {
   ApiInternalServerErrorResponse,
@@ -35,9 +46,12 @@ export class CreateImmediateChargeController {
     title: 'CreateImmediateChargeException',
     detail: 'failed to create imediate cob on Celcoin',
   })
+  @UseGuards(JwtAuthGuard)
   async handle(
     @Body() data: CreateImmediateChargeInput,
+    @User() user: TokenPayload,
   ): Promise<CreateImmediateChargeOutput> {
+    console.log(user);
     const result = await this.createImmediateChargeUseCase.execute(
       CreateImmediateChargeInput.mapToUseCaseInput(data),
     );

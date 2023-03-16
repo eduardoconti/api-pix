@@ -17,6 +17,7 @@ export interface EnvironmentVariables {
   ELASTIC_HOST: number;
   ELASTIC_PORT: string;
   SENTRY_DSN: string;
+  JWT_KEY: string;
 }
 
 export const configValidationSchema = Joi.object({
@@ -43,4 +44,5 @@ export const configValidationSchema = Joi.object({
   ELASTIC_PORT: Joi.number().required(),
   //SENTRY
   SENTRY_DSN: Joi.string(),
+  JWT_KEY: Joi.string().required(),
 });
