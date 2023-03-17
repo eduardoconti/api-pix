@@ -40,7 +40,7 @@ export const configValidationSchema = Joi.object({
   // REDIS
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
-  REDIS_PASSWORD: Joi.number().required(),
+  REDIS_PASSWORD: Joi.string().required(),
   //ELASTIC
   ELASTIC_HOST: Joi.string(),
   ELASTIC_PORT: Joi.number(),
