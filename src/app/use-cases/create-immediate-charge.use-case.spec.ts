@@ -2,7 +2,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  mockCreateImmediateChargeOnPspInput,
+  mockCreateImmediateChargeUseCaseInput,
   mockCreateImmediateChargeOnPSPResponse,
 } from '@app/__mocks__';
 import { provideCreateImmediateChargeUseCase } from '@app/app.provider';
@@ -85,7 +85,7 @@ describe('CreateImmediateChargeUseCase', () => {
         .mockResolvedValue(mockCreateImmediateChargeOnPSPResponse);
 
       const result = await createImmediateChargeUseCase.execute(
-        mockCreateImmediateChargeOnPspInput,
+        mockCreateImmediateChargeUseCaseInput,
       );
       expect(result).toBeDefined();
       expect(pspService.createImmediateCharge).toBeCalled();
@@ -100,7 +100,7 @@ describe('CreateImmediateChargeUseCase', () => {
         .mockRejectedValue(new Error('any'));
       await expect(
         createImmediateChargeUseCase.execute(
-          mockCreateImmediateChargeOnPspInput,
+          mockCreateImmediateChargeUseCaseInput,
         ),
       ).rejects.toThrowError(CreateChargeException);
       expect(chargeRepository.save).toBeCalled();
@@ -115,7 +115,7 @@ describe('CreateImmediateChargeUseCase', () => {
         .mockRejectedValue(new CreateImmediateChargeException('any'));
       await expect(
         createImmediateChargeUseCase.execute(
-          mockCreateImmediateChargeOnPspInput,
+          mockCreateImmediateChargeUseCaseInput,
         ),
       ).rejects.toThrowError(CreateImmediateChargeException);
       expect(pspService.createImmediateCharge).toBeCalled();

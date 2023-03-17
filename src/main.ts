@@ -35,9 +35,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .addServer(`http://localhost:${configService.get('PORT')}`, 'Local')
     .addTag('health-check', 'Endpoints para monitoramento da api')
+    .addTag('auth', 'Endpoints para autenticação')
     .addTag('user', 'Endpoints para gerenciamento de usuário')
     .addTag('charge', 'Endpoints para gerenciamento de cobrança pix')
     .addTag('webhook', 'Endpoints para gerenciamento de webhook')
+    .addBearerAuth({
+      type: 'http',
+      description: 'Todos os endpoints precisam do token de acesso!',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

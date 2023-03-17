@@ -28,8 +28,11 @@ export type CreateImmediateChargeUseCaseOutput = {
   emv: string;
 };
 
+export type CreateImmediateChargeUseCaseInput =
+  CreateImmediateChargeOnPspInput & { userId: string };
+
 export type ICreateImmediateChargeUseCase = IUseCase<
-  CreateImmediateChargeOnPspInput,
+  CreateImmediateChargeUseCaseInput,
   CreateImmediateChargeUseCaseOutput
 >;
 export class CreateImmediateChargeUseCase
@@ -45,10 +48,12 @@ export class CreateImmediateChargeUseCase
     calendar,
     debtor,
     merchant,
-  }: CreateImmediateChargeOnPspInput) {
+    userId,
+  }: CreateImmediateChargeUseCaseInput) {
     const charge = ChargeEntity.create({
       amount: amount,
       provider: ChargeProviderEnum.CELCOIN,
+      userId,
     });
 
     await this.chargeRepository.save(charge);

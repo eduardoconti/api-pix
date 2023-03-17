@@ -8,7 +8,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { CreateImmediateChargeOnPspInput } from '@app/contracts';
+import { CreateImmediateChargeUseCaseInput } from '@app/use-cases';
 
 import { DebtorInputProperty } from '@presentation/__docs__/properties';
 
@@ -46,13 +46,14 @@ export class CreateImmediateChargeInput {
   expiration?: number;
 
   static mapToUseCaseInput(
-    input: CreateImmediateChargeInput,
-  ): CreateImmediateChargeOnPspInput {
+    input: CreateImmediateChargeInput & { userId: string },
+  ): CreateImmediateChargeUseCaseInput {
     const {
       debtor,
       amount,
       expiration,
       merchant: { postal_code, city, category_code = '0000', name },
+      userId,
     } = input;
     return {
       debtor,
@@ -60,7 +61,7 @@ export class CreateImmediateChargeInput {
       calendar: {
         expiration: expiration ?? DEFAULT_EXPIRATION,
       },
-
+      userId,
       merchant: {
         city: city,
         name: name,

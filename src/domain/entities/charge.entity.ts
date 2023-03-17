@@ -25,6 +25,7 @@ export type ChargeProps = {
   providerId?: string;
   qrCode?: QrCode64;
   e2eId?: string;
+  userId: UUID;
 };
 
 export type ChargePrimitiveProps = {
@@ -36,22 +37,24 @@ export type ChargePrimitiveProps = {
   providerId?: string;
   qrCode?: string;
   e2eId?: string;
+  userId: string;
 };
 
 export class ChargeEntity extends AggregateRoot<ChargeProps> {
   protected readonly _id!: UUID;
 
   static create(
-    props: Pick<ChargePrimitiveProps, 'amount' | 'provider'>,
+    props: Pick<ChargePrimitiveProps, 'amount' | 'provider' | 'userId'>,
   ): ChargeEntity {
     const id = UUID.generate();
-    const { amount, provider } = props;
+    const { amount, provider, userId } = props;
     const entity = new ChargeEntity({
       id,
       props: {
         amount: new Amount(amount),
         status: ChargeStatusEnum.PENDING,
         provider,
+        userId: new UUID(userId),
       },
     });
 

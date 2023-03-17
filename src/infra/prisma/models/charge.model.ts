@@ -11,6 +11,7 @@ export class ChargeModel {
   e2e_id!: string | null;
   created_at!: Date;
   updated_at!: Date;
+  user_id!: string;
 
   static fromEntity(entity: ChargeEntity): ChargeModel {
     return {
@@ -24,6 +25,7 @@ export class ChargeModel {
       created_at: entity.createdAt.value,
       updated_at: entity.updatedAt.value,
       e2e_id: entity.props?.e2eId ?? null,
+      user_id: entity.props.userId.value,
     };
   }
 
@@ -38,6 +40,7 @@ export class ChargeModel {
     status,
     updated_at,
     e2e_id,
+    user_id,
   }: ChargeModel): ChargeEntity {
     return new ChargeEntity({
       id: new UUID(id),
@@ -51,6 +54,7 @@ export class ChargeModel {
         provider,
         providerId: provider_id ?? undefined,
         e2eId: e2e_id ?? undefined,
+        userId: new UUID(user_id),
       },
     });
   }

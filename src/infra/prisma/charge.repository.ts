@@ -24,7 +24,7 @@ export class ChargeRepository implements IChargeRepository {
       return ChargeModel.toEntity(saved);
     } catch (e) {
       throw new ChargeRepositoryException(
-        'failed to create charge on database',
+        'failed to create charge on databasex',
         e,
       );
     }

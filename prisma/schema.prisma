@@ -20,6 +20,8 @@ model charge {
   e2e_id      String?
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt
+  user_id     String
+  user        user         @relation(fields: [user_id], references: [id])
 
   @@index([status], type: Hash)
   @@index([provider, provider_id], type: BTree)
@@ -82,12 +84,13 @@ model user {
   created_at      DateTime          @default(now())
   updated_at      DateTime          @updatedAt
   userWebhookHost userWebhookHost[]
+  charge          charge[]
 }
 
 model userWebhookHost {
   id           String      @id
   user_id      String
-  webhook_host String      
+  webhook_host String
   type         webhookType
   created_at   DateTime    @default(now())
   updated_at   DateTime    @updatedAt

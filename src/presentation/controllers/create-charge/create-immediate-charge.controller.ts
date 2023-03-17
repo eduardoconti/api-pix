@@ -6,7 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { TokenPayload } from '@app/contracts';
 import {
@@ -28,6 +28,7 @@ import {
 } from '@presentation/dto';
 @ApiTags('charge')
 @Controller('immediate-charge')
+@ApiBearerAuth()
 export class CreateImmediateChargeController {
   constructor(
     @Inject(CreateImmediateChargeUseCase)
@@ -51,9 +52,11 @@ export class CreateImmediateChargeController {
     @Body() data: CreateImmediateChargeInput,
     @User() user: TokenPayload,
   ): Promise<CreateImmediateChargeOutput> {
-    console.log(user);
     const result = await this.createImmediateChargeUseCase.execute(
-      CreateImmediateChargeInput.mapToUseCaseInput(data),
+      CreateImmediateChargeInput.mapToUseCaseInput({
+        ...data,
+        userId: user.userId,
+      }),
     );
     return CreateImmediateChargeOutput.mapFromUseCaseOutput(result);
   }

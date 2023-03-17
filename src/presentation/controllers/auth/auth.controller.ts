@@ -1,5 +1,6 @@
 import { Controller, Req, Post, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 
 import { UserAuthUseCaseOutput } from '@app/use-cases';
@@ -7,6 +8,7 @@ import { UserAuthUseCaseOutput } from '@app/use-cases';
 import { LocalAuthGuard } from '@infra/guard';
 
 @Controller()
+@ApiTags('auth')
 export class AuthController {
   constructor(private jwtService: JwtService) {}
   @UseGuards(LocalAuthGuard)

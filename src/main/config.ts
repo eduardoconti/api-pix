@@ -40,8 +40,8 @@ export const configValidationSchema = Joi.object({
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
   //ELASTIC
-  ELASTIC_HOST: Joi.string().required(),
-  ELASTIC_PORT: Joi.number().required(),
+  ELASTIC_HOST: Joi.string(),
+  ELASTIC_PORT: Joi.number(),
   //SENTRY
   SENTRY_DSN: Joi.string(),
   JWT_KEY: Joi.string().required(),
