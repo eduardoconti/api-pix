@@ -48,6 +48,7 @@ export class UserRepository implements IUserRepository {
       .findFirst({
         where: {
           id: params?.id?.value,
+          email: params.email?.value,
         },
         include: {
           userWebhookHost: true,

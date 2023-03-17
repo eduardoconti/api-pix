@@ -80,7 +80,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     }),
     ElasticsearchModule.registerAsync({
       useFactory: async (config: ConfigService<EnvironmentVariables>) => ({
-        node: config.getOrThrow('ELASTIC_HOST'),
+        node: config.get('ELASTIC_HOST'),
         name: 'elastic',
         maxRetries: 5,
       }),
