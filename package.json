@@ -147,5 +147,8 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
+  },
+  "engines": {
+    "node": "18.12.0"
   }
 }
