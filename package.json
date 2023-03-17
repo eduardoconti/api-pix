@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -147,8 +148,5 @@
       "@semantic-release/npm",
       "@semantic-release/github"
     ]
-  },
-  "engines": {
-    "node": "18.12.0"
   }
 }

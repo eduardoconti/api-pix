@@ -55,8 +55,9 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
       useFactory: async (config: ConfigService<EnvironmentVariables>) => ({
         ttl: 3600,
         store: redisStore,
-        host: config.get('REDIS_HOST'),
-        port: config.get('REDIS_PORT'),
+        host: config.getOrThrow('REDIS_HOST'),
+        port: config.getOrThrow('REDIS_PORT'),
+        password: config.getOrThrow('REDIS_PASSWORD'),
         isGlobal: true,
       }),
       inject: [ConfigService],
@@ -83,15 +84,19 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
         node: config.get('ELASTIC_HOST'),
         name: 'elastic',
         maxRetries: 5,
+        requestTimeout: 500,
       }),
       inject: [ConfigService],
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot()],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: async (
+        configService: ConfigService<EnvironmentVariables>,
+      ) => ({
         redis: {
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
+          host: configService.getOrThrow('REDIS_HOST'),
+          port: configService.getOrThrow('REDIS_PORT'),
+          password: configService.getOrThrow('REDIS_PASSWORD'),
         },
       }),
       inject: [ConfigService],
