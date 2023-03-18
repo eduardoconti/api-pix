@@ -1,5 +1,8 @@
 import { ChargeEntity } from '@domain/entities';
-import { ChargeCreatedDomainEvent } from '@domain/events';
+import {
+  ChargeCreatedDomainEvent,
+  ChargePayedDomainEvent,
+} from '@domain/events';
 import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
 
 export const mockPendingChargeEntity = new ChargeEntity({
@@ -48,10 +51,19 @@ export const mockChargeEntityPreRequest = new ChargeEntity({
 });
 
 export const mockChargeCreatedDomainEvent = new ChargeCreatedDomainEvent({
-  aggregateId: 'asdf',
+  aggregateId: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
   amount: 200,
   provider: 'CELCOIN',
   status: 'ACTIVE',
+});
+
+export const mockChargePayedDomainEvent = new ChargePayedDomainEvent({
+  aggregateId: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
+  amount: 200,
+  provider: 'CELCOIN',
+  userId: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
+  e2eId: 'EEb85381d7-174f-4c0a-a2c8-aa93a399965d',
+  providerId: '123189',
 });
 
 export const mockChargeEntityPayed = new ChargeEntity({

@@ -1,4 +1,5 @@
 import { Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Job } from 'bull';
 
@@ -8,7 +9,7 @@ import {
   mockChargeEntityPayed,
   mockWebhookEntity,
 } from '@domain/__mocks__';
-import { IChargeRepository, ILogger } from '@domain/core';
+import { IChargeRepository, IEventEmitter, ILogger } from '@domain/core';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { provideWebhookConsumer } from '@infra/infra.provider';
@@ -26,6 +27,7 @@ const fakeJob = {
 describe('WebhookConsumer', () => {
   let webhookConsumer: WebhookConsumer;
   let chargeRepository: IChargeRepository;
+  let eventEmitter: IEventEmitter;
   let logger: ILogger;
 
   beforeEach(async () => {
@@ -46,12 +48,19 @@ describe('WebhookConsumer', () => {
             error: jest.fn(),
           },
         },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emitAsync: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     webhookConsumer = app.get<WebhookConsumer>(WebhookConsumer);
     chargeRepository = app.get<IChargeRepository>(ChargeRepository);
     logger = app.get<ILogger>(Logger);
+    eventEmitter = app.get<IEventEmitter>(EventEmitter2);
   });
 
   describe('WebhookConsumer', () => {
@@ -59,6 +68,7 @@ describe('WebhookConsumer', () => {
       expect(webhookConsumer).toBeDefined();
       expect(chargeRepository).toBeDefined();
       expect(logger).toBeDefined();
+      expect(eventEmitter).toBeDefined();
     });
     it('should throw error if amount does not match', async () => {
       const { data, ...rest } = fakeJob;
@@ -86,9 +96,12 @@ describe('WebhookConsumer', () => {
         .spyOn(chargeRepository, 'update')
         .mockResolvedValue(mockPendingChargeEntity);
 
+      jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValue(undefined);
+
       await webhookConsumer.process(fakeJob);
       expect(chargeRepository.findOne).toBeCalled();
       expect(chargeRepository.update).toBeCalled();
+      expect(eventEmitter.emitAsync).toBeCalled();
     });
 
     it('should not update if webhook type is not CHARGE_PAYED', async () => {
@@ -106,6 +119,7 @@ describe('WebhookConsumer', () => {
       });
       expect(chargeRepository.findOne).toBeCalled();
       expect(chargeRepository.update).not.toBeCalled();
+      expect(eventEmitter.emitAsync).not.toBeCalled();
     });
 
     it('should throw error if charge already payed', async () => {
@@ -115,6 +129,7 @@ describe('WebhookConsumer', () => {
       await expect(webhookConsumer.process(fakeJob)).rejects.toThrow();
       expect(chargeRepository.findOne).toBeCalled();
       expect(chargeRepository.update).not.toBeCalled();
+      expect(eventEmitter.emitAsync).not.toBeCalled();
     });
 
     it('should throw error if charge is expired', async () => {
@@ -124,6 +139,7 @@ describe('WebhookConsumer', () => {
       await expect(webhookConsumer.process(fakeJob)).rejects.toThrow();
       expect(chargeRepository.findOne).toBeCalled();
       expect(chargeRepository.update).not.toBeCalled();
+      expect(eventEmitter.emitAsync).not.toBeCalled();
     });
 
     it('logger onQueueFailed', () => {

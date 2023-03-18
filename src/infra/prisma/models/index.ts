@@ -3,3 +3,4 @@ export * from './outbox.model';
 export * from './webhook.model';
 export * from './user-webhook-host.model';
 export * from './user.model';
+export * from './user-webhook-notification.model';

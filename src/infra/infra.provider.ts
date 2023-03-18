@@ -1,9 +1,17 @@
 import { Logger, LoggerService, Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
 
-import { IChargeRepository, IExternalLog, ILogger, IQueue } from '@domain/core';
+import {
+  IChargeRepository,
+  IEventEmitter,
+  IExternalLog,
+  ILogger,
+  IQueue,
+  IUserWebhookNotificationRepository,
+} from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
 import { EnvironmentVariables } from '@main/config';
@@ -17,9 +25,15 @@ import {
   OutboxRepository,
   PrismaService,
   UserRepository,
+  UserWebhookNotificationRepository,
 } from './prisma';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
-import { CleanOutboxService, OutboxWebhookService } from './scheduler';
+import { UserWebhookNotificationConsumer } from './processors/user-webhook-notification.processor';
+import {
+  CleanOutboxService,
+  OutboxUserWebhookNotificationService,
+  OutboxWebhookService,
+} from './scheduler';
 import { PayChargeService } from './scheduler/pay-charge.cron';
 
 export const provideCelcoinApi: Provider<CelcoinApi> = {
@@ -64,10 +78,14 @@ export const provideElasticSearchConsumer: Provider<ElasticSearchConsumer> = {
 
 export const provideWebhookConsumer: Provider<WebhookConsumer> = {
   provide: WebhookConsumer,
-  useFactory: (logger: ILogger, chargeRepository: IChargeRepository) => {
-    return new WebhookConsumer(logger, chargeRepository);
+  useFactory: (
+    logger: ILogger,
+    chargeRepository: IChargeRepository,
+    eventEmitter: IEventEmitter,
+  ) => {
+    return new WebhookConsumer(logger, chargeRepository, eventEmitter);
   },
-  inject: [Logger, ChargeRepository],
+  inject: [Logger, ChargeRepository, EventEmitter2],
 };
 
 export const providePayChargeService: Provider<PayChargeService> = {
@@ -89,3 +107,46 @@ export const provideUserRepository: Provider<UserRepository> = {
   },
   inject: [PrismaService],
 };
+
+export const provideUserWebhookNotificationRepository: Provider<UserWebhookNotificationRepository> =
+  {
+    provide: UserWebhookNotificationRepository,
+    useFactory: (prismaService: PrismaService) => {
+      return new UserWebhookNotificationRepository(prismaService);
+    },
+    inject: [PrismaService],
+  };
+
+export const provideOutboxUserWebhookNotificationService: Provider<OutboxUserWebhookNotificationService> =
+  {
+    provide: OutboxUserWebhookNotificationService,
+    useFactory: (
+      logger: LoggerService,
+      outboxRepository: IOutboxRepository,
+      queue: IQueue,
+    ) => {
+      return new OutboxUserWebhookNotificationService(
+        logger,
+        outboxRepository,
+        queue,
+      );
+    },
+    inject: [Logger, OutboxRepository, 'BullQueue_user_webhook_notification'],
+  };
+
+export const provideUserWebhookNotificationConsumer: Provider<UserWebhookNotificationConsumer> =
+  {
+    provide: UserWebhookNotificationConsumer,
+    useFactory: (
+      logger: ILogger,
+      httpService: IHttpService,
+      userWebhookNotificationRepository: IUserWebhookNotificationRepository,
+    ) => {
+      return new UserWebhookNotificationConsumer(
+        logger,
+        httpService,
+        userWebhookNotificationRepository,
+      );
+    },
+    inject: [Logger, HttpService, UserWebhookNotificationRepository],
+  };

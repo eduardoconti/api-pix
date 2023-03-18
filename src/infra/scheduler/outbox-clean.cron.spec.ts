@@ -49,7 +49,7 @@ describe('CleanOutboxService', () => {
 
     await cleanOutboxService.handleCron();
     expect(outboxRepository.sql).toBeCalledWith(
-      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '5 minutes'`,
     );
   });
 
@@ -58,7 +58,7 @@ describe('CleanOutboxService', () => {
 
     await cleanOutboxService.handleCron();
     expect(outboxRepository.sql).toBeCalledWith(
-      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+      `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '5 minutes'`,
     );
     expect(logger.error).toBeCalledTimes(1);
   });

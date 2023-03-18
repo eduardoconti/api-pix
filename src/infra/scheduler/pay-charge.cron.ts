@@ -13,11 +13,11 @@ export class PayChargeService implements ICronService {
     private readonly webhookUseCase: IReceiveWebhookUseCase,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE, {
+  @Cron(CronExpression.EVERY_10_SECONDS, {
     disabled: process.env.NODE_ENV === 'production',
   })
   async handleCron() {
-    this.logger.log('Called every minute', 'PayChargeService');
+    this.logger.log('Called every 10 seconds', 'PayChargeService');
 
     const data = await this.chargeRepository.findMany({ status: 'ACTIVE' });
     if (data.length === 0) return;
@@ -26,7 +26,7 @@ export class PayChargeService implements ICronService {
       try {
         await this.webhookUseCase.execute({
           amount: e.props.amount.value,
-          endToEndId: `EE${UUID.generate()}`,
+          endToEndId: `EE${UUID.generate().value}`,
           provider: e.props.provider,
           providerId: e.props.providerId as string,
           type: 'CHARGE_PAYED',

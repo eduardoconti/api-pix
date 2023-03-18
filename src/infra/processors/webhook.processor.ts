@@ -1,7 +1,7 @@
 import { OnQueueActive, OnQueueFailed, Process, Processor } from '@nestjs/bull';
 import { Job } from 'bull';
 
-import { ILogger } from '@domain/core';
+import { IEventEmitter, ILogger } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
@@ -13,6 +13,7 @@ export class WebhookConsumer {
   constructor(
     private readonly logger: ILogger,
     private readonly chargeRepository: IChargeRepository,
+    private readonly eventEmitter: IEventEmitter,
   ) {}
   @Process()
   async process(job: Job<WebhookModel>) {
@@ -29,6 +30,12 @@ export class WebhookConsumer {
         e2eId: webhookEntity.props.e2eId,
       });
       await this.chargeRepository.update(charge);
+      await Promise.all(
+        charge.domainEvents.map((e) => {
+          return this.eventEmitter.emitAsync(e.constructor.name, e);
+        }),
+      );
+      charge.clearEvents();
     }
   }
 

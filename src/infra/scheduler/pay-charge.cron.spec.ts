@@ -68,6 +68,16 @@ describe('PayChargeService', () => {
       status: 'ACTIVE',
     });
     expect(receiveWebhookUseCase.execute).toBeCalledTimes(1);
+    expect(receiveWebhookUseCase.execute).toBeCalledWith(
+      expect.objectContaining({
+        amount: mockActiveChargeEntity.props.amount.value,
+        endToEndId: expect.any(String),
+        provider: mockActiveChargeEntity.props.provider,
+        providerId: mockActiveChargeEntity.props.providerId as string,
+        type: 'CHARGE_PAYED',
+        providerJson: expect.any(String),
+      }),
+    );
   });
 
   it('should return if not find outbox', async () => {

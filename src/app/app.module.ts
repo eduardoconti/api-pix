@@ -4,6 +4,7 @@ import { InfraModule } from '@infra/infra.module';
 
 import {
   provideChargeCreatedListener,
+  provideChargePayedListener,
   provideCreateImmediateChargeUseCase,
   providePspService,
   provideReceiveWebhookUseCase,
@@ -19,6 +20,7 @@ import {
     provideReceiveWebhookUseCase,
     provideRegisterUserUseCase,
     provideUserAuthUseCase,
+    provideChargePayedListener,
   ],
   exports: [
     providePspService,

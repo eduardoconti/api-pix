@@ -1,16 +1,24 @@
 import { Provider } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { IEventEmitter, IUserRepository } from '@domain/core';
+import {
+  IEventEmitter,
+  IUserRepository,
+  IUserWebhookNotificationRepository,
+} from '@domain/core';
 import { IQueue } from '@domain/core/queue';
 import { IChargeRepository, IWebhookRepository } from '@domain/core/repository';
 
 import { CelcoinApi, ICelcoinApi } from '@infra/celcoin';
-import { ChargeRepository, WebhookRepository } from '@infra/prisma';
+import {
+  ChargeRepository,
+  UserWebhookNotificationRepository,
+  WebhookRepository,
+} from '@infra/prisma';
 import { UserRepository } from '@infra/prisma/user.repository';
 
 import { IPspService } from './contracts';
-import { ChargeCreatedListener } from './event-handler';
+import { ChargeCreatedListener, ChargePayedListener } from './event-handler';
 import { PspService } from './services';
 import {
   CreateImmediateChargeUseCase,
@@ -74,4 +82,18 @@ export const provideUserAuthUseCase: Provider<UserAuthUseCase> = {
     return new UserAuthUseCase(userRepository);
   },
   inject: [UserRepository],
+};
+
+export const provideChargePayedListener: Provider<ChargePayedListener> = {
+  provide: ChargePayedListener,
+  useFactory: (
+    userWebhookNotificationRepository: IUserWebhookNotificationRepository,
+    userRepository: IUserRepository,
+  ) => {
+    return new ChargePayedListener(
+      userWebhookNotificationRepository,
+      userRepository,
+    );
+  },
+  inject: [UserWebhookNotificationRepository, UserRepository],
 };

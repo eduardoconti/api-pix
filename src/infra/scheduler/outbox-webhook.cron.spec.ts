@@ -8,7 +8,7 @@ import { IOutboxRepository } from '@domain/core/repository';
 import { provideOutboxWebhookService } from '@infra/infra.provider';
 import { OutboxRepository } from '@infra/prisma';
 
-import { OutboxWebhookService } from './outbox-webhook-cron';
+import { OutboxWebhookService } from './outbox-webhook.cron';
 
 describe('OutboxWebhookService', () => {
   let logger: LoggerService;

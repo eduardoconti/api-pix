@@ -7,6 +7,7 @@ export enum AggregateTypeEnum {
   WEBHOOK = 'WEBHOOK',
   CHARGE = 'CHARGE',
   USER = 'USER',
+  USER_WEBHOOK_NOTIFICATION = 'USER_WEBHOOK_NOTIFICATION',
 }
 
 export type OutboxAggregateType = keyof typeof AggregateTypeEnum;

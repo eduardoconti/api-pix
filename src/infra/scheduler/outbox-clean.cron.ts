@@ -10,13 +10,13 @@ export class CleanOutboxService implements ICronService {
     private readonly outboxRepository: IOutboxRepository,
   ) {}
 
-  @Cron(CronExpression.EVERY_4_HOURS)
+  @Cron(CronExpression.EVERY_5_MINUTES)
   async handleCron() {
-    this.logger.log('Called every 4 hours', 'CleanOutboxService');
+    this.logger.log('Called every 5 minutes', 'CleanOutboxService');
 
     await this.outboxRepository
       .sql(
-        `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '12 hours'`,
+        `DELETE FROM outbox WHERE published = true AND created_at < NOW() - INTERVAL '5 minutes'`,
       )
       .catch((e) => {
         this.logger.error(`failed to execute cron CleanOutboxService`, e);

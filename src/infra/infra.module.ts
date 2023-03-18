@@ -29,9 +29,12 @@ import {
   provideCelcoinApi,
   provideCleanOutboxService,
   provideElasticSearchConsumer,
+  provideOutboxUserWebhookNotificationService,
   provideOutboxWebhookService,
   providePayChargeService,
   provideUserRepository,
+  provideUserWebhookNotificationConsumer,
+  provideUserWebhookNotificationRepository,
   provideWebhookConsumer,
 } from './infra.provider';
 import {
@@ -125,6 +128,18 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
         },
       },
     }),
+    BullModule.registerQueue({
+      name: `user_webhook_notification`,
+      defaultJobOptions: {
+        attempts: 10,
+        removeOnComplete: true,
+        removeOnFail: false,
+        backoff: {
+          type: 'exponential',
+          delay: 1000,
+        },
+      },
+    }),
     ScheduleModule.forRoot(),
     forwardRef(() => AppModule),
     SentryModule.forRootAsync({
@@ -193,6 +208,9 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     },
     LocalStrategy,
     JwtStrategy,
+    provideUserWebhookNotificationRepository,
+    provideOutboxUserWebhookNotificationService,
+    provideUserWebhookNotificationConsumer,
   ],
   exports: [
     HttpService,
@@ -208,6 +226,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     provideUserRepository,
     SentryMonitorError,
     JwtModule,
+    provideUserWebhookNotificationRepository,
   ],
 })
 export class InfraModule {}

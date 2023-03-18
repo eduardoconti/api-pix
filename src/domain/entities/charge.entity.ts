@@ -1,5 +1,8 @@
 import { AggregateRoot } from '@domain/core';
-import { ChargeCreatedDomainEvent } from '@domain/events';
+import {
+  ChargeCreatedDomainEvent,
+  ChargePayedDomainEvent,
+} from '@domain/events';
 import { ArgumentInvalidException } from '@domain/exceptions';
 import { Amount, QrCode64, UUID } from '@domain/value-objects';
 
@@ -83,6 +86,17 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
     }
     this.props.e2eId = props.e2eId;
     this.props.status = 'PAYED';
+
+    this.addEvent(
+      new ChargePayedDomainEvent({
+        aggregateId: this.id.value,
+        amount: this.props.amount.value,
+        provider: this.props.provider,
+        e2eId: this.props.e2eId as string,
+        providerId: this.props.providerId as string,
+        userId: this.props.userId.value,
+      }),
+    );
   }
 
   isPayed(): boolean {

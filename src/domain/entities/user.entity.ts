@@ -6,7 +6,7 @@ import {
   UserWebhookHosPrimitivesProps,
   UserWebhookHost,
 } from './user-webhook-host.entity';
-import { WebhookTypesEnum } from './webhook.entity';
+import { WebhookTypes, WebhookTypesEnum } from './webhook.entity';
 
 export enum UserStatusEnum {
   ACTIVE = 'ACTIVE',
@@ -119,5 +119,22 @@ export class UserEntity extends AggregateRoot<UserProps> {
         }),
       );
     });
+  }
+
+  get webhookHost() {
+    return this.props.webhookHost;
+  }
+
+  getUserWebhookHostByType(type: WebhookTypes): UserWebhookHost {
+    if (!this.props.webhookHost) {
+      throw new ArgumentInvalidException('Webhook hosts not found');
+    }
+
+    const host = this.props.webhookHost.find((e) => e.props.type === type);
+
+    if (!host) {
+      throw new ArgumentInvalidException(`Host for ${type} not found`);
+    }
+    return host;
   }
 }
