@@ -1,11 +1,11 @@
-import { IUserWebhookNotificationRepository, QueryParams } from '@domain/core';
-import {
-  OutboxEntity,
-  UserWebhookNotificationEntity,
-  UserWebhookNotificationProps,
-} from '@domain/entities';
+import { IUserWebhookNotificationRepository } from '@domain/core';
+import { OutboxEntity, UserWebhookNotificationEntity } from '@domain/entities';
+import { UUID } from '@domain/value-objects';
 
-import { UserWebhookNotificationRepositoryException } from '@infra/exceptions';
+import {
+  UserWebhookNotificationNotFoundException,
+  UserWebhookNotificationRepositoryException,
+} from '@infra/exceptions';
 
 import { OutBoxModel, UserWebhookNotificationModel } from './models';
 import { PrismaService } from './prisma.service';
@@ -20,22 +20,21 @@ export class UserWebhookNotificationRepository
     outBox: OutboxEntity,
   ): Promise<UserWebhookNotificationEntity> {
     try {
-      const webhookEntity = this.prismaService.user_webhook_notification.create(
-        {
+      const userWebhookNotificationModel =
+        this.prismaService.user_webhook_notification.create({
           data: UserWebhookNotificationModel.fromEntity(entity),
-        },
-      );
+        });
 
-      const outBoxEntity = this.prismaService.outbox.create({
+      const outboxModel = this.prismaService.outbox.create({
         data: OutBoxModel.fromEntity(outBox),
       });
 
-      const [webhook] = await this.prismaService.$transaction([
-        webhookEntity,
-        outBoxEntity,
+      const [notification] = await this.prismaService.$transaction([
+        userWebhookNotificationModel,
+        outboxModel,
       ]);
       return UserWebhookNotificationModel.toEntity(
-        webhook as UserWebhookNotificationModel,
+        notification as UserWebhookNotificationModel,
       );
     } catch (e) {
       throw new UserWebhookNotificationRepositoryException(
@@ -45,11 +44,11 @@ export class UserWebhookNotificationRepository
     }
   }
 
-  async findOne(params: QueryParams<UserWebhookNotificationProps>) {
+  async findOneById(id: UUID) {
     const model = await this.prismaService.user_webhook_notification
-      .findFirst({
+      .findUnique({
         where: {
-          id: params?.id?.value,
+          id: id.value,
         },
       })
       .catch((e) => {
@@ -60,7 +59,7 @@ export class UserWebhookNotificationRepository
       });
 
     if (!model) {
-      throw new UserWebhookNotificationRepositoryException(
+      throw new UserWebhookNotificationNotFoundException(
         'UserWebhookNotification not found',
       );
     }

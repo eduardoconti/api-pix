@@ -34,7 +34,7 @@ export class OutboxRepository implements IOutboxRepository {
     const model = await this.prismaService.outbox
       .findFirst({
         where: {
-          id: params?.id?.value,
+          id: params.id?.value,
         },
       })
       .catch((e) => {
@@ -56,9 +56,9 @@ export class OutboxRepository implements IOutboxRepository {
     const models = await this.prismaService.outbox
       .findMany({
         where: {
-          published: params?.published,
-          aggregate_type: params?.aggregateType,
-          aggregate_id: params?.aggregateId?.value,
+          published: params.published,
+          aggregate_type: params.aggregateType,
+          aggregate_id: params.aggregateId?.value,
         },
       })
       .catch((e) => {

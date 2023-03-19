@@ -12,3 +12,4 @@ export * from './unauthorized.exception';
 export * from './token-expired.exception';
 export * from './invalid-token.exception';
 export * from './user-webhook-notification-repository.exception';
+export * from './user-webhook-notification-not-found.exception';

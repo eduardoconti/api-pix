@@ -121,10 +121,6 @@ export class UserEntity extends AggregateRoot<UserProps> {
     });
   }
 
-  get webhookHost() {
-    return this.props.webhookHost;
-  }
-
   getUserWebhookHostByType(type: WebhookTypes): UserWebhookHost {
     if (!this.props.webhookHost) {
       throw new ArgumentInvalidException('Webhook hosts not found');

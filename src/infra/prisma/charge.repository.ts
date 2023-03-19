@@ -75,7 +75,7 @@ export class ChargeRepository implements IChargeRepository {
     const model = await this.prismaService.charge
       .findMany({
         where: {
-          status: params?.status,
+          status: params.status,
         },
       })
       .catch((error) => {

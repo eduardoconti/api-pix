@@ -18,7 +18,7 @@ export const ApiErrorResponse = (props: ApiErrorResponseProps) => {
           status: { example: props.status, type: 'number' },
           title: { example: props.title, type: 'string' },
           detail: { example: props.detail, type: 'string' },
-          type: { example: props?.type ?? 'about:blank', type: 'string' },
+          type: { example: props.type ?? 'about:blank', type: 'string' },
         },
         required: ['status', 'title', 'detail', 'type'],
       },

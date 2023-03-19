@@ -115,7 +115,7 @@ export class ChargeEntity extends AggregateRoot<ChargeProps> {
     if (!this.props.qrCode) {
       throw new ArgumentInvalidException('qrcode not found');
     }
-    return this.props.qrCode?.value;
+    return this.props.qrCode.value;
   }
 
   async completeWithPSPResponse(

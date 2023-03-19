@@ -2,6 +2,7 @@ import {
   CreateImmediateChargeUseCaseInput,
   RegisterUserUseCaseInput,
   RegisterUserUseCaseOutput,
+  UserAuthUseCaseInput,
 } from '@app/use-cases';
 
 export const mockRegisterUserUseCaseInput: RegisterUserUseCaseInput = {
@@ -15,6 +16,14 @@ export const mockRegisterUserUseCaseInput: RegisterUserUseCaseInput = {
     },
   ],
 };
+
+export const mockRegisterUserWithoutHostUseCaseInput: RegisterUserUseCaseInput =
+  {
+    name: 'Eduardo Conti',
+    email: 'eduardo.conti@gmail.com',
+    password: 'teste@123',
+    webhookHost: undefined,
+  };
 
 export const mockRegisterUserUseCaseOutput: RegisterUserUseCaseOutput = {
   id: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
@@ -45,3 +54,8 @@ export const mockCreateImmediateChargeUseCaseInput: CreateImmediateChargeUseCase
     },
     userId: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
   };
+
+export const mockUserAuthUseCaseInput: UserAuthUseCaseInput = {
+  userName: 'eduardo.conti@gmail.com',
+  password: 'teste@123',
+};

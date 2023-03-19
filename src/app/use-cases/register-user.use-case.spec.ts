@@ -1,11 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { mockRegisterUserUseCaseInput } from '@app/__mocks__';
+import {
+  mockRegisterUserUseCaseInput,
+  mockRegisterUserWithoutHostUseCaseInput,
+} from '@app/__mocks__';
 import { provideRegisterUserUseCase } from '@app/app.provider';
 import { UserAlreadyExistsException } from '@app/exceptions';
 
-import { userEntityMock } from '@domain/__mocks__';
+import { mockUserEntity, mockUserEntityWithoutHost } from '@domain/__mocks__';
 import { IUserRepository } from '@domain/core';
+import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { UserRepository } from '@infra/prisma';
 
@@ -43,9 +47,20 @@ describe('RegisterUserUseCase', () => {
 
   it('should register new user successfully', async () => {
     jest.spyOn(userRepository, 'exists').mockResolvedValue(false);
-    jest.spyOn(userRepository, 'save').mockResolvedValue(userEntityMock);
+    jest.spyOn(userRepository, 'save').mockResolvedValue(mockUserEntity);
     const result = await registerUserUseCase.execute(
       mockRegisterUserUseCaseInput,
+    );
+    expect(result).toBeDefined();
+  });
+
+  it('should register new user without hosts successfully', async () => {
+    jest.spyOn(userRepository, 'exists').mockResolvedValue(false);
+    jest
+      .spyOn(userRepository, 'save')
+      .mockResolvedValue(mockUserEntityWithoutHost);
+    const result = await registerUserUseCase.execute(
+      mockRegisterUserWithoutHostUseCaseInput,
     );
     expect(result).toBeDefined();
   });
@@ -55,6 +70,29 @@ describe('RegisterUserUseCase', () => {
     await expect(
       registerUserUseCase.execute(mockRegisterUserUseCaseInput),
     ).rejects.toThrowError(UserAlreadyExistsException);
+    expect(userRepository.exists).toBeCalled();
+    expect(userRepository.save).not.toBeCalled();
+  });
+
+  it('should throw ArgumentInvalidException when duplicated webhook type', async () => {
+    jest.spyOn(userRepository, 'exists').mockResolvedValue(false);
+    await expect(
+      registerUserUseCase.execute({
+        ...mockRegisterUserUseCaseInput,
+        webhookHost: [
+          {
+            type: 'CHARGE_PAYED',
+            host: 'http://localhost:3000/pix',
+          },
+          {
+            type: 'CHARGE_PAYED',
+            host: 'http://localhost:3000/pix',
+          },
+        ],
+      }),
+    ).rejects.toThrowError(
+      new ArgumentInvalidException(`duplicated webhook type CHARGE_PAYED`),
+    );
     expect(userRepository.exists).toBeCalled();
     expect(userRepository.save).not.toBeCalled();
   });

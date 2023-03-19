@@ -47,7 +47,7 @@ export class UserRepository implements IUserRepository {
     const model = await this.prismaService.user
       .findFirst({
         where: {
-          id: params?.id?.value,
+          id: params.id?.value,
           email: params.email?.value,
         },
         include: {
@@ -102,19 +102,9 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async sql(sql: string): Promise<void | UserEntity | UserEntity[]> {
-    try {
-      return await this.prismaService.$queryRawUnsafe<
-        void | UserEntity | UserEntity[]
-      >(sql);
-    } catch (e) {
-      throw new UserRepositoryException('failed to execute sql', e);
-    }
-  }
-
   async exists(email: Email): Promise<boolean> {
     const model = await this.prismaService.user
-      .findFirst({
+      .findUnique({
         where: {
           email: email.value,
         },

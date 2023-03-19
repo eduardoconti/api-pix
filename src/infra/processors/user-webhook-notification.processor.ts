@@ -29,9 +29,9 @@ export class UserWebhookNotificationConsumer {
         notification_id,
       },
     } = job;
-    const entity = await this.userWebhookNotificationRepository.findOne({
-      id: new UUID(notification_id),
-    });
+    const entity = await this.userWebhookNotificationRepository.findOneById(
+      new UUID(notification_id),
+    );
 
     await this.httpService.post({
       url: url,
@@ -62,9 +62,9 @@ export class UserWebhookNotificationConsumer {
       `job ${job.id} of type ${job.queue.name} with error "${job.failedReason}"`,
       'UserWebhookNotificationConsumer',
     );
-    const entity = await this.userWebhookNotificationRepository.findOne({
-      id: new UUID(job.data.notification_id),
-    });
+    const entity = await this.userWebhookNotificationRepository.findOneById(
+      new UUID(job.data.notification_id),
+    );
     entity.addAttempts();
     await this.userWebhookNotificationRepository.update(entity);
 

@@ -124,7 +124,8 @@
       "!<rootDir>/main.ts",
       "!<rootDir>/main/**",
       "!<rootDir>/infra/strategy/**",
-      "!<rootDir>/infra/guard/**"
+      "!<rootDir>/infra/guard/**",
+      "!<rootDir>/infra/decorators/**"
       
     ],
     "coverageDirectory": "../coverage",

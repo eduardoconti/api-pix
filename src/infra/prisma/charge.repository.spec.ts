@@ -115,9 +115,9 @@ describe('ChargeRepository', () => {
   });
 
   describe('findMany', () => {
-    it('should find charge register', async () => {
+    it('should findMany charge register', async () => {
       jest.spyOn(prismaService.charge, 'findMany').mockResolvedValue([model]);
-      const result = await repository.findMany({});
+      const result = await repository.findMany({ status: 'ACTIVE' });
       expect(result).toStrictEqual([mockPendingChargeEntity]);
       expect(prismaService.charge.findMany).toBeCalled();
     });

@@ -9,7 +9,7 @@ export class UserWebhookNotificationModel {
   charge_id!: string;
   payload!: JsonValue;
   attempts!: number;
-  delivered_at?: Date | null;
+  delivered_at!: Date | null;
   created_at!: Date;
   updated_at!: Date;
 
@@ -25,7 +25,7 @@ export class UserWebhookNotificationModel {
       type: entity.props.type,
       created_at: entity.createdAt.value,
       updated_at: entity.updatedAt.value,
-      delivered_at: entity.props.deliverdAt?.value,
+      delivered_at: entity.props.deliverdAt?.value ?? null,
     };
   }
 

@@ -47,10 +47,6 @@ export class UserWebhookNotificationEntity extends AggregateRoot<UserWebhookNoti
     return entity;
   }
 
-  isDeliverd(): boolean {
-    return this.props.deliverdAt ? true : false;
-  }
-
   markAsDeliverd() {
     this.props.deliverdAt = DateVO.now();
   }

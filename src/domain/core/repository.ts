@@ -6,7 +6,6 @@ import {
   UserEntity,
   UserProps,
   UserWebhookNotificationEntity,
-  UserWebhookNotificationProps,
   WebhookEntity,
 } from '@domain/entities';
 import { Email } from '@domain/value-objects';
@@ -83,7 +82,7 @@ export interface IUserRepository
 export interface IUserWebhookNotificationRepository
   extends ISaveWithOutbox<UserWebhookNotificationEntity, OutboxEntity>,
     IUpdate<UserWebhookNotificationEntity>,
-    IFindOne<UserWebhookNotificationEntity, UserWebhookNotificationProps> {}
+    IFindOneById<UserWebhookNotificationEntity> {}
 
 /**
  * From https://github.com/sindresorhus/type-fest/

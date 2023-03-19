@@ -1,7 +1,7 @@
-import { UnauthorizedException } from '@nestjs/common';
-
 import { IUseCase, IUserRepository } from '@domain/core';
 import { Email, Password } from '@domain/value-objects';
+
+import { UnauthorizedException } from '@infra/exceptions';
 
 export type UserAuthUseCaseInput = {
   userName: string;
@@ -23,10 +23,6 @@ export class UserAuthUseCase implements IUserAuthUseCase {
     const user = await this.userRepository.findOne({
       email: new Email(userName),
     });
-
-    if (!user) {
-      throw new UnauthorizedException('user not found');
-    }
 
     if (!(await Password.compareHash(password, user.props.password.value))) {
       throw new UnauthorizedException('invalid credentials');

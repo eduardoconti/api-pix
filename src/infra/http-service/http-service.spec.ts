@@ -17,6 +17,7 @@ const props = {
   url: 'http://example.com',
   body: { foo: 'bar' },
   headers: { Authorization: 'Bearer token' },
+  timeOut: undefined,
 };
 
 const mockResponseData = {
@@ -105,7 +106,7 @@ describe('HttpService', () => {
     axiosService.axiosRef.post.mockImplementation(mockPost);
 
     await expect(
-      httpService.post({ ...props, body: undefined }),
+      httpService.post({ ...props, body: undefined, timeOut: 6000 }),
     ).rejects.toThrow();
     expect(mockLogger.log).toBeCalled();
     expect(mockLogger.error).toBeCalledTimes(1);

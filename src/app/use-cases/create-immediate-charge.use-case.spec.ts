@@ -15,8 +15,9 @@ import {
 } from '@app/use-cases';
 
 import {
+  mockActiveChargeEntity,
+  mockFailedChargeEntity,
   mockPendingChargeEntity,
-  mockChargeEntityPreRequest,
 } from '@domain/__mocks__';
 import { IEventEmitter } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
@@ -65,10 +66,10 @@ describe('CreateImmediateChargeUseCase', () => {
 
     jest
       .spyOn(chargeRepository, 'save')
-      .mockResolvedValue(mockChargeEntityPreRequest);
+      .mockResolvedValue(mockPendingChargeEntity);
     jest
       .spyOn(chargeRepository, 'update')
-      .mockResolvedValue(mockPendingChargeEntity);
+      .mockResolvedValue(mockActiveChargeEntity);
     jest.spyOn(eventEmitter, 'emitAsync').mockResolvedValueOnce(undefined);
   });
 
@@ -98,6 +99,10 @@ describe('CreateImmediateChargeUseCase', () => {
       jest
         .spyOn(pspService, 'createImmediateCharge')
         .mockRejectedValue(new Error('any'));
+
+      jest
+        .spyOn(chargeRepository, 'update')
+        .mockResolvedValue(mockFailedChargeEntity);
       await expect(
         createImmediateChargeUseCase.execute(
           mockCreateImmediateChargeUseCaseInput,

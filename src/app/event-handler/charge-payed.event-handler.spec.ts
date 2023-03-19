@@ -2,11 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { provideChargePayedListener } from '@app/app.provider';
 
-import { mockChargePayedDomainEvent, userEntityMock } from '@domain/__mocks__';
+import {
+  mockChargePayedDomainEvent,
+  mockUserEntity,
+  mockUserEntityWithoutHost,
+} from '@domain/__mocks__';
 import {
   IUserRepository,
   IUserWebhookNotificationRepository,
 } from '@domain/core';
+import { ArgumentInvalidException } from '@domain/exceptions';
 import { UUID } from '@domain/value-objects';
 
 import {
@@ -56,7 +61,7 @@ describe('ChargePayedListener', () => {
     expect(userRepository).toBeDefined();
   });
   it('should handle successfully', async () => {
-    jest.spyOn(userRepository, 'findOne').mockResolvedValue(userEntityMock);
+    jest.spyOn(userRepository, 'findOne').mockResolvedValue(mockUserEntity);
     jest
       .spyOn(userWebhookNotificationRepository, 'saveWithOutbox')
       .mockImplementation();
@@ -66,5 +71,21 @@ describe('ChargePayedListener', () => {
       id: new UUID(mockChargePayedDomainEvent.userId),
     });
     expect(userWebhookNotificationRepository.saveWithOutbox).toBeCalled();
+  });
+
+  it('should throw error when user does not have webhook registered', async () => {
+    jest
+      .spyOn(userRepository, 'findOne')
+      .mockResolvedValue(mockUserEntityWithoutHost);
+    jest
+      .spyOn(userWebhookNotificationRepository, 'saveWithOutbox')
+      .mockImplementation();
+    await expect(
+      listener.handle(mockChargePayedDomainEvent),
+    ).rejects.toThrowError(ArgumentInvalidException);
+    expect(userRepository.findOne).toBeCalledWith({
+      id: new UUID(mockChargePayedDomainEvent.userId),
+    });
+    expect(userWebhookNotificationRepository.saveWithOutbox).not.toBeCalled();
   });
 });

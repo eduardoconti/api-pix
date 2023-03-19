@@ -84,7 +84,7 @@ export class CelcoinApi implements ICelcoinApi {
         headers,
       })
       .catch((e) => {
-        if (e?.response?.data) {
+        if (e.response?.data) {
           const celcoinError: CelcoinErrorResponse = e.response.data;
           throw new PspAuthenticationException(
             celcoinError?.message ?? 'failed to authenticate on Celcoin',
@@ -131,7 +131,7 @@ export class CelcoinApi implements ICelcoinApi {
         headers,
       })
       .catch((e) => {
-        if (e?.response?.data) {
+        if (e.response?.data) {
           const celcoinError: CelcoinErrorResponse = e.response.data;
           throw new CreateImmediateChargeException(
             celcoinError?.message ?? 'failed to create pix location on Celcoin',
@@ -176,7 +176,7 @@ export class CelcoinApi implements ICelcoinApi {
         headers,
       })
       .catch((e) => {
-        if (e?.response?.data) {
+        if (e.response?.data) {
           const celcoinError: CelcoinErrorResponse = e.response.data;
           throw new CreateImmediateChargeException(
             celcoinError?.message ?? 'failed to create imediate cob on Celcoin',
