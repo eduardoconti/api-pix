@@ -8,3 +8,5 @@ export * from './merchant-input.dto';
 export * from './webhook-celcoin-input.dto';
 export * from './register-user.input.dto';
 export * from './register-user-webhook-host.input.dto';
+export * from './login-input.dto';
+export * from './login-output.dto';

@@ -6,7 +6,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { TokenPayload } from '@app/contracts';
 import {
@@ -21,6 +21,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiServiceUnavailableErrorResponse,
   ApiSuccessResponse,
+  ApiUnauthorizedErrorResponse,
 } from '@presentation/__docs__';
 import {
   CreateImmediateChargeInput,
@@ -46,6 +47,13 @@ export class CreateImmediateChargeController {
   @ApiServiceUnavailableErrorResponse({
     title: 'CreateImmediateChargeException',
     detail: 'failed to create imediate cob on Celcoin',
+  })
+  @ApiUnauthorizedErrorResponse({
+    title: 'InvalidTokenException',
+    detail: 'Invalid token',
+  })
+  @ApiOperation({
+    summary: 'Cria cobrança imediata',
   })
   @UseGuards(JwtAuthGuard)
   async handle(

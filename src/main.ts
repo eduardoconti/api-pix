@@ -34,6 +34,7 @@ async function bootstrap() {
     .setDescription('API para gerar QrCode e processar pagamentos com `PIX`')
     .setVersion('1.0')
     .addServer(`http://localhost:${configService.get('PORT')}`, 'Local')
+    .addServer(`https://api-pix-qx46.onrender.com`, 'Production')
     .addTag('health-check', 'Endpoints para monitoramento da api')
     .addTag('auth', 'Endpoints para autenticação')
     .addTag('user', 'Endpoints para gerenciamento de usuário')

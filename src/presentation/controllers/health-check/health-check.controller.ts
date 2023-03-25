@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 @ApiTags('health-check')
 @Controller()
 export class HealthCheckController {
@@ -10,6 +10,9 @@ export class HealthCheckController {
       type: 'string',
       example: 'app is running',
     },
+  })
+  @ApiOperation({
+    summary: 'Health-check',
   })
   handle(): string {
     return 'app is running';
