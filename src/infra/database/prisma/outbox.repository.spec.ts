@@ -9,7 +9,7 @@ import {
   OutboxRepositoryException,
 } from '@infra/exceptions';
 
-import { OutBoxModel } from './models';
+import { OutBoxModel } from '../models';
 import { OutboxRepository } from './outbox.repository';
 import { PrismaService } from './prisma.service';
 

@@ -12,9 +12,9 @@ import {
 import { IUserWebhookNotificationRepository, ILogger } from '@domain/core';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
+import { UserWebhookNotificationRepository } from '@infra/database/prisma';
 import { HttpService, IHttpService } from '@infra/http-service';
 import { provideUserWebhookNotificationConsumer } from '@infra/infra.provider';
-import { UserWebhookNotificationRepository } from '@infra/prisma';
 
 import { UserWebhookNotificationConsumer } from './user-webhook-notification.processor';
 

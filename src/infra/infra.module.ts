@@ -6,6 +6,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
@@ -20,9 +21,18 @@ import { AppModule } from '@app/app.module';
 
 import { BaseException } from '@domain/exceptions';
 
+import { UserModel, UserSchema } from '@infra/database/models';
+import { UserRepositoryMongo } from '@infra/database/mongo';
+
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
+import {
+  WebhookRepository,
+  ChargeRepository,
+  OutboxRepository,
+} from './database/prisma';
+import { PrismaService } from './database/prisma';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service';
 import {
@@ -37,12 +47,6 @@ import {
   provideUserWebhookNotificationRepository,
   provideWebhookConsumer,
 } from './infra.provider';
-import {
-  WebhookRepository,
-  ChargeRepository,
-  OutboxRepository,
-} from './prisma';
-import { PrismaService } from './prisma';
 import { SentryMonitorError } from './sentry';
 import { JwtStrategy } from './strategy/auth';
 import { LocalStrategy } from './strategy/auth/local.strategy';
@@ -184,6 +188,14 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
         signOptions: { expiresIn: '1d' },
       }),
     }),
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService<EnvironmentVariables>) => ({
+        uri: configService.get('DB_MONGO_URI'),
+        dbName: configService.get('DB_NAME'),
+      }),
+    }),
+    MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
   ],
   providers: [
     HttpService,
@@ -202,6 +214,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     providePayChargeService,
     provideUserRepository,
     SentryMonitorError,
+    UserRepositoryMongo,
     {
       provide: APP_INTERCEPTOR,
       useFactory: () => new SentryInterceptor(),
@@ -227,6 +240,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     SentryMonitorError,
     JwtModule,
     provideUserWebhookNotificationRepository,
+    UserRepositoryMongo,
   ],
 })
 export class InfraModule {}

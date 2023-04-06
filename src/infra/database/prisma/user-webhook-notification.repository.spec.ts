@@ -12,7 +12,7 @@ import {
 } from '@infra/exceptions';
 import { provideUserWebhookNotificationRepository } from '@infra/infra.provider';
 
-import { OutBoxModel, UserWebhookNotificationModel } from './models';
+import { OutBoxModel, UserWebhookNotificationModel } from '../models';
 import { PrismaService } from './prisma.service';
 import { UserWebhookNotificationRepository } from './user-webhook-notification.repository';
 

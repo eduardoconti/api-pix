@@ -14,10 +14,8 @@ import {
 import { ArgumentInvalidException } from '@domain/exceptions';
 import { UUID } from '@domain/value-objects';
 
-import {
-  UserRepository,
-  UserWebhookNotificationRepository,
-} from '@infra/prisma';
+import { UserRepositoryMongo } from '@infra/database/mongo';
+import { UserWebhookNotificationRepository } from '@infra/database/prisma';
 
 import { ChargePayedListener } from './charge-payed.event-handler';
 
@@ -30,7 +28,7 @@ describe('ChargePayedListener', () => {
       providers: [
         provideChargePayedListener,
         {
-          provide: UserRepository,
+          provide: UserRepositoryMongo,
           useValue: {
             findOne: jest.fn(),
           },
@@ -48,7 +46,7 @@ describe('ChargePayedListener', () => {
     userWebhookNotificationRepository = module.get(
       UserWebhookNotificationRepository,
     );
-    userRepository = module.get(UserRepository);
+    userRepository = module.get(UserRepositoryMongo);
   });
 
   afterEach(() => {

@@ -7,7 +7,7 @@ import {
   UserWebhookNotificationRepositoryException,
 } from '@infra/exceptions';
 
-import { OutBoxModel, UserWebhookNotificationModel } from './models';
+import { OutBoxModel, UserWebhookNotificationModel } from '../models';
 import { PrismaService } from './prisma.service';
 
 export class UserWebhookNotificationRepository

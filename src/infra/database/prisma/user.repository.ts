@@ -9,7 +9,7 @@ import {
   UserRepositoryException,
 } from '@infra/exceptions';
 
-import { UserModel } from './models';
+import { UserModel } from '../models';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
@@ -18,14 +18,14 @@ export class UserRepository implements IUserRepository {
 
   async save(entity: UserEntity): Promise<UserEntity> {
     try {
-      const { userWebhookHost, ...rest } = UserModel.fromEntity(entity);
+      const { user_webhook_host, ...rest } = UserModel.fromEntity(entity);
       const prismaModel = {
         ...rest,
 
-        userWebhookHost: userWebhookHost
+        userWebhookHost: user_webhook_host
           ? {
               create: [
-                ...userWebhookHost.map(
+                ...user_webhook_host.map(
                   ({ created_at, id, type, updated_at, webhook_host }) => {
                     return { created_at, id, type, updated_at, webhook_host };
                   },
@@ -37,7 +37,7 @@ export class UserRepository implements IUserRepository {
       const saved = await this.prismaService.user.create({
         data: prismaModel,
       });
-      return UserModel.toEntity({ ...saved, userWebhookHost });
+      return UserModel.toEntity({ ...saved, user_webhook_host });
     } catch (e) {
       throw new UserRepositoryException('failed to create user on database', e);
     }

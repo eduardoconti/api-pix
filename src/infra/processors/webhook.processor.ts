@@ -5,8 +5,8 @@ import { IEventEmitter, ILogger } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
+import { WebhookModel } from '@infra/database/models';
 import { ChargeNotFoundException } from '@infra/exceptions';
-import { WebhookModel } from '@infra/prisma/models';
 
 @Processor('webhook')
 export class WebhookConsumer {

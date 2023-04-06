@@ -2,13 +2,13 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 
+import { PrismaService } from '@infra/database/prisma';
 import {
   BaseExceptionFilter,
   HttpExceptionFilter,
   UnknownExceptionFilter,
 } from '@infra/exception-filter';
 import { ValidationPipe } from '@infra/pipes';
-import { PrismaService } from '@infra/prisma';
 
 import { MainModule } from '@main/main.module';
 

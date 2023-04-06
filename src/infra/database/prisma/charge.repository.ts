@@ -9,7 +9,7 @@ import {
   ChargeRepositoryException,
 } from '@infra/exceptions';
 
-import { ChargeModel } from './models';
+import { ChargeModel } from '../models';
 import { PrismaService } from './prisma.service';
 
 @Injectable()

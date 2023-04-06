@@ -5,7 +5,7 @@ import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 import { AggregateTypeEnum } from '@domain/entities';
 
-import { WebhookModel } from '@infra/prisma/models';
+import { WebhookModel } from '@infra/database/models';
 
 export class OutboxWebhookService implements ICronService {
   constructor(

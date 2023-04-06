@@ -6,8 +6,8 @@ import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 import { AggregateTypeEnum } from '@domain/entities';
 
+import { OutboxRepository } from '@infra/database/prisma';
 import { provideOutboxUserWebhookNotificationService } from '@infra/infra.provider';
-import { OutboxRepository } from '@infra/prisma';
 
 import { OutboxUserWebhookNotificationService } from './outbox-user-webhook-notification.cron';
 

@@ -6,8 +6,8 @@ import { provideUserAuthUseCase } from '@app/app.provider';
 import { mockUserEntity } from '@domain/__mocks__';
 import { IUserRepository } from '@domain/core';
 
+import { UserRepositoryMongo } from '@infra/database/mongo';
 import { UnauthorizedException } from '@infra/exceptions';
-import { UserRepository } from '@infra/prisma';
 
 import { UserAuthUseCase, IUserAuthUseCase } from './user-auth.use-case';
 
@@ -20,7 +20,7 @@ describe('userAuthUseCase', () => {
       providers: [
         provideUserAuthUseCase,
         {
-          provide: UserRepository,
+          provide: UserRepositoryMongo,
           useValue: {
             findOne: jest.fn(),
           },
@@ -29,7 +29,7 @@ describe('userAuthUseCase', () => {
     }).compile();
 
     userAuthUseCase = app.get<IUserAuthUseCase>(UserAuthUseCase);
-    userRepository = app.get<IUserRepository>(UserRepository);
+    userRepository = app.get<IUserRepository>(UserRepositoryMongo);
   });
 
   it('should be defined', () => {

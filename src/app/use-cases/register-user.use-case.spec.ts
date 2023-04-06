@@ -11,7 +11,7 @@ import { mockUserEntity, mockUserEntityWithoutHost } from '@domain/__mocks__';
 import { IUserRepository } from '@domain/core';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
-import { UserRepository } from '@infra/prisma';
+import { UserRepositoryMongo } from '@infra/database/mongo';
 
 import {
   IRegisterUserUseCase,
@@ -27,7 +27,7 @@ describe('RegisterUserUseCase', () => {
       providers: [
         provideRegisterUserUseCase,
         {
-          provide: UserRepository,
+          provide: UserRepositoryMongo,
           useValue: {
             exists: jest.fn(),
             save: jest.fn(),
@@ -37,7 +37,7 @@ describe('RegisterUserUseCase', () => {
     }).compile();
 
     registerUserUseCase = app.get<IRegisterUserUseCase>(RegisterUserUseCase);
-    userRepository = app.get<IUserRepository>(UserRepository);
+    userRepository = app.get<IUserRepository>(UserRepositoryMongo);
   });
 
   it('should defined', () => {

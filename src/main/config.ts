@@ -19,6 +19,8 @@ export interface EnvironmentVariables {
   ELASTIC_PORT: string;
   SENTRY_DSN: string;
   JWT_KEY: string;
+  DB_MONGO_PORT: string;
+  DB_MONGO_URI: string;
 }
 
 export const configValidationSchema = Joi.object({
@@ -47,4 +49,7 @@ export const configValidationSchema = Joi.object({
   //SENTRY
   SENTRY_DSN: Joi.string(),
   JWT_KEY: Joi.string().required(),
+  //MONGO
+  DB_MONGO_PORT: Joi.number().required(),
+  DB_MONGO_URI: Joi.string().required(),
 });

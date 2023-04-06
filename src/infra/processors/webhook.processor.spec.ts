@@ -12,9 +12,9 @@ import {
 import { IChargeRepository, IEventEmitter, ILogger } from '@domain/core';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
+import { WebhookModel } from '@infra/database/models';
+import { ChargeRepository } from '@infra/database/prisma';
 import { provideWebhookConsumer } from '@infra/infra.provider';
-import { ChargeRepository } from '@infra/prisma';
-import { WebhookModel } from '@infra/prisma/models';
 
 import { WebhookConsumer } from './webhook.processor';
 

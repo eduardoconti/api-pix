@@ -78,6 +78,20 @@ services:
       - api-pix
     dns:
       - 8.8.8.8
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - ${DB_MONGO_PORT}:${DB_MONGO_PORT}
+    volumes:
+      - mongo-apipix-data:/data/db
+    networks:
+     - api-pix
+    restart: always
+    dns:
+     - 8.8.8.8
+    
 networks:
   api-pix:
 
@@ -85,3 +99,4 @@ volumes:
   pg-apipix-data:
   redis:
   es-data:
+  mongo-apipix-data:

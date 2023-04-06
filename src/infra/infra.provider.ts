@@ -18,15 +18,15 @@ import { EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
-import { ElasticSearch } from './elastic';
-import { HttpService, IHttpService } from './http-service';
 import {
   ChargeRepository,
   OutboxRepository,
   PrismaService,
   UserRepository,
   UserWebhookNotificationRepository,
-} from './prisma';
+} from './database/prisma';
+import { ElasticSearch } from './elastic';
+import { HttpService, IHttpService } from './http-service';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
 import { UserWebhookNotificationConsumer } from './processors/user-webhook-notification.processor';
 import {

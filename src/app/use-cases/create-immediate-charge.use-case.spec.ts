@@ -22,8 +22,8 @@ import {
 import { IEventEmitter } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 
+import { ChargeRepository } from '@infra/database/prisma';
 import { CreateImmediateChargeException } from '@infra/exceptions';
-import { ChargeRepository } from '@infra/prisma';
 
 describe('CreateImmediateChargeUseCase', () => {
   let pspService: IPspService;
