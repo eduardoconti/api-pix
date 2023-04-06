@@ -34,6 +34,7 @@
     "@nestjs/elasticsearch": "8.0.0",
     "@nestjs/event-emitter": "^1.4.1",
     "@nestjs/jwt": "^10.0.2",
+    "@nestjs/mongoose": "^9.2.2",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/schedule": "^2.2.0",
@@ -54,6 +55,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "joi": "^17.8.3",
+    "mongoose": "^7.0.3",
     "nanoid": "3.3.4",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
@@ -126,7 +128,6 @@
       "!<rootDir>/infra/strategy/**",
       "!<rootDir>/infra/guard/**",
       "!<rootDir>/infra/decorators/**"
-      
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",

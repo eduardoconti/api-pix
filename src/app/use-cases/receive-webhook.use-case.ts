@@ -8,7 +8,7 @@ import {
   WebhookTypes,
 } from '@domain/entities';
 
-import { WebhookModel } from '@infra/prisma/models';
+import { WebhookModel } from '@infra/database/models';
 
 export type ReceiveWebhookUseCaseOutput = string;
 export type ReceiveWebhookUseCaseInput = {

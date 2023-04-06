@@ -6,8 +6,8 @@ import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
 import { mockActiveChargeEntity } from '@domain/__mocks__';
 import { IChargeRepository, ICronService } from '@domain/core';
 
+import { ChargeRepository } from '@infra/database/prisma';
 import { providePayChargeService } from '@infra/infra.provider';
-import { ChargeRepository } from '@infra/prisma';
 
 import { PayChargeService } from './pay-charge.cron';
 

@@ -9,7 +9,7 @@ import {
 } from '@infra/exceptions';
 import { provideUserRepository } from '@infra/infra.provider';
 
-import { UserModel } from './models';
+import { UserModel } from '../models';
 import { PrismaService } from './prisma.service';
 import { UserRepository } from './user.repository';
 

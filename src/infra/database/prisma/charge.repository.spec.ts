@@ -8,8 +8,8 @@ import {
   ChargeRepositoryException,
 } from '@infra/exceptions';
 
+import { ChargeModel } from '../models';
 import { ChargeRepository } from './charge.repository';
-import { ChargeModel } from './models';
 import { PrismaService } from './prisma.service';
 
 const model = ChargeModel.fromEntity(mockPendingChargeEntity);

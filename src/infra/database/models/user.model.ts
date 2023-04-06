@@ -1,3 +1,5 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { UserEntity, UserStatus, UserWebhookHost } from '@domain/entities';
 import {
   DateVO,
@@ -10,15 +12,26 @@ import {
 
 import { UserWebhookHostModel } from './user-webhook-host.model';
 
+@Schema()
 export class UserModel {
+  @Prop()
   id!: string;
+  @Prop()
   name!: string;
+  @Prop()
   email!: string;
+  @Prop()
   password!: string;
+  @Prop()
   status!: UserStatus;
+  @Prop()
   created_at!: Date;
+  @Prop()
   updated_at!: Date;
-  userWebhookHost?: UserWebhookHostModel[];
+  @Prop({
+    type: [{ type: Object }],
+  })
+  user_webhook_host?: UserWebhookHostModel[];
 
   static fromEntity(userEntity: UserEntity): UserModel {
     const {
@@ -38,7 +51,7 @@ export class UserModel {
       email,
       password,
       status,
-      userWebhookHost: webhookHost?.map((e) => {
+      user_webhook_host: webhookHost?.map((e) => {
         return {
           id: e.id,
           webhook_host: e.host,
@@ -61,7 +74,7 @@ export class UserModel {
     status,
     created_at,
     updated_at,
-    userWebhookHost,
+    user_webhook_host,
   }: UserModel): UserEntity {
     return new UserEntity({
       id: new UUID(id),
@@ -72,7 +85,7 @@ export class UserModel {
         email: new Email(email),
         password: new Password(password),
         status,
-        webhookHost: userWebhookHost?.map(
+        webhookHost: user_webhook_host?.map(
           ({ id, webhook_host, created_at, type, updated_at, user_id }) => {
             return new UserWebhookHost({
               id: new UUID(id),
@@ -90,3 +103,5 @@ export class UserModel {
     });
   }
 }
+
+export const UserSchema = SchemaFactory.createForClass(UserModel);

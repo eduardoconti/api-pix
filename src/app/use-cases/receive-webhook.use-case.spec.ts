@@ -6,7 +6,7 @@ import { mockWebhookEntity } from '@domain/__mocks__/webhook.mock';
 import { IWebhookRepository } from '@domain/core/repository';
 
 import { mockCelcoinWebhook } from '@infra/__mocks__/celcoin.mock';
-import { WebhookRepository } from '@infra/prisma/webhook.repository';
+import { WebhookRepository } from '@infra/database/prisma/webhook.repository';
 
 import { WebhookCelcoinInput } from '@presentation/dto';
 

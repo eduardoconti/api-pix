@@ -5,7 +5,7 @@ import { OutboxEntity, WebhookEntity } from '@domain/entities';
 
 import { WebhookRepositoryException } from '@infra/exceptions';
 
-import { OutBoxModel, WebhookModel } from './models';
+import { OutBoxModel, WebhookModel } from '../models';
 import { PrismaService } from './prisma.service';
 
 @Injectable()

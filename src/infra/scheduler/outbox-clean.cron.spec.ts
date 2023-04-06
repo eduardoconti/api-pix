@@ -4,8 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ICronService } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
+import { OutboxRepository } from '@infra/database/prisma';
 import { provideCleanOutboxService } from '@infra/infra.provider';
-import { OutboxRepository } from '@infra/prisma';
 
 import { CleanOutboxService } from './outbox-clean.cron';
 

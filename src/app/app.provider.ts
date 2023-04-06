@@ -10,12 +10,12 @@ import { IQueue } from '@domain/core/queue';
 import { IChargeRepository, IWebhookRepository } from '@domain/core/repository';
 
 import { CelcoinApi, ICelcoinApi } from '@infra/celcoin';
+import { UserRepositoryMongo } from '@infra/database/mongo';
 import {
   ChargeRepository,
   UserWebhookNotificationRepository,
   WebhookRepository,
-} from '@infra/prisma';
-import { UserRepository } from '@infra/prisma/user.repository';
+} from '@infra/database/prisma';
 
 import { IPspService } from './contracts';
 import { ChargeCreatedListener, ChargePayedListener } from './event-handler';
@@ -70,10 +70,10 @@ export const provideChargeCreatedListener: Provider<ChargeCreatedListener> = {
 
 export const provideRegisterUserUseCase: Provider<RegisterUserUseCase> = {
   provide: RegisterUserUseCase,
-  useFactory: (userRepository: IUserRepository) => {
-    return new RegisterUserUseCase(userRepository);
+  useFactory: (mongo: IUserRepository) => {
+    return new RegisterUserUseCase(mongo);
   },
-  inject: [UserRepository],
+  inject: [UserRepositoryMongo],
 };
 
 export const provideUserAuthUseCase: Provider<UserAuthUseCase> = {
@@ -81,7 +81,7 @@ export const provideUserAuthUseCase: Provider<UserAuthUseCase> = {
   useFactory: (userRepository: IUserRepository) => {
     return new UserAuthUseCase(userRepository);
   },
-  inject: [UserRepository],
+  inject: [UserRepositoryMongo],
 };
 
 export const provideChargePayedListener: Provider<ChargePayedListener> = {
@@ -95,5 +95,5 @@ export const provideChargePayedListener: Provider<ChargePayedListener> = {
       userRepository,
     );
   },
-  inject: [UserWebhookNotificationRepository, UserRepository],
+  inject: [UserWebhookNotificationRepository, UserRepositoryMongo],
 };

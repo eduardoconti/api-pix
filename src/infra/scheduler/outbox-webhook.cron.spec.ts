@@ -5,8 +5,8 @@ import { mockOutboxEntity } from '@domain/__mocks__';
 import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
+import { OutboxRepository } from '@infra/database/prisma';
 import { provideOutboxWebhookService } from '@infra/infra.provider';
-import { OutboxRepository } from '@infra/prisma';
 
 import { OutboxWebhookService } from './outbox-webhook.cron';
 

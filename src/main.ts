@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
+import { PrismaService } from '@infra/database/prisma';
 import {
   BaseExceptionFilter,
   HttpExceptionFilter,
@@ -10,7 +11,6 @@ import {
 } from '@infra/exception-filter';
 import { LoggingInterceptor } from '@infra/interceptors';
 import { ValidationPipe } from '@infra/pipes';
-import { PrismaService } from '@infra/prisma';
 
 import { EnvironmentVariables } from './main/config';
 import { MainModule } from './main/main.module';
