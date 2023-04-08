@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { IUserRepository, QueryParams } from '@domain/core';
-import { UserEntity, UserProps } from '@domain/entities';
+import { UserEntity, UserPrimitivesProps, UserProps } from '@domain/entities';
 import { Email } from '@domain/value-objects';
 
 import { UserModel } from '@infra/database/models';
@@ -31,7 +31,14 @@ export class UserRepositoryMongo implements IUserRepository {
   }
 
   async findOne(params: QueryParams<UserProps>): Promise<UserEntity> {
-    const user = await this.userModel.findOne({ email: params.email?.value });
+    const query: Partial<UserPrimitivesProps> = {};
+    if (params.id) {
+      query.id = params.id.value;
+    }
+    if (params.email) {
+      query.email = params.email.value;
+    }
+    const user = await this.userModel.findOne(query);
 
     if (!user) {
       throw new UserNotFoundException('user not found');
