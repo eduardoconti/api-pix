@@ -22,9 +22,8 @@ export class WebhookConsumer {
       providerId: webhookModel.provider_id,
       provider: webhookModel.provider,
     });
-
     const webhookEntity = WebhookModel.toEntity(webhookModel);
-    if (webhookEntity.isPayedCharge()) {
+    if (webhookEntity.isPayedChargeNotification()) {
       charge.pay({
         amount: webhookEntity.props.amount.value,
         e2eId: webhookEntity.props.e2eId,

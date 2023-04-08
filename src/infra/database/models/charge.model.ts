@@ -1,16 +1,30 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { ChargeEntity, ChargeProvider, ChargeStatus } from '@domain/entities';
 import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
+@Schema()
 export class ChargeModel {
+  @Prop({ index: true })
   id!: string;
+  @Prop()
   amount!: number;
+  @Prop()
   status!: ChargeStatus;
+  @Prop()
   provider!: ChargeProvider;
+  @Prop({ type: 'string', required: false })
   emv!: string | null;
+  @Prop({ type: 'string', required: false })
   provider_id!: string | null;
+  @Prop({ type: 'string', required: false })
   qr_code!: string | null;
+  @Prop({ type: 'string', required: false })
   e2e_id!: string | null;
+  @Prop({ type: 'string', required: false })
   created_at!: Date;
+  @Prop()
   updated_at!: Date;
+  @Prop()
   user_id!: string;
 
   static fromEntity(entity: ChargeEntity): ChargeModel {
@@ -59,3 +73,5 @@ export class ChargeModel {
     });
   }
 }
+
+export const ChargeSchema = SchemaFactory.createForClass(ChargeModel);

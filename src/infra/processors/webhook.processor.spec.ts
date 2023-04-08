@@ -13,7 +13,7 @@ import { IChargeRepository, IEventEmitter, ILogger } from '@domain/core';
 import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { WebhookModel } from '@infra/database/models';
-import { ChargeRepository } from '@infra/database/prisma';
+import { ChargeRepositoryMongo } from '@infra/database/mongo';
 import { provideWebhookConsumer } from '@infra/infra.provider';
 
 import { WebhookConsumer } from './webhook.processor';
@@ -35,7 +35,7 @@ describe('WebhookConsumer', () => {
       providers: [
         provideWebhookConsumer,
         {
-          provide: ChargeRepository,
+          provide: ChargeRepositoryMongo,
           useValue: {
             findOne: jest.fn(),
             update: jest.fn(),
@@ -58,7 +58,7 @@ describe('WebhookConsumer', () => {
     }).compile();
 
     webhookConsumer = app.get<WebhookConsumer>(WebhookConsumer);
-    chargeRepository = app.get<IChargeRepository>(ChargeRepository);
+    chargeRepository = app.get<IChargeRepository>(ChargeRepositoryMongo);
     logger = app.get<ILogger>(Logger);
     eventEmitter = app.get<IEventEmitter>(EventEmitter2);
   });

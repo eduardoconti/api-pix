@@ -22,6 +22,7 @@ export class OutboxWebhookService implements ICronService {
       published: false,
       aggregateType: AggregateTypeEnum.WEBHOOK,
     });
+
     if (data.length === 0) return;
 
     data.forEach(async (e) => {

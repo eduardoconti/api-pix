@@ -14,7 +14,7 @@ import { UserWebhookHostModel } from './user-webhook-host.model';
 
 @Schema()
 export class UserModel {
-  @Prop()
+  @Prop({ index: true })
   id!: string;
   @Prop()
   name!: string;

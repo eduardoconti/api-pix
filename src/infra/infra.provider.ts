@@ -14,13 +14,17 @@ import {
 } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
+import {
+  ChargeRepositoryMongo,
+  OutboxRepositoryMongo,
+  UserWebhookNotificationRepositoryMongo,
+} from '@infra/database/mongo';
+
 import { EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
 import {
-  ChargeRepository,
-  OutboxRepository,
   PrismaService,
   UserRepository,
   UserWebhookNotificationRepository,
@@ -57,7 +61,7 @@ export const provideOutboxWebhookService: Provider<OutboxWebhookService> = {
   ) => {
     return new OutboxWebhookService(logger, outboxRepository, queue);
   },
-  inject: [Logger, OutboxRepository, 'BullQueue_webhook'],
+  inject: [Logger, OutboxRepositoryMongo, 'BullQueue_webhook'],
 };
 
 export const provideCleanOutboxService: Provider<CleanOutboxService> = {
@@ -65,7 +69,7 @@ export const provideCleanOutboxService: Provider<CleanOutboxService> = {
   useFactory: (logger: LoggerService, outboxRepository: IOutboxRepository) => {
     return new CleanOutboxService(logger, outboxRepository);
   },
-  inject: [Logger, OutboxRepository],
+  inject: [Logger, OutboxRepositoryMongo],
 };
 
 export const provideElasticSearchConsumer: Provider<ElasticSearchConsumer> = {
@@ -85,7 +89,7 @@ export const provideWebhookConsumer: Provider<WebhookConsumer> = {
   ) => {
     return new WebhookConsumer(logger, chargeRepository, eventEmitter);
   },
-  inject: [Logger, ChargeRepository, EventEmitter2],
+  inject: [Logger, ChargeRepositoryMongo, EventEmitter2],
 };
 
 export const providePayChargeService: Provider<PayChargeService> = {
@@ -97,7 +101,7 @@ export const providePayChargeService: Provider<PayChargeService> = {
   ) => {
     return new PayChargeService(logger, chargeRepository, webhookUseCase);
   },
-  inject: [Logger, ChargeRepository, ReceiveWebhookUseCase],
+  inject: [Logger, ChargeRepositoryMongo, ReceiveWebhookUseCase],
 };
 
 export const provideUserRepository: Provider<UserRepository> = {
@@ -131,7 +135,11 @@ export const provideOutboxUserWebhookNotificationService: Provider<OutboxUserWeb
         queue,
       );
     },
-    inject: [Logger, OutboxRepository, 'BullQueue_user_webhook_notification'],
+    inject: [
+      Logger,
+      OutboxRepositoryMongo,
+      'BullQueue_user_webhook_notification',
+    ],
   };
 
 export const provideUserWebhookNotificationConsumer: Provider<UserWebhookNotificationConsumer> =
@@ -148,5 +156,5 @@ export const provideUserWebhookNotificationConsumer: Provider<UserWebhookNotific
         userWebhookNotificationRepository,
       );
     },
-    inject: [Logger, HttpService, UserWebhookNotificationRepository],
+    inject: [Logger, HttpService, UserWebhookNotificationRepositoryMongo],
   };

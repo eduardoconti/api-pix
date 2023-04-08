@@ -67,7 +67,7 @@ export class AplicationProblem {
       title: this.title,
       detail: this.detail,
       type: this.type,
-      invalidFields: this?.invalidFields,
+      invalid_fields: this?.invalidFields,
     };
   }
 }

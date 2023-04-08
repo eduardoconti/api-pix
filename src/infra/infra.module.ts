@@ -21,17 +21,29 @@ import { AppModule } from '@app/app.module';
 
 import { BaseException } from '@domain/exceptions';
 
-import { UserModel, UserSchema } from '@infra/database/models';
-import { UserRepositoryMongo } from '@infra/database/mongo';
+import {
+  ChargeModel,
+  ChargeSchema,
+  OutBoxModel,
+  OutboxSchema,
+  UserModel,
+  UserSchema,
+  UserWebhookNotificationModel,
+  UserWebhookNotificationSchema,
+  WebhookModel,
+  WebhookSchema,
+} from '@infra/database/models';
+import {
+  ChargeRepositoryMongo,
+  OutboxRepositoryMongo,
+  UserRepositoryMongo,
+  WebhookRepositoryMongo,
+} from '@infra/database/mongo';
+import { UserWebhookNotificationRepositoryMongo } from '@infra/database/mongo/user-webhook-notification.repository';
 
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
-import {
-  WebhookRepository,
-  ChargeRepository,
-  OutboxRepository,
-} from './database/prisma';
 import { PrismaService } from './database/prisma';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service';
@@ -196,6 +208,21 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
       }),
     }),
     MongooseModule.forFeature([{ name: UserModel.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: ChargeModel.name, schema: ChargeSchema },
+    ]),
+    MongooseModule.forFeature([
+      { name: OutBoxModel.name, schema: OutboxSchema },
+    ]),
+    MongooseModule.forFeature([
+      { name: WebhookModel.name, schema: WebhookSchema },
+    ]),
+    MongooseModule.forFeature([
+      {
+        name: UserWebhookNotificationModel.name,
+        schema: UserWebhookNotificationSchema,
+      },
+    ]),
   ],
   providers: [
     HttpService,
@@ -203,10 +230,10 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     CacheManager,
     ElasticSearch,
     PrismaService,
-    ChargeRepository,
-    WebhookRepository,
+    ChargeRepositoryMongo,
+    WebhookRepositoryMongo,
     provideCelcoinApi,
-    OutboxRepository,
+    OutboxRepositoryMongo,
     provideWebhookConsumer,
     provideElasticSearchConsumer,
     provideOutboxWebhookService,
@@ -224,6 +251,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     provideUserWebhookNotificationRepository,
     provideOutboxUserWebhookNotificationService,
     provideUserWebhookNotificationConsumer,
+    UserWebhookNotificationRepositoryMongo,
   ],
   exports: [
     HttpService,
@@ -231,16 +259,17 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     Logger,
     ElasticSearch,
     PrismaService,
-    ChargeRepository,
+    ChargeRepositoryMongo,
     BullModule,
-    WebhookRepository,
-    OutboxRepository,
+    WebhookRepositoryMongo,
+    OutboxRepositoryMongo,
     provideCelcoinApi,
     provideUserRepository,
     SentryMonitorError,
     JwtModule,
     provideUserWebhookNotificationRepository,
     UserRepositoryMongo,
+    UserWebhookNotificationRepositoryMongo,
   ],
 })
 export class InfraModule {}

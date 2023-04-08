@@ -5,7 +5,7 @@ import { mockOutboxEntity } from '@domain/__mocks__';
 import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
-import { OutboxRepository } from '@infra/database/prisma';
+import { OutboxRepositoryMongo } from '@infra/database/mongo';
 import { provideOutboxWebhookService } from '@infra/infra.provider';
 
 import { OutboxWebhookService } from './outbox-webhook.cron';
@@ -28,7 +28,7 @@ describe('OutboxWebhookService', () => {
           },
         },
         {
-          provide: OutboxRepository,
+          provide: OutboxRepositoryMongo,
           useValue: {
             update: jest.fn(),
             findMany: jest.fn(),
@@ -44,7 +44,7 @@ describe('OutboxWebhookService', () => {
     }).compile();
 
     logger = app.get<LoggerService>(Logger);
-    outboxRepository = app.get<IOutboxRepository>(OutboxRepository);
+    outboxRepository = app.get<IOutboxRepository>(OutboxRepositoryMongo);
     outboxWebhookService = app.get<ICronService>(OutboxWebhookService);
     queue = app.get<IQueue>('BullQueue_webhook');
   });

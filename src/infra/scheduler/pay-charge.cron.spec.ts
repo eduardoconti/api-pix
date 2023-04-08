@@ -6,7 +6,7 @@ import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
 import { mockActiveChargeEntity } from '@domain/__mocks__';
 import { IChargeRepository, ICronService } from '@domain/core';
 
-import { ChargeRepository } from '@infra/database/prisma';
+import { ChargeRepositoryMongo } from '@infra/database/mongo';
 import { providePayChargeService } from '@infra/infra.provider';
 
 import { PayChargeService } from './pay-charge.cron';
@@ -29,7 +29,7 @@ describe('PayChargeService', () => {
           },
         },
         {
-          provide: ChargeRepository,
+          provide: ChargeRepositoryMongo,
           useValue: {
             findMany: jest.fn(),
           },
@@ -44,7 +44,7 @@ describe('PayChargeService', () => {
     }).compile();
 
     logger = app.get<LoggerService>(Logger);
-    chargeRepository = app.get<IChargeRepository>(ChargeRepository);
+    chargeRepository = app.get<IChargeRepository>(ChargeRepositoryMongo);
     payChargeService = app.get<ICronService>(PayChargeService);
     receiveWebhookUseCase = app.get<IReceiveWebhookUseCase>(
       ReceiveWebhookUseCase,

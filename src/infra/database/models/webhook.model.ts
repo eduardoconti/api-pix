@@ -1,15 +1,27 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { ChargeProvider, WebhookEntity, WebhookTypes } from '@domain/entities';
 import { Amount, DateVO, UUID } from '@domain/value-objects';
 
+@Schema()
 export class WebhookModel {
+  @Prop({ index: true })
   id!: string;
+  @Prop()
   provider!: ChargeProvider;
+  @Prop()
   provider_id!: string;
+  @Prop()
   payload!: string;
+  @Prop()
   type!: WebhookTypes;
+  @Prop()
   amount!: number;
+  @Prop()
   e2e_id!: string;
+  @Prop()
   created_at!: Date;
+  @Prop()
   updated_at!: Date;
 
   static fromEntity(entity: WebhookEntity): WebhookModel {
@@ -53,3 +65,5 @@ export class WebhookModel {
     });
   }
 }
+
+export const WebhookSchema = SchemaFactory.createForClass(WebhookModel);

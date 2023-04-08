@@ -1,16 +1,28 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { JsonValue } from '@domain/core';
 import { UserWebhookNotificationEntity, WebhookTypes } from '@domain/entities';
 import { DateVO, UUID } from '@domain/value-objects';
 
+@Schema()
 export class UserWebhookNotificationModel {
+  @Prop({ index: true })
   id!: string;
+  @Prop()
   user_id!: string;
+  @Prop()
   type!: WebhookTypes;
+  @Prop()
   charge_id!: string;
+  @Prop({ type: Object })
   payload!: JsonValue;
+  @Prop()
   attempts!: number;
+  @Prop({ required: false, type: 'date' })
   delivered_at!: Date | null;
+  @Prop()
   created_at!: Date;
+  @Prop()
   updated_at!: Date;
 
   static fromEntity(
@@ -58,3 +70,7 @@ export class UserWebhookNotificationModel {
     });
   }
 }
+
+export const UserWebhookNotificationSchema = SchemaFactory.createForClass(
+  UserWebhookNotificationModel,
+);

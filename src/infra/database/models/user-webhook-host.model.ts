@@ -3,7 +3,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { WebhookTypes } from '@domain/entities';
 @Schema()
 export class UserWebhookHostModel {
-  @Prop()
+  @Prop({ index: true })
   id!: string;
   @Prop()
   user_id!: string;

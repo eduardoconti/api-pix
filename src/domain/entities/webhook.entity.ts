@@ -50,7 +50,7 @@ export class WebhookEntity extends AggregateRoot<WebhookProps> {
     return entity;
   }
 
-  isPayedCharge(): boolean {
+  isPayedChargeNotification(): boolean {
     return this.props.type === 'CHARGE_PAYED';
   }
 }
