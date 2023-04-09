@@ -14,17 +14,16 @@ export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly logger: Logger) {}
   intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
-    const { body, headers, path } = _context
-      .switchToHttp()
-      .getRequest<Request>();
+    const req = _context.switchToHttp().getRequest<Request>();
+
     return next.handle().pipe(
       tap((output) => {
         try {
           this.logger.log(
             {
-              path,
-              headers,
-              input: body,
+              path: req?.path,
+              headers: req?.headers,
+              input: req?.body,
               output,
               requestTime: `${Date.now() - now}ms`,
             },

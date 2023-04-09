@@ -232,6 +232,9 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
       autoSchemaFile: 'schema.gql',
       transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
       installSubscriptionHandlers: true,
+      formatError: (e) => {
+        return { message: e.message };
+      },
       buildSchemaOptions: {
         directives: [
           new GraphQLDirective({
