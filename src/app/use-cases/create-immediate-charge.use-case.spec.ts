@@ -22,7 +22,7 @@ import {
 import { IEventEmitter } from '@domain/core';
 import { IChargeRepository } from '@domain/core/repository';
 
-import { ChargeRepository } from '@infra/database/prisma';
+import { ChargeRepositoryMongo } from '@infra/database/mongo';
 import { CreateImmediateChargeException } from '@infra/exceptions';
 
 describe('CreateImmediateChargeUseCase', () => {
@@ -48,7 +48,7 @@ describe('CreateImmediateChargeUseCase', () => {
           },
         },
         {
-          provide: ChargeRepository,
+          provide: ChargeRepositoryMongo,
           useValue: {
             save: jest.fn(),
             update: jest.fn(),
@@ -62,7 +62,7 @@ describe('CreateImmediateChargeUseCase', () => {
       CreateImmediateChargeUseCase,
     );
     eventEmitter = app.get<IEventEmitter>(EventEmitter2);
-    chargeRepository = app.get<IChargeRepository>(ChargeRepository);
+    chargeRepository = app.get<IChargeRepository>(ChargeRepositoryMongo);
 
     jest
       .spyOn(chargeRepository, 'save')

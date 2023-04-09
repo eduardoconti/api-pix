@@ -10,12 +10,12 @@ import { IQueue } from '@domain/core/queue';
 import { IChargeRepository, IWebhookRepository } from '@domain/core/repository';
 
 import { CelcoinApi, ICelcoinApi } from '@infra/celcoin';
-import { UserRepositoryMongo } from '@infra/database/mongo';
 import {
-  ChargeRepository,
-  UserWebhookNotificationRepository,
-  WebhookRepository,
-} from '@infra/database/prisma';
+  ChargeRepositoryMongo,
+  UserRepositoryMongo,
+  WebhookRepositoryMongo,
+} from '@infra/database/mongo';
+import { UserWebhookNotificationRepositoryMongo } from '@infra/database/mongo/user-webhook-notification.repository';
 
 import { IPspService } from './contracts';
 import { ChargeCreatedListener, ChargePayedListener } from './event-handler';
@@ -33,15 +33,15 @@ export const provideCreateImmediateChargeUseCase: Provider<CreateImmediateCharge
     useFactory: (
       pspService: IPspService,
       eventEmitter: IEventEmitter,
-      chargeRepository: IChargeRepository,
+      ChargeRepositoryMongo: IChargeRepository,
     ) => {
       return new CreateImmediateChargeUseCase(
         pspService,
         eventEmitter,
-        chargeRepository,
+        ChargeRepositoryMongo,
       );
     },
-    inject: [PspService, EventEmitter2, ChargeRepository],
+    inject: [PspService, EventEmitter2, ChargeRepositoryMongo],
   };
 
 export const provideReceiveWebhookUseCase: Provider<ReceiveWebhookUseCase> = {
@@ -49,7 +49,7 @@ export const provideReceiveWebhookUseCase: Provider<ReceiveWebhookUseCase> = {
   useFactory: (webhookRepository: IWebhookRepository) => {
     return new ReceiveWebhookUseCase(webhookRepository);
   },
-  inject: [WebhookRepository],
+  inject: [WebhookRepositoryMongo],
 };
 
 export const providePspService: Provider<PspService> = {
@@ -95,5 +95,5 @@ export const provideChargePayedListener: Provider<ChargePayedListener> = {
       userRepository,
     );
   },
-  inject: [UserWebhookNotificationRepository, UserRepositoryMongo],
+  inject: [UserWebhookNotificationRepositoryMongo, UserRepositoryMongo],
 };

@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ICronService } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 
-import { OutboxRepository } from '@infra/database/prisma';
+import { OutboxRepositoryMongo } from '@infra/database/mongo';
 import { provideCleanOutboxService } from '@infra/infra.provider';
 
 import { CleanOutboxService } from './outbox-clean.cron';
@@ -25,7 +25,7 @@ describe('CleanOutboxService', () => {
           },
         },
         {
-          provide: OutboxRepository,
+          provide: OutboxRepositoryMongo,
           useValue: {
             sql: jest.fn(),
           },
@@ -34,7 +34,7 @@ describe('CleanOutboxService', () => {
     }).compile();
 
     logger = app.get<LoggerService>(Logger);
-    outboxRepository = app.get<IOutboxRepository>(OutboxRepository);
+    outboxRepository = app.get<IOutboxRepository>(OutboxRepositoryMongo);
     cleanOutboxService = app.get<ICronService>(CleanOutboxService);
   });
 

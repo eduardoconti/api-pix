@@ -14,8 +14,10 @@ import {
 import { ArgumentInvalidException } from '@domain/exceptions';
 import { UUID } from '@domain/value-objects';
 
-import { UserRepositoryMongo } from '@infra/database/mongo';
-import { UserWebhookNotificationRepository } from '@infra/database/prisma';
+import {
+  UserRepositoryMongo,
+  UserWebhookNotificationRepositoryMongo,
+} from '@infra/database/mongo';
 
 import { ChargePayedListener } from './charge-payed.event-handler';
 
@@ -34,7 +36,7 @@ describe('ChargePayedListener', () => {
           },
         },
         {
-          provide: UserWebhookNotificationRepository,
+          provide: UserWebhookNotificationRepositoryMongo,
           useValue: {
             saveWithOutbox: jest.fn(),
           },
@@ -44,7 +46,7 @@ describe('ChargePayedListener', () => {
 
     listener = module.get<ChargePayedListener>(ChargePayedListener);
     userWebhookNotificationRepository = module.get(
-      UserWebhookNotificationRepository,
+      UserWebhookNotificationRepositoryMongo,
     );
     userRepository = module.get(UserRepositoryMongo);
   });

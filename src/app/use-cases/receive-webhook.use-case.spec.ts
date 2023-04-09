@@ -6,7 +6,7 @@ import { mockWebhookEntity } from '@domain/__mocks__/webhook.mock';
 import { IWebhookRepository } from '@domain/core/repository';
 
 import { mockCelcoinWebhook } from '@infra/__mocks__/celcoin.mock';
-import { WebhookRepository } from '@infra/database/prisma/webhook.repository';
+import { WebhookRepositoryMongo } from '@infra/database/mongo';
 
 import { WebhookCelcoinInput } from '@presentation/dto';
 
@@ -25,7 +25,7 @@ describe('ReceiveWebhookUseCase', () => {
       providers: [
         provideReceiveWebhookUseCase,
         {
-          provide: WebhookRepository,
+          provide: WebhookRepositoryMongo,
           useValue: {
             save: jest.fn(),
             saveWithOutbox: jest.fn(),
@@ -35,7 +35,7 @@ describe('ReceiveWebhookUseCase', () => {
     }).compile();
 
     WebhookUseCase = app.get<IReceiveWebhookUseCase>(ReceiveWebhookUseCase);
-    chargeRepository = app.get<IWebhookRepository>(WebhookRepository);
+    chargeRepository = app.get<IWebhookRepository>(WebhookRepositoryMongo);
 
     jest
       .spyOn(chargeRepository, 'saveWithOutbox')

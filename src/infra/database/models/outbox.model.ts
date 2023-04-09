@@ -1,14 +1,25 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+
 import { OutboxAggregateType, OutboxEntity } from '@domain/entities';
 import { DateVO, UUID } from '@domain/value-objects';
 
+@Schema()
 export class OutBoxModel {
+  @Prop({ index: true })
   id!: string;
+  @Prop()
   aggregate_id!: string;
+  @Prop()
   aggregate_type!: OutboxAggregateType;
+  @Prop()
   event_id!: string;
+  @Prop()
   payload!: string;
+  @Prop()
   published!: boolean;
+  @Prop()
   created_at!: Date;
+  @Prop()
   updated_at!: Date;
 
   static fromEntity(entity: OutboxEntity): OutBoxModel {
@@ -49,3 +60,4 @@ export class OutBoxModel {
     });
   }
 }
+export const OutboxSchema = SchemaFactory.createForClass(OutBoxModel);

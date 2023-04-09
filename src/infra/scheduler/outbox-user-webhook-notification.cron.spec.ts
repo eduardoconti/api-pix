@@ -6,7 +6,7 @@ import { ICronService, IQueue } from '@domain/core';
 import { IOutboxRepository } from '@domain/core/repository';
 import { AggregateTypeEnum } from '@domain/entities';
 
-import { OutboxRepository } from '@infra/database/prisma';
+import { OutboxRepositoryMongo } from '@infra/database/mongo';
 import { provideOutboxUserWebhookNotificationService } from '@infra/infra.provider';
 
 import { OutboxUserWebhookNotificationService } from './outbox-user-webhook-notification.cron';
@@ -29,7 +29,7 @@ describe('OutboxUserWebhookNotificationService', () => {
           },
         },
         {
-          provide: OutboxRepository,
+          provide: OutboxRepositoryMongo,
           useValue: {
             update: jest.fn(),
             findMany: jest.fn(),
@@ -45,7 +45,7 @@ describe('OutboxUserWebhookNotificationService', () => {
     }).compile();
 
     logger = app.get<LoggerService>(Logger);
-    outboxRepository = app.get<IOutboxRepository>(OutboxRepository);
+    outboxRepository = app.get<IOutboxRepository>(OutboxRepositoryMongo);
     outboxWebhookService = app.get<ICronService>(
       OutboxUserWebhookNotificationService,
     );
