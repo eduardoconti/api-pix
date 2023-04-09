@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { IChargeRepository } from '@domain/core';
@@ -6,8 +6,10 @@ import { ChargeStatus } from '@domain/entities';
 
 import { ChargeModel } from '@infra/database/models';
 import { ChargeRepositoryMongo } from '@infra/database/mongo';
+import { GqlAuthGuard } from '@infra/guard';
 
 @Resolver(() => ChargeModel)
+@UseGuards(GqlAuthGuard)
 export class ChargeResolver {
   constructor(
     @Inject(ChargeRepositoryMongo)
