@@ -24,7 +24,9 @@
 
 ## Description
 
-Api para pagamentos com PIX.
+Este é um projeto de API para pagamentos com PIX que utiliza a plataforma da empresa Celcoin como provedora de serviços de pagamento. A API foi desenvolvida usando a arquitetura limpa (Clean Architecture) e o modelo de Domínio Orientado a Design (DDD), para garantir a separação de preocupações e tornar o código mais testável, escalável e fácil de manter.
+
+A API possui alguns recursos, como criação de transações de pagamento, consulta de transações e gerenciamento de contas e usuários. Além disso, a API utiliza diversas tecnologias para tornar o processo de pagamento mais rápido, seguro e confiável, como o uso de cache com Redis , bancos de dados como MongoDB, PostgreSQL e Elasticsearch, Sentry para monitoramento de erros, e mensageria com Bull para processamento assíncrono de transações.
 
 ## Installation
 
