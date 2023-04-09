@@ -16,8 +16,7 @@ export class UserRepositoryMongo implements IUserRepository {
   ) {}
 
   async save(entity: UserEntity): Promise<UserEntity> {
-    const createdCat = new this.userModel(UserModel.fromEntity(entity));
-    const saved = await createdCat.save();
+    const saved = await this.userModel.create(UserModel.fromEntity(entity));
     return UserModel.toEntity(saved);
   }
 
@@ -46,8 +45,8 @@ export class UserRepositoryMongo implements IUserRepository {
     return UserModel.toEntity(user);
   }
 
-  async findMany(params: QueryParams<UserProps>): Promise<UserEntity[] | []> {
-    const users = await this.userModel.find({ status: params.status });
+  async findMany(params?: QueryParams<UserProps>): Promise<UserEntity[] | []> {
+    const users = await this.userModel.find({ status: params?.status });
     return users.map((e) => {
       return UserModel.toEntity(e);
     });
