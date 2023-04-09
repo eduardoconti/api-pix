@@ -1,3 +1,4 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule, forwardRef, Logger, Module } from '@nestjs/common';
@@ -5,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { GraphQLModule } from '@nestjs/graphql';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
@@ -15,6 +17,7 @@ import * as Sentry from '@sentry/node';
 import { ProfilingIntegration } from '@sentry/profiling-node';
 import * as Tracing from '@sentry/tracing';
 import * as redisStore from 'cache-manager-redis-store';
+import { DirectiveLocation, GraphQLDirective } from 'graphql';
 import type { ClientOpts } from 'redis';
 
 import { AppModule } from '@app/app.module';
@@ -39,7 +42,8 @@ import {
   UserRepositoryMongo,
   WebhookRepositoryMongo,
 } from '@infra/database/mongo';
-import { UserWebhookNotificationRepositoryMongo } from '@infra/database/mongo/user-webhook-notification.repository';
+import { UserWebhookNotificationRepositoryMongo } from '@infra/database/mongo';
+import { upperDirectiveTransformer } from '@infra/graphql/upper-case.directive';
 
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
@@ -223,6 +227,20 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
         schema: UserWebhookNotificationSchema,
       },
     ]),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: 'schema.gql',
+      transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
+      installSubscriptionHandlers: true,
+      buildSchemaOptions: {
+        directives: [
+          new GraphQLDirective({
+            name: 'upper',
+            locations: [DirectiveLocation.FIELD_DEFINITION],
+          }),
+        ],
+      },
+    }),
   ],
   providers: [
     HttpService,
