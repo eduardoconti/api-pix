@@ -3,7 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { IChargeRepository, QueryParams } from '@domain/core';
-import { ChargeEntity, ChargeProps } from '@domain/entities';
+import {
+  ChargeEntity,
+  ChargePrimitiveProps,
+  ChargeProps,
+} from '@domain/entities';
 
 import { ChargeModel } from '@infra/database/models';
 import { ChargeNotFoundException } from '@infra/exceptions';
@@ -36,7 +40,11 @@ export class ChargeRepositoryMongo implements IChargeRepository {
   async findMany(
     params: QueryParams<ChargeProps>,
   ): Promise<ChargeEntity[] | []> {
-    const charges = await this.chargeModel.find({ status: params.status });
+    const query: Partial<ChargePrimitiveProps> = {};
+    if (params?.status) {
+      query.status = params.status;
+    }
+    const charges = await this.chargeModel.find(query);
     return charges.map((e) => {
       return ChargeModel.toEntity(e);
     });

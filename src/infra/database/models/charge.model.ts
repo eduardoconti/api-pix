@@ -1,29 +1,42 @@
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { ChargeEntity, ChargeProvider, ChargeStatus } from '@domain/entities';
 import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
 @Schema()
+@ObjectType()
 export class ChargeModel {
+  @Field((_type) => ID)
   @Prop({ index: true })
   id!: string;
+  @Field()
   @Prop()
   amount!: number;
+  @Field()
   @Prop()
   status!: ChargeStatus;
+  @Field()
   @Prop()
   provider!: ChargeProvider;
+  @Field((_type) => String, { nullable: true })
   @Prop({ type: 'string', required: false })
   emv!: string | null;
+  @Field((_type) => String, { nullable: true })
   @Prop({ type: 'string', required: false })
   provider_id!: string | null;
+  @Field((_type) => String, { nullable: true })
   @Prop({ type: 'string', required: false })
   qr_code!: string | null;
+  @Field((_type) => String, { nullable: true })
   @Prop({ type: 'string', required: false })
   e2e_id!: string | null;
+  @Field()
   @Prop({ type: 'string', required: false })
   created_at!: Date;
+  @Field()
   @Prop()
   updated_at!: Date;
+  @Field()
   @Prop()
   user_id!: string;
 

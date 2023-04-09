@@ -9,7 +9,7 @@ import {
   HttpExceptionFilter,
   UnknownExceptionFilter,
 } from '@infra/exception-filter';
-import { LoggingInterceptor } from '@infra/interceptors';
+//import { LoggingInterceptor } from '@infra/interceptors';
 import { ValidationPipe } from '@infra/pipes';
 
 import { EnvironmentVariables } from './main/config';
@@ -18,7 +18,7 @@ import { MainModule } from './main/main.module';
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);
   const logger = app.get(Logger);
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
+  //app.useGlobalInterceptors(new LoggingInterceptor(logger));
   app.useGlobalFilters(new UnknownExceptionFilter(logger));
   app.useGlobalFilters(new BaseExceptionFilter(logger));
   app.useGlobalFilters(new HttpExceptionFilter(logger));

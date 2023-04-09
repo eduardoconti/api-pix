@@ -24,7 +24,6 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true,
     "paths": {
       "@app/*": [
         "src/app/*"

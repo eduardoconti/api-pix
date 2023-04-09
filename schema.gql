@@ -1,0 +1,29 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+directive @upper on FIELD_DEFINITION
+
+type ChargeModel {
+  id: ID!
+  amount: Float!
+  status: String!
+  provider: String!
+  emv: String
+  provider_id: String
+  qr_code: String
+  e2e_id: String
+  created_at: DateTime!
+  updated_at: DateTime!
+  user_id: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Query {
+  findAll: [ChargeModel!]!
+  findByStatus(status: String!): [ChargeModel!]!
+}
