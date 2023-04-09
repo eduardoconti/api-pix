@@ -6,6 +6,7 @@ import { mockUserEntity } from '@domain/__mocks__';
 
 import { UserModel } from '@infra/database/models';
 import { UserRepositoryMongo } from '@infra/database/mongo/user.repository';
+import { UserNotFoundException } from '@infra/exceptions';
 
 describe('UserRepositoryMongo', () => {
   let repository: UserRepositoryMongo;
@@ -73,7 +74,7 @@ describe('UserRepositoryMongo', () => {
   });
 
   describe('findOne', () => {
-    it('should find ond user', async () => {
+    it('should find one user', async () => {
       mockUserModel.findOne.mockResolvedValue(model);
 
       const result = await repository.findOne({ id: mockUserEntity.id });
@@ -82,6 +83,33 @@ describe('UserRepositoryMongo', () => {
         id: mockUserEntity.id.value,
       });
       expect(result).toStrictEqual(mockUserEntity);
+    });
+
+    it('should find one user by email', async () => {
+      mockUserModel.findOne.mockResolvedValue(model);
+
+      const result = await repository.findOne({
+        email: mockUserEntity.props.email,
+      });
+
+      expect(userModel.findOne).toHaveBeenCalledWith({
+        email: mockUserEntity.props.email.value,
+      });
+      expect(result).toStrictEqual(mockUserEntity);
+    });
+
+    it('should throw UserNotFoundException when user not found', async () => {
+      mockUserModel.findOne.mockResolvedValue(null);
+
+      await expect(
+        repository.findOne({
+          email: mockUserEntity.props.email,
+        }),
+      ).rejects.toThrowError(new UserNotFoundException('user not found'));
+
+      expect(userModel.findOne).toHaveBeenCalledWith({
+        email: mockUserEntity.props.email.value,
+      });
     });
   });
 
@@ -92,6 +120,19 @@ describe('UserRepositoryMongo', () => {
       const result = await repository.findMany();
 
       expect(userModel.find).toBeCalled();
+      expect(result).toStrictEqual([mockUserEntity]);
+    });
+
+    it('should find many users by status', async () => {
+      mockUserModel.find.mockResolvedValue([model]);
+
+      const result = await repository.findMany({
+        status: mockUserEntity.props.status,
+      });
+
+      expect(userModel.find).toBeCalledWith({
+        status: mockUserEntity.props.status,
+      });
       expect(result).toStrictEqual([mockUserEntity]);
     });
   });
