@@ -14,7 +14,6 @@ import { ValidationPipe } from '@infra/pipes';
 
 import { EnvironmentVariables } from './main/config';
 import { MainModule } from './main/main.module';
-
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);
   const logger = app.get(Logger);
@@ -24,6 +23,9 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter(logger));
 
   app.useGlobalPipes(new ValidationPipe());
+  app.enableCors({
+    origin: '*',
+  });
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);

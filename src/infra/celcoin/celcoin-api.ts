@@ -51,11 +51,11 @@ export class CelcoinApi implements ICelcoinApi {
   constructor(
     private readonly httpService: IHttpService,
     private readonly configService: ConfigService<EnvironmentVariables>,
-    private readonly cacheMamager: ICacheManager,
+    private readonly cacheManager: ICacheManager,
   ) {}
 
   async auth(): Promise<AuthenticateOnPSPResponse> {
-    const cachedToken = await this.cacheMamager.get<AuthenticateOnPSPResponse>(
+    const cachedToken = await this.cacheManager.get<AuthenticateOnPSPResponse>(
       TOKEN_CACHE_KEY,
     );
     if (cachedToken) {
@@ -101,14 +101,13 @@ export class CelcoinApi implements ICelcoinApi {
       accessToken: access_token,
       expiresIn: expires_in,
     };
-    await this.cacheMamager.set<AuthenticateOnPSPResponse>(
+    await this.cacheManager.set<AuthenticateOnPSPResponse>(
       TOKEN_CACHE_KEY,
       response,
       TOKEN_CACHE_TTL,
     );
     return response;
   }
-
   async createLocation(
     auth: CelcoinAuth,
     data: Omit<CelcoinLocationRequest, 'type' | 'clientRequestId'>,

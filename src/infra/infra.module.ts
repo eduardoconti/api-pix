@@ -232,7 +232,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
       autoSchemaFile: 'schema.gql',
       transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
       installSubscriptionHandlers: true,
-      formatError: (e) => {
+      formatError: (e: any) => {
         return { message: e.message };
       },
       buildSchemaOptions: {

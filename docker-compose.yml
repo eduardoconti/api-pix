@@ -12,8 +12,6 @@ services:
     env_file:
       - .env
     command: yarn start:dev
-    networks:
-      - api-pix
     depends_on:
       - postgres
     dns:
@@ -29,8 +27,6 @@ services:
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-    networks:
-      - api-pix
     restart: always
     dns:
       - 8.8.8.8
@@ -43,8 +39,6 @@ services:
     command: redis-server --requirepass ${REDIS_PASSWORD} --save 20 1 --loglevel warning
     volumes: 
       - redis:/data
-    networks:
-      - api-pix
     dns:
       - 8.8.8.8
 
@@ -62,8 +56,6 @@ services:
       - es-data:/usr/share/elasticsearch/data
     ports:
       - ${ELASTIC_PORT}:${ELASTIC_PORT}
-    networks:
-      - api-pix
     dns:
       - 8.8.8.8
   
@@ -74,8 +66,6 @@ services:
       - 5601:5601
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
-    networks:
-      - api-pix
     dns:
       - 8.8.8.8
 
@@ -86,15 +76,10 @@ services:
       - ${DB_MONGO_PORT}:${DB_MONGO_PORT}
     volumes:
       - mongo-apipix-data:/data/db
-    networks:
-     - api-pix
     restart: always
     dns:
      - 8.8.8.8
     
-networks:
-  api-pix:
-
 volumes:
   pg-apipix-data:
   redis:
