@@ -16,8 +16,8 @@ export class OutboxRepositoryMongo implements IOutboxRepository {
   ) {}
 
   async save(entity: OutboxEntity): Promise<OutboxEntity> {
-    const createdCat = new this.outboxModel(OutBoxModel.fromEntity(entity));
-    const saved = await createdCat.save();
+    const createdOutbox = new this.outboxModel(OutBoxModel.fromEntity(entity));
+    const saved = await createdOutbox.save();
     return OutBoxModel.toEntity(saved);
   }
 

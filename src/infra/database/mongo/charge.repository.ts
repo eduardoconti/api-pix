@@ -20,8 +20,8 @@ export class ChargeRepositoryMongo implements IChargeRepository {
   ) {}
 
   async save(entity: ChargeEntity): Promise<ChargeEntity> {
-    const createdCat = new this.chargeModel(ChargeModel.fromEntity(entity));
-    const saved = await createdCat.save();
+    const createdCharge = new this.chargeModel(ChargeModel.fromEntity(entity));
+    const saved = await createdCharge.save();
     return ChargeModel.toEntity(saved);
   }
 
