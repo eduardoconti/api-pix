@@ -47,9 +47,9 @@ export const configValidationSchema = Joi.object({
   ELASTIC_HOST: Joi.string(),
   ELASTIC_PORT: Joi.number(),
   //SENTRY
-  SENTRY_DSN: Joi.string(),
+  SENTRY_DSN: Joi.optional(),
   JWT_KEY: Joi.string().required(),
   //MONGO
-  DB_MONGO_PORT: Joi.number().required(),
+  DB_MONGO_PORT: Joi.number().default(27017),
   DB_MONGO_URI: Joi.string().required(),
 });
