@@ -20,6 +20,8 @@ echo '_______  _______  ________
 echo ''
 echo ''
 
+echo '  -- create .env --  \n'
+cp env.example .env
 echo '  -- build  -- \n'
 docker-compose up -d --build
 
