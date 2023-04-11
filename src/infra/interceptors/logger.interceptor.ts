@@ -5,6 +5,7 @@ import {
   CallHandler,
   Logger,
 } from '@nestjs/common';
+import { GqlContextType } from '@nestjs/graphql';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -12,10 +13,12 @@ import { tap } from 'rxjs/operators';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   constructor(private readonly logger: Logger) {}
-  intercept(_context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const now = Date.now();
-    const req = _context.switchToHttp().getRequest<Request>();
-
+    const req = context.switchToHttp().getRequest<Request>();
+    if (context.getType<GqlContextType>() === 'graphql') {
+      return next.handle();
+    }
     return next.handle().pipe(
       tap((output) => {
         try {
