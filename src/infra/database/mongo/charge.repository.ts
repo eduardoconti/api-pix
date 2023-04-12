@@ -43,7 +43,7 @@ export class ChargeRepositoryMongo implements IChargeRepository {
     if (params?.userId) {
       query.user_id = params.userId.value;
     }
-    const charges = await this.chargeModel.find(query);
+    const charges = await this.chargeModel.find(query).sort({ created_at: -1 });
     return charges.map((e) => {
       return ChargeModel.toEntity(e);
     });
