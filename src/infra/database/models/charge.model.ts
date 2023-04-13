@@ -31,7 +31,7 @@ export class ChargeModel {
   @Prop({ type: 'string', required: false })
   e2e_id!: string | null;
   @Field()
-  @Prop({ type: 'string', required: false })
+  @Prop()
   created_at!: Date;
   @Field()
   @Prop()
