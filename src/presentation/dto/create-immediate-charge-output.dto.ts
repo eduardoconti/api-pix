@@ -68,12 +68,13 @@ export class CreateImmediateChargeOutput {
       qrCode,
       providerTransactionId,
     } = useCaseOutput;
+
     return {
       transaction_id: transactionId,
       psp_transaction_id: providerTransactionId,
       status,
       amount,
-      expiration,
+      expiration: Date.now() + expiration * 1000,
       emv,
       qr_code: qrCode,
       location_id: locationId,
