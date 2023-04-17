@@ -15,6 +15,7 @@ const fakeJob = {
   },
   queue: 'elastic',
   id: 'fakeid',
+  remove: jest.fn(),
 } as unknown as Job<any>;
 describe('ElasticSearchConsumer', () => {
   let elasticSearchConsumer: ElasticSearchConsumer;

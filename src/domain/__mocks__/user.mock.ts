@@ -2,6 +2,7 @@ import {
   UserEntity,
   UserWebhookHost,
   UserWebhookNotificationEntity,
+  UserWebhookNotificationPayload,
 } from '@domain/entities';
 import {
   DateVO,
@@ -51,6 +52,13 @@ export const mockUserEntityWithoutHost = new UserEntity({
   },
 });
 
+export const chargePayedDomainEvent: UserWebhookNotificationPayload = {
+  chargeId: 'fd700cff-8dfe-46a1-9069-3ba0b7fa113f',
+  amount: 8000,
+  e2eId: 'EE0e360935-b38a-4f4f-8978-2fd5ebb5759b',
+  provider: 'CELCOIN',
+  providerId: '123',
+};
 export const mockUserWebhookNotificationEntity =
   new UserWebhookNotificationEntity({
     id: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
@@ -61,8 +69,7 @@ export const mockUserWebhookNotificationEntity =
       type: 'CHARGE_PAYED',
       userId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
       chargeId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
-      payload:
-        '"{"id":"a269151d-a3e9-439c-b0f9-43d4a84234b8","aggregateId":"fd700cff-8dfe-46a1-9069-3ba0b7fa113f","dateOccurred":1679113502275,"amount":8000,"provider":"CELCOIN","userId":"95581982-6852-45c9-8883-2e15f5b8f00d","e2eId":"EE0e360935-b38a-4f4f-8978-2fd5ebb5759b","providerId":"775"}"',
+      payload: chargePayedDomainEvent,
       deliverdAt: undefined,
     },
   });
@@ -77,8 +84,7 @@ export const mockUserWebhookNotificationDeliverdEntity =
       type: 'CHARGE_PAYED',
       userId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
       chargeId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
-      payload:
-        '"{"id":"a269151d-a3e9-439c-b0f9-43d4a84234b8","aggregateId":"fd700cff-8dfe-46a1-9069-3ba0b7fa113f","dateOccurred":1679113502275,"amount":8000,"provider":"CELCOIN","userId":"95581982-6852-45c9-8883-2e15f5b8f00d","e2eId":"EE0e360935-b38a-4f4f-8978-2fd5ebb5759b","providerId":"775"}"',
+      payload: chargePayedDomainEvent,
       deliverdAt: new DateVO(new Date()),
     },
   });
@@ -93,8 +99,7 @@ export const mockUserWebhookNotificationNotDeliverdEntity =
       type: 'CHARGE_PAYED',
       userId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
       chargeId: new UUID('b85381d7-174f-4c0a-a2c8-aa93a399965d'),
-      payload:
-        '"{"id":"a269151d-a3e9-439c-b0f9-43d4a84234b8","aggregateId":"fd700cff-8dfe-46a1-9069-3ba0b7fa113f","dateOccurred":1679113502275,"amount":8000,"provider":"CELCOIN","userId":"95581982-6852-45c9-8883-2e15f5b8f00d","e2eId":"EE0e360935-b38a-4f4f-8978-2fd5ebb5759b","providerId":"775"}"',
+      payload: chargePayedDomainEvent,
       deliverdAt: undefined,
     },
   });

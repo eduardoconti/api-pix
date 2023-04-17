@@ -25,12 +25,13 @@ export class ElasticSearchConsumer {
   }
 
   @OnQueueFailed()
-  onQueueFailed(job: Job<SendExternalLogsProps<any>>, err: Error) {
+  async onQueueFailed(job: Job<SendExternalLogsProps<any>>, err: Error) {
     this.logger.error(
       `job ${job.id} of type ${job.queue.name} with error ${JSON.stringify(
         err,
       )}...`,
       'ElasticSearchConsumer',
     );
+    await job.remove();
   }
 }

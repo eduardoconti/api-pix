@@ -35,15 +35,13 @@ export class ChargePayedListener {
 
     const userWebhookNotificationEntity = UserWebhookNotificationEntity.create({
       chargeId: aggregateId,
-      payload: JSON.stringify({
-        aggregateId,
+      payload: {
+        chargeId: aggregateId,
         amount,
         e2eId,
         provider,
         providerId,
-        userId,
-        id,
-      }),
+      },
       type: WebhookTypesEnum.CHARGE_PAYED,
       userId: userId,
     });
@@ -59,6 +57,7 @@ export class ChargePayedListener {
       notification_id: userWebhookNotificationEntity.id.value,
       amount: amount,
     };
+
     const outBoxEntity = OutboxEntity.create({
       aggregateId: userWebhookNotificationEntity.id.value,
       aggregateType: AggregateTypeEnum.USER_WEBHOOK_NOTIFICATION,
