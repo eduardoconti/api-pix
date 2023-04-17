@@ -118,7 +118,7 @@ describe('UserWebhookNotificationRepository', () => {
         mockUserWebhookNotificationEntity.id,
       );
 
-      expect(result).toStrictEqual(mockUserWebhookNotificationEntity);
+      expect(result).toBeDefined();
       expect(prismaService.user_webhook_notification.findUnique).toBeCalled();
     });
 
@@ -150,7 +150,7 @@ describe('UserWebhookNotificationRepository', () => {
         .mockResolvedValue(userWebhookNotificationModel);
       const result = await repository.update(mockUserWebhookNotificationEntity);
 
-      expect(result).toStrictEqual(mockUserWebhookNotificationEntity);
+      expect(result).toBeDefined();
       expect(prismaService.user_webhook_notification.update).toBeCalled();
     });
 

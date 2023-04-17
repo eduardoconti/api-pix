@@ -87,4 +87,13 @@ export class UserWebhookNotificationRepository
       model as UserWebhookNotificationModel,
     );
   }
+
+  async findMany() {
+    return (await this.prismaService.user_webhook_notification.findMany()).map(
+      (e) =>
+        UserWebhookNotificationModel.toEntity(
+          e as UserWebhookNotificationModel,
+        ),
+    );
+  }
 }

@@ -5,6 +5,7 @@ import { AppModule } from '@app/app.module';
 import { InfraModule } from '@infra/infra.module';
 
 import { ChargeResolver } from '@presentation/resolvers/charge.resolver';
+import { UserWebhookNotificationResolver } from '@presentation/resolvers/user-webhook-notification.resolver';
 
 import { AuthController } from './controllers/auth/auth.controller';
 import { CreateImmediateChargeController } from './controllers/create-charge';
@@ -21,6 +22,6 @@ import { ReceiveCelcoinWebhookController } from './controllers/webhook';
     RegisterUserController,
     AuthController,
   ],
-  providers: [ChargeResolver],
+  providers: [ChargeResolver, UserWebhookNotificationResolver],
 })
 export class PresentationModule {}

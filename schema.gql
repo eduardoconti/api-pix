@@ -23,7 +23,25 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type UserWebhookNotificationModel {
+  id: ID!
+  user_id: String!
+  type: String!
+  charge_id: String!
+  payload: JSON!
+  attempts: Float!
+  delivered_at: DateTime
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
 type Query {
   findAll: [ChargeModel!]!
   findByStatus(status: String!): [ChargeModel!]!
+  findAllUserWeboohok: [UserWebhookNotificationModel!]!
 }

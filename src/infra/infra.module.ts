@@ -18,6 +18,7 @@ import { ProfilingIntegration } from '@sentry/profiling-node';
 import * as Tracing from '@sentry/tracing';
 import * as redisStore from 'cache-manager-redis-store';
 import { DirectiveLocation, GraphQLDirective } from 'graphql';
+import GraphQLJSON from 'graphql-type-json';
 import type { ClientOpts } from 'redis';
 
 import { AppModule } from '@app/app.module';
@@ -232,6 +233,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
       autoSchemaFile: 'schema.gql',
       transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
       installSubscriptionHandlers: true,
+      resolvers: { JSON: GraphQLJSON },
       formatError: (e: any) => {
         return { message: e.message };
       },

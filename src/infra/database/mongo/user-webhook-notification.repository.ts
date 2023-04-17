@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 
-import { IUserWebhookNotificationRepository } from '@domain/core';
-import { OutboxEntity, UserWebhookNotificationEntity } from '@domain/entities';
+import { IUserWebhookNotificationRepository, QueryParams } from '@domain/core';
+import {
+  OutboxEntity,
+  UserWebhookNotificationEntity,
+  UserWebhookNotificationProps,
+} from '@domain/entities';
 import { Email, ID } from '@domain/value-objects';
 
 import {
@@ -82,5 +86,17 @@ export class UserWebhookNotificationRepositoryMongo
     );
 
     return entity;
+  }
+
+  async findMany(
+    params: QueryParams<UserWebhookNotificationProps>,
+  ): Promise<UserWebhookNotificationEntity[] | []> {
+    const userWebhookNotification = await this.userWebhookNotificationModel
+      .find({ user_id: params.userId?.value })
+      .sort({ created_at: -1 });
+
+    return userWebhookNotification.map((e) =>
+      UserWebhookNotificationModel.toEntity(e),
+    );
   }
 }

@@ -1,28 +1,39 @@
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import GraphQLJSON from 'graphql-type-json';
 
-import { JsonValue } from '@domain/core';
 import { UserWebhookNotificationEntity, WebhookTypes } from '@domain/entities';
 import { DateVO, UUID } from '@domain/value-objects';
 
 @Schema()
+@ObjectType()
 export class UserWebhookNotificationModel {
+  @Field(() => ID)
   @Prop({ index: true })
   id!: string;
   @Prop()
+  @Field()
   user_id!: string;
   @Prop()
+  @Field()
   type!: WebhookTypes;
   @Prop()
+  @Field()
   charge_id!: string;
+  @Field(() => GraphQLJSON)
   @Prop({ type: Object })
-  payload!: JsonValue;
+  payload!: string;
   @Prop()
+  @Field()
   attempts!: number;
   @Prop({ required: false, type: 'date' })
+  @Field(() => Date, { nullable: true })
   delivered_at!: Date | null;
   @Prop()
+  @Field()
   created_at!: Date;
   @Prop()
+  @Field()
   updated_at!: Date;
 
   static fromEntity(
@@ -31,7 +42,7 @@ export class UserWebhookNotificationModel {
     return {
       id: entity.id.value,
       user_id: entity.props.userId.value,
-      payload: entity.props.payload,
+      payload: JSON.stringify(entity.props.payload),
       attempts: entity.props.attempts,
       charge_id: entity.props.chargeId.value,
       type: entity.props.type,
@@ -61,7 +72,7 @@ export class UserWebhookNotificationModel {
       updatedAt: new DateVO(updated_at),
       props: {
         type,
-        payload: payload as string,
+        payload: JSON.parse(payload),
         userId: new UUID(user_id),
         chargeId: new UUID(charge_id),
         attempts,

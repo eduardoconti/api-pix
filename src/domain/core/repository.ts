@@ -6,6 +6,7 @@ import {
   UserEntity,
   UserProps,
   UserWebhookNotificationEntity,
+  UserWebhookNotificationProps,
   WebhookEntity,
 } from '@domain/entities';
 import { Email } from '@domain/value-objects';
@@ -82,13 +83,15 @@ export interface IUserRepository
 export interface IUserWebhookNotificationRepository
   extends ISaveWithOutbox<UserWebhookNotificationEntity, OutboxEntity>,
     IUpdate<UserWebhookNotificationEntity>,
-    IFindOneById<UserWebhookNotificationEntity> {}
+    IFindOneById<UserWebhookNotificationEntity>,
+    IFindMany<UserWebhookNotificationEntity, UserWebhookNotificationProps> {}
 
 /**
  * From https://github.com/sindresorhus/type-fest/
  * Matches any valid JSON value.
  */
-export type JsonValue = string | number | boolean | JsonObject | JsonArray;
+
+export type JsonValue = string | JsonObject | JsonArray;
 
 export type JsonObject = { [Key in string]?: JsonValue };
 
