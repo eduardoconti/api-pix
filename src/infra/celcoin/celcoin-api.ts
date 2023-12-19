@@ -108,6 +108,7 @@ export class CelcoinApi implements ICelcoinApi {
     );
     return response;
   }
+
   async createLocation(
     auth: CelcoinAuth,
     data: Omit<CelcoinLocationRequest, 'type' | 'clientRequestId'>,

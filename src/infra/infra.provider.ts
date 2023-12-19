@@ -24,11 +24,11 @@ import { EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
 import { CelcoinApi } from './celcoin';
-import {
-  PrismaService,
-  UserRepository,
-  UserWebhookNotificationRepository,
-} from './database/prisma';
+// import {
+//   PrismaService,
+//   UserRepository,
+//   UserWebhookNotificationRepository,
+// } from './database/prisma';
 import { ElasticSearch } from './elastic';
 import { HttpService, IHttpService } from './http-service';
 import { ElasticSearchConsumer, WebhookConsumer } from './processors';
@@ -104,22 +104,22 @@ export const providePayChargeService: Provider<PayChargeService> = {
   inject: [Logger, ChargeRepositoryMongo, ReceiveWebhookUseCase],
 };
 
-export const provideUserRepository: Provider<UserRepository> = {
-  provide: UserRepository,
-  useFactory: (prismaService: PrismaService) => {
-    return new UserRepository(prismaService);
-  },
-  inject: [PrismaService],
-};
+// export const provideUserRepository: Provider<UserRepository> = {
+//   provide: UserRepository,
+//   useFactory: (prismaService: PrismaService) => {
+//     return new UserRepository(prismaService);
+//   },
+//   inject: [PrismaService],
+// };
 
-export const provideUserWebhookNotificationRepository: Provider<UserWebhookNotificationRepository> =
-  {
-    provide: UserWebhookNotificationRepository,
-    useFactory: (prismaService: PrismaService) => {
-      return new UserWebhookNotificationRepository(prismaService);
-    },
-    inject: [PrismaService],
-  };
+// export const provideUserWebhookNotificationRepository: Provider<UserWebhookNotificationRepository> =
+//   {
+//     provide: UserWebhookNotificationRepository,
+//     useFactory: (prismaService: PrismaService) => {
+//       return new UserWebhookNotificationRepository(prismaService);
+//     },
+//     inject: [PrismaService],
+//   };
 
 export const provideOutboxUserWebhookNotificationService: Provider<OutboxUserWebhookNotificationService> =
   {

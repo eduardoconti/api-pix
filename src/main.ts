@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { PrismaService } from '@infra/database/prisma';
+//import { PrismaService } from '@infra/database/prisma';
 import {
   BaseExceptionFilter,
   HttpExceptionFilter,
@@ -27,8 +27,8 @@ async function bootstrap() {
     origin: '*',
   });
 
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
+  //const prismaService = app.get(PrismaService);
+  //await prismaService.enableShutdownHooks(app);
 
   const configService = app.get(ConfigService<EnvironmentVariables>);
   const config = new DocumentBuilder()

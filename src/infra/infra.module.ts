@@ -49,7 +49,7 @@ import { upperDirectiveTransformer } from '@infra/graphql/upper-case.directive';
 import { configValidationSchema, EnvironmentVariables } from '@main/config';
 
 import { CacheManager } from './cache';
-import { PrismaService } from './database/prisma';
+//import { PrismaService } from './database/prisma';
 import { ElasticSearch } from './elastic';
 import { HttpService } from './http-service';
 import {
@@ -59,9 +59,9 @@ import {
   provideOutboxUserWebhookNotificationService,
   provideOutboxWebhookService,
   providePayChargeService,
-  provideUserRepository,
+  //provideUserRepository,
   provideUserWebhookNotificationConsumer,
-  provideUserWebhookNotificationRepository,
+  // provideUserWebhookNotificationRepository,
   provideWebhookConsumer,
 } from './infra.provider';
 import { SentryMonitorError } from './sentry';
@@ -252,7 +252,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     Logger,
     CacheManager,
     ElasticSearch,
-    PrismaService,
+    //PrismaService,
     ChargeRepositoryMongo,
     WebhookRepositoryMongo,
     provideCelcoinApi,
@@ -262,7 +262,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     provideOutboxWebhookService,
     provideCleanOutboxService,
     providePayChargeService,
-    provideUserRepository,
+    //provideUserRepository,
     SentryMonitorError,
     UserRepositoryMongo,
     {
@@ -271,7 +271,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     },
     LocalStrategy,
     JwtStrategy,
-    provideUserWebhookNotificationRepository,
+    // provideUserWebhookNotificationRepository,
     provideOutboxUserWebhookNotificationService,
     provideUserWebhookNotificationConsumer,
     UserWebhookNotificationRepositoryMongo,
@@ -281,16 +281,16 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     CacheManager,
     Logger,
     ElasticSearch,
-    PrismaService,
+    //PrismaService,
     ChargeRepositoryMongo,
     BullModule,
     WebhookRepositoryMongo,
     OutboxRepositoryMongo,
     provideCelcoinApi,
-    provideUserRepository,
+    //provideUserRepository,
     SentryMonitorError,
     JwtModule,
-    provideUserWebhookNotificationRepository,
+    // provideUserWebhookNotificationRepository,
     UserRepositoryMongo,
     UserWebhookNotificationRepositoryMongo,
   ],

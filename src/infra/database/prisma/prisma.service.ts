@@ -1,14 +1,21 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  INestApplication,
+  Injectable,
+  Logger,
+  OnModuleInit,
+} from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor() {
+  constructor(private readonly logService: Logger) {
     super({ log: ['info', 'warn', 'error'] });
   }
 
   async onModuleInit() {
-    await this.$connect();
+    await this.$connect().catch((e: Error) => {
+      this.logService.error(e.message);
+    });
   }
 
   async enableShutdownHooks(app: INestApplication) {
@@ -18,5 +25,3 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
   }
 }
-
-export const prismaService = new PrismaService();
