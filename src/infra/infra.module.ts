@@ -3,7 +3,6 @@ import { HttpModule } from '@nestjs/axios';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule, forwardRef, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -11,19 +10,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { ScheduleModule } from '@nestjs/schedule';
-import { SentryInterceptor, SentryModule } from '@ntegral/nestjs-sentry';
-import { PrismaClient } from '@prisma/client';
-import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
-import * as Tracing from '@sentry/tracing';
+//import { PrismaClient } from '@prisma/client';
 import * as redisStore from 'cache-manager-redis-store';
 import { DirectiveLocation, GraphQLDirective } from 'graphql';
 import GraphQLJSON from 'graphql-type-json';
 import type { ClientOpts } from 'redis';
 
 import { AppModule } from '@app/app.module';
-
-import { BaseException } from '@domain/exceptions';
 
 import {
   ChargeModel,
@@ -163,38 +156,6 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     }),
     ScheduleModule.forRoot(),
     forwardRef(() => AppModule),
-    SentryModule.forRootAsync({
-      inject: [ConfigService],
-      imports: [],
-      useFactory: async (
-        configService: ConfigService<EnvironmentVariables>,
-      ) => ({
-        dsn: configService.get('SENTRY_DSN'),
-        debug: true,
-        tracesSampleRate: 1.0,
-        profilesSampleRate: 1.0,
-        attachStacktrace: true,
-        environment: configService.get('NODE_ENV'),
-        integrations: [
-          new Sentry.Integrations.Http({ tracing: true }),
-          new Tracing.Integrations.Express(),
-          new ProfilingIntegration(),
-          new Tracing.Integrations.Prisma({ client: new PrismaClient() }),
-        ],
-        logLevels: ['debug'],
-        beforeSend(event, hint) {
-          const exception = hint?.originalException;
-          if (exception instanceof BaseException) {
-            event.extra = {
-              message: exception.message,
-              metadata: exception?.metadata,
-            };
-          }
-
-          return event;
-        },
-      }),
-    }),
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -265,10 +226,6 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     //provideUserRepository,
     SentryMonitorError,
     UserRepositoryMongo,
-    {
-      provide: APP_INTERCEPTOR,
-      useFactory: () => new SentryInterceptor(),
-    },
     LocalStrategy,
     JwtStrategy,
     // provideUserWebhookNotificationRepository,

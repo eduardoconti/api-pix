@@ -24,6 +24,6 @@ COPY --from=build /app/entrypoint.sh ./entrypoint.sh
 
 EXPOSE ${PORT}
 
-ENTRYPOINT [ "sh", "entrypoint.sh" ]
+# ENTRYPOINT [ "sh", "entrypoint.sh" ]
 
 CMD ["yarn", "start:prod"]

@@ -1,0 +1,45 @@
+config:
+  target: 'http://localhost:80'
+  phases:
+    - duration: 60
+      arrivalRate: 20
+    - duration: 60
+      arrivalRate: 40
+    - duration: 60
+      arrivalRate: 120
+  plugins:
+    ensure: {}
+    apdex: {}
+    metrics-by-endpoint: {}
+  apdex:
+    threshold: 300
+  ensure:
+      thresholds:
+        - http.response_time.p99: 300
+        - http.response_time.p95: 275
+        - http.response_time.p50: 100
+# scenarios:
+#   - flow:
+#       - post:
+#           url: '/login'
+#           json:
+#             email: 'challenge@woovi.com'
+#             password: 'teste@123'
+scenarios:
+  - flow:
+      - post:
+          url: '/immediate-charge'
+          json:          
+            debtor: 
+              name: 'Eduardo'
+              cpf: '50673646459'
+            amount: 8000
+            merchant: 
+                postal_code: '86990000'
+                city: 'Marialva'
+                name: 'Eduardo Dev'
+                category_code: '0000'
+            expiration: 86400
+          headers:
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0N2E4NzAxNy1lN2ExLTQxZTktYjYwNS03OGFmMTM4NGE1N2QiLCJ1c2VyTmFtZSI6Ildvb3ZpIiwiaWF0IjoxNzAzMDc1MzU1LCJleHAiOjE3MDMxNjE3NTV9.9f0mDtCSEK_P16bfKTcOPXlkraHnslmTEuSGoizibGc'
+
