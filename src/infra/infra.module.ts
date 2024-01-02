@@ -121,7 +121,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     BullModule.registerQueue({
       name: `elasticsearch`,
       defaultJobOptions: {
-        attempts: 10,
+        attempts: 3,
         removeOnComplete: true,
         removeOnFail: false,
         backoff: {
@@ -133,7 +133,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     BullModule.registerQueue({
       name: `webhook`,
       defaultJobOptions: {
-        attempts: 10,
+        attempts: 3,
         removeOnComplete: true,
         removeOnFail: false,
         backoff: {
@@ -145,7 +145,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     BullModule.registerQueue({
       name: `user_webhook_notification`,
       defaultJobOptions: {
-        attempts: 10,
+        attempts: 3,
         removeOnComplete: true,
         removeOnFail: false,
         backoff: {

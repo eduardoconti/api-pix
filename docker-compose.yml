@@ -10,12 +10,13 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - api-pix
+      - api-pix1
+      - api-pix2
     cpus: 0.1
     mem_limit: 256M
 
-  api-pix:
-    hostname: api-pix
+  api-pix1: &api-pix
+    hostname: api-pix1
     restart: on-failure
     build: .
     volumes:
@@ -33,40 +34,8 @@ services:
     mem_limit: 2048M  
 
   api-pix2:
+    <<: *api-pix
     hostname: api-pix2
-    restart: on-failure
-    build: .
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    env_file:
-      - .env
-    command: yarn start:dev
-    depends_on:
-      - redis
-      - mongo
-      - apm-server
-    cpus: 0.5
-    mem_limit: 1024M 
-
-  api-pix3:
-    hostname: api-pix3
-    restart: on-failure
-    build: .
-    volumes:
-      - .:/app
-    expose:
-      - "3000"
-    env_file:
-      - .env
-    command: yarn start:dev
-    depends_on:
-      - redis
-      - mongo
-      - apm-server
-    cpus: 0.25
-    mem_limit: 512M   
 
   redis:
     image: redis:6.2-alpine
@@ -85,8 +54,6 @@ services:
     environment:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      # - http.host=0.0.0.0
-      # - transport.host=127.0.0.1
     ulimits:
       memlock:
         soft: -1
@@ -95,8 +62,6 @@ services:
       - es-data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
-    # cpus: 0.1
-    # mem_limit: 256M 
   
   kibana:
     image: docker.elastic.co/kibana/kibana:7.12.1
