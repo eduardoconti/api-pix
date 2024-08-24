@@ -38,10 +38,7 @@ const TOKEN_CACHE_TTL = 2400;
 
 export interface ICelcoinApi
   extends IAuthenticateOnPSP,
-    ICreateLocationOnPSP<
-      CelcoinAuth,
-      Omit<CelcoinLocationRequest, 'type' | 'clientRequestId'>
-    >,
+    ICreateLocationOnPSP<CelcoinAuth, Omit<CelcoinLocationRequest, 'type'>>,
     ICreateImmediateChargeOnPSP<
       CelcoinAuth,
       Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & { amount: number }

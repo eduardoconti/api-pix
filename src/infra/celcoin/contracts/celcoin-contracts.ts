@@ -31,7 +31,7 @@ export type CelcoinLocationResponse = {
 };
 
 export type CelcoinImmediateChargeRequest = {
-  clientRequestId?: string;
+  clientRequestId: string;
   payerQuestion?: string;
   key: string;
   locationId: number;

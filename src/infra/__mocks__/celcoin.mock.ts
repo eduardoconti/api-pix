@@ -74,6 +74,7 @@ export const mockCelcoinImmediateChargeRequest: Omit<
   debtor: { name: 'Eduardo Ferreira Conti', cnpj: '50673646459123' },
   calendar: { expiration: 86400 },
   locationId: 12868841,
+  clientRequestId: 'fakeId',
 };
 
 export const mockCelcoinAuth = {

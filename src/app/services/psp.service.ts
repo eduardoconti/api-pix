@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import {
   CreateImmediateChargeOnPspInput,
   CreateImmediateChargeOnPSPResponse,
@@ -15,13 +17,18 @@ export class PspService implements IPspService {
     amount,
     calendar,
   }: CreateImmediateChargeOnPspInput): Promise<CreateImmediateChargeOnPSPResponse> {
+    const clientRequestId = randomUUID();
     const { accessToken } = await this.celcoin.auth();
     const { locationId } = await this.celcoin.createLocation(
       {
         token: accessToken,
       },
       {
-        merchant: { ...merchant, merchantCategoryCode: '0000' },
+        clientRequestId,
+        merchant: {
+          ...merchant,
+          merchantCategoryCode: '0000',
+        },
       },
     );
 
@@ -34,6 +41,7 @@ export class PspService implements IPspService {
         debtor,
         amount,
         calendar,
+        clientRequestId,
       },
     );
 
