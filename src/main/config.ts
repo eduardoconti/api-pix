@@ -15,6 +15,8 @@ export interface EnvironmentVariables {
   REDIS_HOST: number;
   REDIS_PORT: string;
   REDIS_PASSWORD: string;
+  REDIS_URL: string;
+  REDIS_USER?: string;
   ELASTIC_HOST: number;
   ELASTIC_PORT: string;
   SENTRY_DSN: string;
@@ -42,6 +44,8 @@ export const configValidationSchema = Joi.object({
   // REDIS
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().required(),
+  REDIS_URL: Joi.string().required(),
+  REDIS_USER: Joi.string().optional(),
   REDIS_PASSWORD: Joi.string().required(),
   //ELASTIC
   ELASTIC_HOST: Joi.string(),

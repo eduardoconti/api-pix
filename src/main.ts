@@ -8,7 +8,7 @@ import { ProfilingIntegration } from '@sentry/profiling-node';
 
 import { BaseException } from '@domain/exceptions';
 
-import { initializeAPMAgent } from '@infra/apm/apm.util';
+//import { initializeAPMAgent } from '@infra/apm/apm.util';
 import {
   BaseExceptionFilter,
   HttpExceptionFilter,
@@ -21,11 +21,11 @@ import { EnvironmentVariables } from './main/config';
 import { MainModule } from './main/main.module';
 
 async function bootstrap() {
-  initializeAPMAgent({
-    serviceName: 'api-pix',
-    serverUrl: 'http://apm-server:8200',
-    environment: 'teste',
-  });
+  // initializeAPMAgent({
+  //   serviceName: 'api-pix',
+  //   serverUrl: 'http://apm-server:8200',
+  //   environment: 'teste',
+  // });
   const app = await NestFactory.create(MainModule);
 
   const logger = app.get(Logger);

@@ -70,11 +70,9 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
     CacheModule.registerAsync<ClientOpts>({
       imports: [ConfigModule, HttpModule],
       useFactory: async (config: ConfigService<EnvironmentVariables>) => ({
-        ttl: 3600,
+        ttl: 2400,
         store: redisStore,
-        host: config.getOrThrow('REDIS_HOST'),
-        port: config.getOrThrow('REDIS_PORT'),
-        password: config.getOrThrow('REDIS_PASSWORD'),
+        url: config.getOrThrow('REDIS_URL'),
         isGlobal: true,
       }),
       inject: [ConfigService],
@@ -114,6 +112,7 @@ import { LocalStrategy } from './strategy/auth/local.strategy';
           host: configService.getOrThrow('REDIS_HOST'),
           port: configService.getOrThrow('REDIS_PORT'),
           password: configService.getOrThrow('REDIS_PASSWORD'),
+          username: configService.get('REDIS_USER'),
         },
       }),
       inject: [ConfigService],
