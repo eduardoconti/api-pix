@@ -5,7 +5,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { TokenPayload } from '@app/contracts';
-import { UserAuthUseCaseOutput } from '@app/use-cases';
+import { AuthenticateOutput } from '@app/use-cases';
 
 import { EnvironmentVariables } from '@main/config';
 
@@ -27,7 +27,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate({
     userId,
     userName,
-  }: UserAuthUseCaseOutput): Promise<TokenPayload> {
+  }: AuthenticateOutput): Promise<TokenPayload> {
     return {
       userName,
       userId,

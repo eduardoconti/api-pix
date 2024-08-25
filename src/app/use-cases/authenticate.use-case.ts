@@ -3,23 +3,23 @@ import { Email, Password } from '@domain/value-objects';
 
 import { UnauthorizedException } from '@infra/exceptions';
 
-export type UserAuthUseCaseInput = {
+export type AuthenticateInput = {
   userName: string;
   password: string;
 };
 
-export type UserAuthUseCaseOutput = {
+export type AuthenticateOutput = {
   userId: string;
   userName: string;
 };
 
-export type IUserAuthUseCase = IUseCase<
-  UserAuthUseCaseInput,
-  UserAuthUseCaseOutput
+export type IAuthenticateUseCase = IUseCase<
+  AuthenticateInput,
+  AuthenticateOutput
 >;
-export class UserAuthUseCase implements IUserAuthUseCase {
+export class Authenticate implements IAuthenticateUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
-  async execute({ userName, password }: UserAuthUseCaseInput) {
+  async execute({ userName, password }: AuthenticateInput) {
     const user = await this.userRepository.findOne({
       email: new Email(userName),
     });

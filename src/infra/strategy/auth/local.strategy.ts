@@ -2,13 +2,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 
-import { IUserAuthUseCase, UserAuthUseCase } from '@app/use-cases';
+import { IAuthenticateUseCase, Authenticate } from '@app/use-cases';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject(UserAuthUseCase)
-    private authService: IUserAuthUseCase,
+    @Inject(Authenticate)
+    private authService: IAuthenticateUseCase,
   ) {
     super({ usernameField: 'email' });
   }

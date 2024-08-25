@@ -10,8 +10,8 @@ import {
 
 import { WebhookModel } from '@infra/database/models';
 
-export type ReceiveWebhookUseCaseOutput = string;
-export type ReceiveWebhookUseCaseInput = {
+export type ReceiveWebhookOutput = string;
+export type ReceiveWebhookInput = {
   provider: ChargeProvider;
   providerId: string;
   providerJson: string;
@@ -21,10 +21,10 @@ export type ReceiveWebhookUseCaseInput = {
 };
 
 export type IReceiveWebhookUseCase = IUseCase<
-  ReceiveWebhookUseCaseInput,
-  ReceiveWebhookUseCaseOutput
+  ReceiveWebhookInput,
+  ReceiveWebhookOutput
 >;
-export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
+export class ReceiveWebhook implements IReceiveWebhookUseCase {
   constructor(private readonly webhookRepository: IWebhookRepository) {}
   async execute({
     provider,
@@ -33,7 +33,7 @@ export class ReceiveWebhookUseCase implements IReceiveWebhookUseCase {
     type,
     amount,
     endToEndId,
-  }: ReceiveWebhookUseCaseInput) {
+  }: ReceiveWebhookInput) {
     const webhookEntity = WebhookEntity.create({
       provider,
       providerId,

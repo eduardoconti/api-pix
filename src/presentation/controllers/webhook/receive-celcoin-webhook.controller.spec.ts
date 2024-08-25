@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ReceiveWebhookUseCase, IReceiveWebhookUseCase } from '@app/use-cases';
+import { ReceiveWebhook, IReceiveWebhookUseCase } from '@app/use-cases';
 
 import { mockCelcoinWebhook } from '@infra/__mocks__/celcoin.mock';
 
@@ -15,7 +15,7 @@ describe('ReceiveCelcoinWebhookController', () => {
       controllers: [ReceiveCelcoinWebhookController],
       providers: [
         {
-          provide: ReceiveWebhookUseCase,
+          provide: ReceiveWebhook,
           useValue: {
             execute: jest.fn(),
           },
@@ -26,9 +26,8 @@ describe('ReceiveCelcoinWebhookController', () => {
     receiveCelcoinWebhookController = app.get<ReceiveCelcoinWebhookController>(
       ReceiveCelcoinWebhookController,
     );
-    receiveCelcoinWebhookUseCase = app.get<IReceiveWebhookUseCase>(
-      ReceiveWebhookUseCase,
-    );
+    receiveCelcoinWebhookUseCase =
+      app.get<IReceiveWebhookUseCase>(ReceiveWebhook);
   });
 
   it('should be defined', () => {

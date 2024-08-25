@@ -9,10 +9,10 @@ import { IUserRepository } from '@domain/core';
 import { UserRepositoryMongo } from '@infra/database/mongo';
 import { UnauthorizedException } from '@infra/exceptions';
 
-import { UserAuthUseCase, IUserAuthUseCase } from './user-auth.use-case';
+import { Authenticate, IAuthenticateUseCase } from './authenticate.use-case';
 
-describe('userAuthUseCase', () => {
-  let userAuthUseCase: IUserAuthUseCase;
+describe('AuthenticateUseCase', () => {
+  let userAuthUseCase: IAuthenticateUseCase;
   let userRepository: IUserRepository;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('userAuthUseCase', () => {
       ],
     }).compile();
 
-    userAuthUseCase = app.get<IUserAuthUseCase>(UserAuthUseCase);
+    userAuthUseCase = app.get<IAuthenticateUseCase>(Authenticate);
     userRepository = app.get<IUserRepository>(UserRepositoryMongo);
   });
 

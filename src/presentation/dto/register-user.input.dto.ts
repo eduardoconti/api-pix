@@ -9,11 +9,11 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { RegisterUserUseCaseInput } from '@app/use-cases';
+import { RegisterUserInput } from '@app/use-cases';
 
-import { RegisterUserWebhookHostInput } from './register-user-webhook-host.input.dto';
+import { RegisterUserWebhookHostRequest } from './register-user-webhook-host.input.dto';
 
-export class RegisterUserInput {
+export class RegisterUserRequest {
   @IsString()
   @MinLength(2)
   @MaxLength(255)
@@ -41,21 +41,21 @@ export class RegisterUserInput {
   @ValidateNested({
     each: true,
   })
-  @Type(() => RegisterUserWebhookHostInput)
+  @Type(() => RegisterUserWebhookHostRequest)
   @IsOptional()
   @ArrayMinSize(1)
   @ApiPropertyOptional({
     isArray: true,
-    type: RegisterUserWebhookHostInput,
+    type: RegisterUserWebhookHostRequest,
   })
-  webhook_host?: RegisterUserWebhookHostInput[];
+  webhook_host?: RegisterUserWebhookHostRequest[];
 
   static toUseCaseInput({
     name,
     email,
     password,
     webhook_host,
-  }: RegisterUserInput): RegisterUserUseCaseInput {
+  }: RegisterUserRequest): RegisterUserInput {
     return {
       email,
       password,

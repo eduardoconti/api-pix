@@ -3,12 +3,9 @@ import { ConfigService } from '@nestjs/config';
 import { nanoid } from 'nanoid';
 
 import {
-  IAuthenticateOnPSP,
-  AuthenticateOnPSPResponse,
-  ICreateLocationOnPSP,
-  ICreateImmediateChargeOnPSP,
-  CreateLocationOnPSPResponse,
-  CreateImmediateChargeOnPSPResponse,
+  AuthenticatePSPOutput,
+  CreateLocationPSPOutput,
+  CreateImmediateChargePSPOutput,
 } from '@app/contracts';
 
 import { ICacheManager } from '@domain/core';
@@ -36,13 +33,20 @@ const NOT_CHANGE_VALUE = 0;
 const TOKEN_CACHE_KEY = 'celcoin_token';
 const TOKEN_CACHE_TTL = 2400;
 
-export interface ICelcoinApi
-  extends IAuthenticateOnPSP,
-    ICreateLocationOnPSP<CelcoinAuth, Omit<CelcoinLocationRequest, 'type'>>,
-    ICreateImmediateChargeOnPSP<
-      CelcoinAuth,
-      Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & { amount: number }
-    > {}
+export interface ICelcoinApi {
+  auth(): Promise<AuthenticatePSPOutput>;
+  createLocation(
+    auth: CelcoinAuth,
+    data: Omit<CelcoinLocationRequest, 'type'>,
+  ): Promise<CreateLocationPSPOutput>;
+  createImmediateCharge(
+    auth: CelcoinAuth,
+    data: Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & {
+      amount: number;
+    },
+  ): Promise<CreateImmediateChargePSPOutput>;
+}
+
 @Injectable()
 export class CelcoinApi implements ICelcoinApi {
   constructor(
@@ -51,8 +55,8 @@ export class CelcoinApi implements ICelcoinApi {
     private readonly cacheManager: ICacheManager,
   ) {}
 
-  async auth(): Promise<AuthenticateOnPSPResponse> {
-    const cachedToken = await this.cacheManager.get<AuthenticateOnPSPResponse>(
+  async auth(): Promise<AuthenticatePSPOutput> {
+    const cachedToken = await this.cacheManager.get<AuthenticatePSPOutput>(
       TOKEN_CACHE_KEY,
     );
     if (cachedToken) {
@@ -98,7 +102,7 @@ export class CelcoinApi implements ICelcoinApi {
       accessToken: access_token,
       expiresIn: expires_in,
     };
-    await this.cacheManager.set<AuthenticateOnPSPResponse>(
+    await this.cacheManager.set<AuthenticatePSPOutput>(
       TOKEN_CACHE_KEY,
       response,
       TOKEN_CACHE_TTL,
@@ -109,7 +113,7 @@ export class CelcoinApi implements ICelcoinApi {
   async createLocation(
     auth: CelcoinAuth,
     data: Omit<CelcoinLocationRequest, 'type' | 'clientRequestId'>,
-  ): Promise<CreateLocationOnPSPResponse> {
+  ): Promise<CreateLocationPSPOutput> {
     const headers = {
       Authorization: `Bearer ${auth.token}`,
     };
@@ -149,7 +153,7 @@ export class CelcoinApi implements ICelcoinApi {
     data: Omit<CelcoinImmediateChargeRequest, 'amount' | 'key'> & {
       amount: number;
     },
-  ): Promise<CreateImmediateChargeOnPSPResponse> {
+  ): Promise<CreateImmediateChargePSPOutput> {
     const { locationId, amount: amountReq, ...rest } = data;
     const headers = {
       Authorization: `Bearer ${auth.token}`,

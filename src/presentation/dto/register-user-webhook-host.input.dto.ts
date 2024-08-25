@@ -3,7 +3,7 @@ import { IsEnum, IsUrl, MaxLength } from 'class-validator';
 
 import { WebhookTypes, WebhookTypesEnum } from '@domain/entities';
 
-export class RegisterUserWebhookHostInput {
+export class RegisterUserWebhookHostRequest {
   @IsEnum(WebhookTypesEnum)
   @ApiProperty({
     example: 'CHARGE_PAYED',

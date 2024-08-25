@@ -1,34 +1,16 @@
-export interface IAuthenticateOnPSP {
-  auth(): Promise<AuthenticateOnPSPResponse>;
-}
-
-export interface ICreateLocationOnPSP<Auth, Request> {
-  createLocation(
-    auth: Auth,
-    data: Request,
-  ): Promise<CreateLocationOnPSPResponse>;
-}
-
-export interface ICreateImmediateChargeOnPSP<Auth, Request> {
-  createImmediateCharge(
-    auth: Auth,
-    data: Request,
-  ): Promise<CreateImmediateChargeOnPSPResponse>;
-}
-
-export type AuthenticateOnPSPResponse = {
+export type AuthenticatePSPOutput = {
   accessToken: string;
   expiresIn: number;
 };
 
-export type CreateLocationOnPSPResponse = {
+export type CreateLocationPSPOutput = {
   locationId: number;
   status: string;
   emv: string;
   clientRequestId: string;
 };
 
-export type CreateImmediateChargeOnPSPResponse = {
+export type CreateImmediateChargePSPOutput = {
   providerTransactionId: string;
   status: string;
   amount: number;
@@ -50,13 +32,7 @@ export type CreateImmediateChargeOnPSPResponse = {
   createAt: string;
 };
 
-export interface IPspService {
-  createImmediateCharge(
-    data: CreateImmediateChargeOnPspInput,
-  ): Promise<CreateImmediateChargeOnPSPResponse>;
-}
-
-export type CreateImmediateChargeOnPspInput = {
+export type CreateImmediateChargePspInput = {
   debtor: {
     name: string;
     cpf: string;

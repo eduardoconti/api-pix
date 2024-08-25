@@ -2,7 +2,7 @@ import { Controller, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { UserAuthUseCaseOutput } from '@app/use-cases';
+import { AuthenticateOutput } from '@app/use-cases';
 
 import { User } from '@infra/decorators/user.decorator';
 import { LocalAuthGuard } from '@infra/guard';
@@ -32,7 +32,7 @@ export class AuthController {
   @ApiOperation({
     summary: 'Autenticação',
   })
-  async handle(@User() user: UserAuthUseCaseOutput) {
+  async handle(@User() user: AuthenticateOutput) {
     return {
       access_token: await this.jwtService.signAsync(user),
     };

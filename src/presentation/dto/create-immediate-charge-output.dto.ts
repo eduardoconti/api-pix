@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { CreateImmediateChargeUseCaseOutput } from '@app/use-cases';
+import { CreateImmediateChargeOutput } from '@app/use-cases';
 
-export class CreateImmediateChargeOutput {
+export class CreateImmediateChargeResponse {
   @ApiProperty({
     example: '8883c972-059e-4ad6-998d-241c333757bc',
   })
@@ -53,8 +53,8 @@ export class CreateImmediateChargeOutput {
   created_at!: string;
 
   static mapFromUseCaseOutput(
-    useCaseOutput: CreateImmediateChargeUseCaseOutput,
-  ): CreateImmediateChargeOutput {
+    useCaseOutput: CreateImmediateChargeOutput,
+  ): CreateImmediateChargeResponse {
     const {
       transactionId,
       status,

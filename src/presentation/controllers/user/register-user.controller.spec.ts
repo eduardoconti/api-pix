@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { mockRegisterUserUseCaseOutput } from '@app/__mocks__';
-import { IRegisterUserUseCase, RegisterUserUseCase } from '@app/use-cases';
+import { IRegisterUserUseCase, RegisterUser } from '@app/use-cases';
 
 import {
   mockRegisterUserInput,
@@ -18,7 +18,7 @@ describe('RegisterUserController', () => {
       controllers: [RegisterUserController],
       providers: [
         {
-          provide: RegisterUserUseCase,
+          provide: RegisterUser,
           useValue: {
             execute: jest.fn(),
           },
@@ -27,7 +27,7 @@ describe('RegisterUserController', () => {
     }).compile();
 
     controller = app.get(RegisterUserController);
-    registerUserUseCase = app.get<IRegisterUserUseCase>(RegisterUserUseCase);
+    registerUserUseCase = app.get<IRegisterUserUseCase>(RegisterUser);
   });
 
   it('should be defined', () => {

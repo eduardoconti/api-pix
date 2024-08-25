@@ -1,16 +1,16 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
+import { IReceiveWebhookUseCase, ReceiveWebhook } from '@app/use-cases';
 
 import { ApiInternalServerErrorResponse } from '@presentation/__docs__';
-import { WebhookCelcoinInput } from '@presentation/dto';
+import { WebhookCelcoinRequest } from '@presentation/dto';
 
 @ApiTags('webhook')
 @Controller('webhook')
 export class ReceiveCelcoinWebhookController {
   constructor(
-    @Inject(ReceiveWebhookUseCase)
+    @Inject(ReceiveWebhook)
     private readonly receiveWebhookUseCase: IReceiveWebhookUseCase,
   ) {}
 
@@ -24,9 +24,9 @@ export class ReceiveCelcoinWebhookController {
     title: 'WebhookRepositoryException',
     detail: 'database error',
   })
-  async handle(@Body() data: WebhookCelcoinInput): Promise<void> {
+  async handle(@Body() data: WebhookCelcoinRequest): Promise<void> {
     await this.receiveWebhookUseCase.execute(
-      WebhookCelcoinInput.toUseCaseInput(data),
+      WebhookCelcoinRequest.toUseCaseInput(data),
     );
   }
 }
