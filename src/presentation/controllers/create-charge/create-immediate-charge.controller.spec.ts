@@ -2,8 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { mockCreateImmediateChargeOnPSPResponse } from '@app/__mocks__';
 import {
-  CreateImmediateChargeUseCase,
+  CelcoinImmediateChargeCreator,
+  CreateImmediateCharge,
   ICreateImmediateChargeUseCase,
+  IImmediateChargeCreatorStrategy,
 } from '@app/use-cases';
 
 import {
@@ -16,15 +18,24 @@ import { CreateImmediateChargeController } from './create-immediate-charge.contr
 describe('CreateImmediateChargeController', () => {
   let createImmediateChargeController: CreateImmediateChargeController;
   let createImmediateChargeUseCase: ICreateImmediateChargeUseCase;
+  let strategy: IImmediateChargeCreatorStrategy;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CreateImmediateChargeController],
       providers: [
         {
-          provide: CreateImmediateChargeUseCase,
+          provide: CreateImmediateCharge,
           useValue: {
             execute: jest.fn(),
+            setStrategy: jest.fn(),
+          },
+        },
+        {
+          provide: CelcoinImmediateChargeCreator,
+          useValue: {
+            createImmediateCharge: jest.fn(),
+            createChargeEntity: jest.fn(),
           },
         },
       ],
@@ -34,13 +45,17 @@ describe('CreateImmediateChargeController', () => {
       CreateImmediateChargeController,
     );
     createImmediateChargeUseCase = app.get<ICreateImmediateChargeUseCase>(
-      CreateImmediateChargeUseCase,
+      CreateImmediateCharge,
+    );
+    strategy = app.get<IImmediateChargeCreatorStrategy>(
+      CelcoinImmediateChargeCreator,
     );
   });
 
   it('should be defined', () => {
     expect(createImmediateChargeUseCase).toBeDefined();
     expect(createImmediateChargeController).toBeDefined();
+    expect(strategy).toBeDefined();
   });
   it('should execute successfully', async () => {
     jest.spyOn(createImmediateChargeUseCase, 'execute').mockResolvedValue({
@@ -68,5 +83,6 @@ describe('CreateImmediateChargeController', () => {
       }),
     );
     expect(createImmediateChargeUseCase.execute).toBeCalledTimes(1);
+    expect(createImmediateChargeUseCase.setStrategy).toBeCalledWith(strategy);
   });
 });

@@ -1,11 +1,11 @@
 import {
-  CreateImmediateChargeUseCaseInput,
-  RegisterUserUseCaseInput,
-  RegisterUserUseCaseOutput,
-  UserAuthUseCaseInput,
+  CreateImmediateChargeInput,
+  RegisterUserInput,
+  RegisterUserOutput,
+  AuthenticateInput,
 } from '@app/use-cases';
 
-export const mockRegisterUserUseCaseInput: RegisterUserUseCaseInput = {
+export const mockRegisterUserUseCaseInput: RegisterUserInput = {
   name: 'Eduardo Conti',
   email: 'eduardo.conti@gmail.com',
   password: 'teste@123',
@@ -17,15 +17,14 @@ export const mockRegisterUserUseCaseInput: RegisterUserUseCaseInput = {
   ],
 };
 
-export const mockRegisterUserWithoutHostUseCaseInput: RegisterUserUseCaseInput =
-  {
-    name: 'Eduardo Conti',
-    email: 'eduardo.conti@gmail.com',
-    password: 'teste@123',
-    webhookHost: undefined,
-  };
+export const mockRegisterUserWithoutHostUseCaseInput: RegisterUserInput = {
+  name: 'Eduardo Conti',
+  email: 'eduardo.conti@gmail.com',
+  password: 'teste@123',
+  webhookHost: undefined,
+};
 
-export const mockRegisterUserUseCaseOutput: RegisterUserUseCaseOutput = {
+export const mockRegisterUserUseCaseOutput: RegisterUserOutput = {
   id: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
   name: 'Eduardo Conti',
   email: 'eduardo.conti@gmail.com',
@@ -37,7 +36,7 @@ export const mockRegisterUserUseCaseOutput: RegisterUserUseCaseOutput = {
   ],
 };
 
-export const mockCreateImmediateChargeUseCaseInput: CreateImmediateChargeUseCaseInput =
+export const mockCreateImmediateChargeUseCaseInput: CreateImmediateChargeInput =
   {
     debtor: {
       name: 'Eduardo Ferreira Conti',
@@ -55,7 +54,7 @@ export const mockCreateImmediateChargeUseCaseInput: CreateImmediateChargeUseCase
     userId: 'b85381d7-174f-4c0a-a2c8-aa93a399965d',
   };
 
-export const mockUserAuthUseCaseInput: UserAuthUseCaseInput = {
+export const mockUserAuthUseCaseInput: AuthenticateInput = {
   userName: 'eduardo.conti@gmail.com',
   password: 'teste@123',
 };

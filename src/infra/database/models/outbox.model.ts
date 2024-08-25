@@ -5,17 +5,17 @@ import { DateVO, UUID } from '@domain/value-objects';
 
 @Schema()
 export class OutBoxModel {
-  @Prop({ index: true })
+  @Prop({ unique: true })
   id!: string;
   @Prop()
   aggregate_id!: string;
-  @Prop()
+  @Prop({ index: true })
   aggregate_type!: OutboxAggregateType;
   @Prop()
   event_id!: string;
   @Prop()
   payload!: string;
-  @Prop()
+  @Prop({ index: true })
   published!: boolean;
   @Prop()
   created_at!: Date;

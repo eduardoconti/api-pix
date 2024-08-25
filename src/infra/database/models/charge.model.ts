@@ -7,7 +7,7 @@ import { Amount, DateVO, QrCode64, UUID } from '@domain/value-objects';
 @ObjectType()
 export class ChargeModel {
   @Field((_type) => ID)
-  @Prop({ index: true })
+  @Prop({ unique: true })
   id!: string;
   @Field()
   @Prop()

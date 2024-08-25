@@ -6,14 +6,13 @@ import {
   mockCreateImmediateChargeOnPSPResponse,
   mockCreateLocationOnPSPResponse,
 } from '@app/__mocks__';
-import { providePspService } from '@app/app.provider';
-import { IPspService } from '@app/contracts';
-import { PspService } from '@app/services';
+import { provideCelcoinService } from '@app/app.provider';
+import { CelcoinService } from '@app/services';
 
 import { CelcoinApi } from '@infra/celcoin';
 
-describe('PspService', () => {
-  let pspService: IPspService;
+describe('CelcoinService', () => {
+  let celcoinService: CelcoinService;
   let celcoinApi: CelcoinApi;
 
   beforeEach(async () => {
@@ -27,11 +26,11 @@ describe('PspService', () => {
             createLocation: jest.fn(),
           },
         },
-        providePspService,
+        provideCelcoinService,
       ],
     }).compile();
 
-    pspService = app.get<IPspService>(PspService);
+    celcoinService = app.get(CelcoinService);
     celcoinApi = app.get<CelcoinApi>(CelcoinApi);
 
     jest
@@ -47,12 +46,12 @@ describe('PspService', () => {
 
   it('should be defined', () => {
     expect(celcoinApi).toBeDefined();
-    expect(pspService).toBeDefined();
+    expect(celcoinService).toBeDefined();
   });
 
   describe('create immediate charge', () => {
     it('should create immediate charge successfully', async () => {
-      const result = await pspService.createImmediateCharge(
+      const result = await celcoinService.createImmediateCharge(
         mockCreateImmediateChargeOnPspInput,
       );
       expect(result).toBeDefined();

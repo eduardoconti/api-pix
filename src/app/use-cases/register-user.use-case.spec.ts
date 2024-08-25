@@ -13,10 +13,7 @@ import { ArgumentInvalidException } from '@domain/exceptions';
 
 import { UserRepositoryMongo } from '@infra/database/mongo';
 
-import {
-  IRegisterUserUseCase,
-  RegisterUserUseCase,
-} from './register-user.use-case';
+import { IRegisterUserUseCase, RegisterUser } from './register-user.use-case';
 
 describe('RegisterUserUseCase', () => {
   let registerUserUseCase: IRegisterUserUseCase;
@@ -36,7 +33,7 @@ describe('RegisterUserUseCase', () => {
       ],
     }).compile();
 
-    registerUserUseCase = app.get<IRegisterUserUseCase>(RegisterUserUseCase);
+    registerUserUseCase = app.get<IRegisterUserUseCase>(RegisterUser);
     userRepository = app.get<IUserRepository>(UserRepositoryMongo);
   });
 

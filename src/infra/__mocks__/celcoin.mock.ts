@@ -3,7 +3,7 @@ import {
   CelcoinImmediateChargeRequest,
 } from '@infra/celcoin/contracts';
 
-import { WebhookCelcoinInput } from '@presentation/dto';
+import { WebhookCelcoinRequest } from '@presentation/dto';
 
 export const mockCelcoinAuthResponse = {
   access_token:
@@ -87,7 +87,7 @@ export const mockCelcoinErrorResponse: CelcoinErrorResponse = {
   message: 'any error',
 };
 
-export const mockCelcoinWebhook: WebhookCelcoinInput = {
+export const mockCelcoinWebhook: WebhookCelcoinRequest = {
   RequestBody: {
     TransactionType: 'RECEIVEPIX',
     TransactionId: 56762766,

@@ -2,7 +2,7 @@ import { Logger, LoggerService, Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
-import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
+import { IReceiveWebhookUseCase, ReceiveWebhook } from '@app/use-cases';
 
 import {
   IChargeRepository,
@@ -101,7 +101,7 @@ export const providePayChargeService: Provider<PayChargeService> = {
   ) => {
     return new PayChargeService(logger, chargeRepository, webhookUseCase);
   },
-  inject: [Logger, ChargeRepositoryMongo, ReceiveWebhookUseCase],
+  inject: [Logger, ChargeRepositoryMongo, ReceiveWebhook],
 };
 
 // export const provideUserRepository: Provider<UserRepository> = {

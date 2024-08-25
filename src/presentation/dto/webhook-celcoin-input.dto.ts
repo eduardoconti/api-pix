@@ -1,29 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ValidateNested } from 'class-validator';
 
-import { ReceiveWebhookUseCaseInput } from '@app/use-cases';
+import { ReceiveWebhookInput } from '@app/use-cases';
 
 import { Amount } from '@domain/value-objects';
 
 import { WebhookCelcoinBody } from './webhook-celcoin-body.dto';
 
-export class WebhookCelcoinInput {
+export class WebhookCelcoinRequest {
   @ValidateNested()
   @ApiProperty()
   RequestBody!: WebhookCelcoinBody;
 
-  static toUseCaseInput(
-    input: WebhookCelcoinInput,
-  ): ReceiveWebhookUseCaseInput {
+  static toUseCaseInput(request: WebhookCelcoinRequest): ReceiveWebhookInput {
     const {
       RequestBody: { EndToEndId, TransactionId, Amount: amount },
-    } = input;
+    } = request;
     return {
       endToEndId: EndToEndId,
       provider: 'CELCOIN',
       providerId: TransactionId.toString(),
       type: 'CHARGE_PAYED',
-      providerJson: JSON.stringify(input),
+      providerJson: JSON.stringify(request),
       amount: Amount.fromBrlString(amount.toFixed(2)),
     };
   }

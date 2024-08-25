@@ -3,10 +3,11 @@ import { Module } from '@nestjs/common';
 import { InfraModule } from '@infra/infra.module';
 
 import {
+  provideCelcoinImmediateChargeCreator,
   provideChargeCreatedListener,
   provideChargePayedListener,
   provideCreateImmediateChargeUseCase,
-  providePspService,
+  provideCelcoinService,
   provideReceiveWebhookUseCase,
   provideRegisterUserUseCase,
   provideUserAuthUseCase,
@@ -14,20 +15,22 @@ import {
 @Module({
   imports: [InfraModule],
   providers: [
-    providePspService,
+    provideCelcoinService,
     provideCreateImmediateChargeUseCase,
     provideChargeCreatedListener,
     provideReceiveWebhookUseCase,
     provideRegisterUserUseCase,
     provideUserAuthUseCase,
     provideChargePayedListener,
+    provideCelcoinImmediateChargeCreator,
   ],
   exports: [
-    providePspService,
+    provideCelcoinService,
     provideCreateImmediateChargeUseCase,
     provideReceiveWebhookUseCase,
     provideRegisterUserUseCase,
     provideUserAuthUseCase,
+    provideCelcoinImmediateChargeCreator,
   ],
 })
 export class AppModule {}

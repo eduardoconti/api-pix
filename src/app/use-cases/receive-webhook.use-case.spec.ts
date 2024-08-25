@@ -8,11 +8,11 @@ import { IWebhookRepository } from '@domain/core/repository';
 import { mockCelcoinWebhook } from '@infra/__mocks__/celcoin.mock';
 import { WebhookRepositoryMongo } from '@infra/database/mongo';
 
-import { WebhookCelcoinInput } from '@presentation/dto';
+import { WebhookCelcoinRequest } from '@presentation/dto';
 
 import {
   IReceiveWebhookUseCase,
-  ReceiveWebhookUseCase,
+  ReceiveWebhook,
 } from './receive-webhook.use-case';
 
 describe('ReceiveWebhookUseCase', () => {
@@ -34,7 +34,7 @@ describe('ReceiveWebhookUseCase', () => {
       ],
     }).compile();
 
-    WebhookUseCase = app.get<IReceiveWebhookUseCase>(ReceiveWebhookUseCase);
+    WebhookUseCase = app.get<IReceiveWebhookUseCase>(ReceiveWebhook);
     chargeRepository = app.get<IWebhookRepository>(WebhookRepositoryMongo);
 
     jest
@@ -49,7 +49,7 @@ describe('ReceiveWebhookUseCase', () => {
     });
     it('should execute successfully', async () => {
       const result = await WebhookUseCase.execute(
-        WebhookCelcoinInput.toUseCaseInput(mockCelcoinWebhook),
+        WebhookCelcoinRequest.toUseCaseInput(mockCelcoinWebhook),
       );
       expect(result).toBe('success');
       expect(chargeRepository.saveWithOutbox).toBeCalled();

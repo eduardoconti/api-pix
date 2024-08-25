@@ -1,7 +1,7 @@
 import { Logger, LoggerService } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IReceiveWebhookUseCase, ReceiveWebhookUseCase } from '@app/use-cases';
+import { IReceiveWebhookUseCase, ReceiveWebhook } from '@app/use-cases';
 
 import { mockActiveChargeEntity } from '@domain/__mocks__';
 import { IChargeRepository, ICronService } from '@domain/core';
@@ -35,7 +35,7 @@ describe('PayChargeService', () => {
           },
         },
         {
-          provide: ReceiveWebhookUseCase,
+          provide: ReceiveWebhook,
           useValue: {
             execute: jest.fn(),
           },
@@ -46,9 +46,7 @@ describe('PayChargeService', () => {
     logger = app.get<LoggerService>(Logger);
     chargeRepository = app.get<IChargeRepository>(ChargeRepositoryMongo);
     payChargeService = app.get<ICronService>(PayChargeService);
-    receiveWebhookUseCase = app.get<IReceiveWebhookUseCase>(
-      ReceiveWebhookUseCase,
-    );
+    receiveWebhookUseCase = app.get<IReceiveWebhookUseCase>(ReceiveWebhook);
   });
 
   it('should be defined', () => {

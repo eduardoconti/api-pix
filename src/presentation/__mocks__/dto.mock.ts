@@ -1,11 +1,11 @@
 import { TokenPayload } from '@app/contracts';
 
 import {
-  CreateImmediateChargeInput,
-  RegisterUserInput,
+  CreateImmediateChargeRequest,
+  RegisterUserRequest,
 } from '@presentation/dto';
 
-export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
+export const mockCreateImmediateChargeInput: CreateImmediateChargeRequest = {
   debtor: {
     name: 'Eduardo Ferreira Conti',
     cpf: '50673646459',
@@ -20,7 +20,7 @@ export const mockCreateImmediateChargeInput: CreateImmediateChargeInput = {
   expiration: 3600,
 };
 
-export const mockRegisterUserInput: RegisterUserInput = {
+export const mockRegisterUserInput: RegisterUserRequest = {
   name: 'Eduardo Ferreira Conti',
   email: 'es.eduardoconti@gmail.com',
   password: 'teste@123',
@@ -32,7 +32,7 @@ export const mockRegisterUserInput: RegisterUserInput = {
   ],
 };
 
-export const mockRegisterUserInputRequiredFields: RegisterUserInput = {
+export const mockRegisterUserInputRequiredFields: RegisterUserRequest = {
   name: 'Eduardo Ferreira Conti',
   email: 'es.eduardoconti@gmail.com',
   password: 'teste@123',

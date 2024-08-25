@@ -10,8 +10,10 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { TokenPayload } from '@app/contracts';
 import {
-  CreateImmediateChargeUseCase,
+  CelcoinImmediateChargeCreator,
+  CreateImmediateCharge,
   ICreateImmediateChargeUseCase,
+  IImmediateChargeCreatorStrategy,
 } from '@app/use-cases';
 
 import { User } from '@infra/decorators/user.decorator';
@@ -24,20 +26,22 @@ import {
   ApiUnauthorizedErrorResponse,
 } from '@presentation/__docs__';
 import {
-  CreateImmediateChargeInput,
-  CreateImmediateChargeOutput,
+  CreateImmediateChargeRequest,
+  CreateImmediateChargeResponse,
 } from '@presentation/dto';
 @ApiTags('charge')
 @Controller('immediate-charge')
 @ApiBearerAuth()
 export class CreateImmediateChargeController {
   constructor(
-    @Inject(CreateImmediateChargeUseCase)
+    @Inject(CreateImmediateCharge)
     private readonly createImmediateChargeUseCase: ICreateImmediateChargeUseCase,
+    @Inject(CelcoinImmediateChargeCreator)
+    private readonly celcoinImmediateChargeCreatorStrategy: IImmediateChargeCreatorStrategy,
   ) {}
   @Post()
   @ApiSuccessResponse({
-    model: CreateImmediateChargeOutput,
+    model: CreateImmediateChargeResponse,
     statusCode: HttpStatus.CREATED,
   })
   @ApiInternalServerErrorResponse({
@@ -57,15 +61,18 @@ export class CreateImmediateChargeController {
   })
   @UseGuards(JwtAuthGuard)
   async handle(
-    @Body() data: CreateImmediateChargeInput,
+    @Body() data: CreateImmediateChargeRequest,
     @User() user: TokenPayload,
-  ): Promise<CreateImmediateChargeOutput> {
+  ): Promise<CreateImmediateChargeResponse> {
+    this.createImmediateChargeUseCase.setStrategy(
+      this.celcoinImmediateChargeCreatorStrategy,
+    );
     const result = await this.createImmediateChargeUseCase.execute(
-      CreateImmediateChargeInput.mapToUseCaseInput({
+      CreateImmediateChargeRequest.mapToUseCaseInput({
         ...data,
         userId: user.userId,
       }),
     );
-    return CreateImmediateChargeOutput.mapFromUseCaseOutput(result);
+    return CreateImmediateChargeResponse.mapFromUseCaseOutput(result);
   }
 }

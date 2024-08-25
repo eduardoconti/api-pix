@@ -1,14 +1,13 @@
 import { randomUUID } from 'crypto';
 
 import {
-  CreateImmediateChargeOnPspInput,
-  CreateImmediateChargeOnPSPResponse,
-  IPspService,
+  CreateImmediateChargePspInput,
+  CreateImmediateChargePSPOutput,
 } from '@app/contracts';
 
 import { ICelcoinApi } from '@infra/celcoin';
 
-export class PspService implements IPspService {
+export class CelcoinService {
   constructor(private readonly celcoin: ICelcoinApi) {}
 
   async createImmediateCharge({
@@ -16,7 +15,7 @@ export class PspService implements IPspService {
     debtor,
     amount,
     calendar,
-  }: CreateImmediateChargeOnPspInput): Promise<CreateImmediateChargeOnPSPResponse> {
+  }: CreateImmediateChargePspInput): Promise<CreateImmediateChargePSPOutput> {
     const clientRequestId = randomUUID();
     const { accessToken } = await this.celcoin.auth();
     const { locationId } = await this.celcoin.createLocation(

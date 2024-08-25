@@ -1,20 +1,20 @@
 import { Body, Controller, HttpStatus, Inject, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { IRegisterUserUseCase, RegisterUserUseCase } from '@app/use-cases';
+import { IRegisterUserUseCase, RegisterUser } from '@app/use-cases';
 
 import {
   ApiInternalServerErrorResponse,
   ApiSuccessResponse,
 } from '@presentation/__docs__';
-import { RegisterUserInput } from '@presentation/dto';
-import { RegisterUserOutput } from '@presentation/dto/register-user.output.dto';
+import { RegisterUserRequest } from '@presentation/dto';
+import { RegisterUserResponse } from '@presentation/dto/register-user.output.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class RegisterUserController {
   constructor(
-    @Inject(RegisterUserUseCase)
+    @Inject(RegisterUser)
     private readonly registerUserUseCase: IRegisterUserUseCase,
   ) {}
 
@@ -24,17 +24,19 @@ export class RegisterUserController {
     description: 'Rota para registrar um novo usuário',
   })
   @ApiSuccessResponse({
-    model: RegisterUserOutput,
+    model: RegisterUserResponse,
     statusCode: HttpStatus.CREATED,
   })
   @ApiInternalServerErrorResponse({
     title: 'UserRepositoryException',
     detail: 'database error',
   })
-  async handle(@Body() data: RegisterUserInput): Promise<RegisterUserOutput> {
+  async handle(
+    @Body() data: RegisterUserRequest,
+  ): Promise<RegisterUserResponse> {
     const { email, name, webhookHost, id } =
       await this.registerUserUseCase.execute(
-        RegisterUserInput.toUseCaseInput(data),
+        RegisterUserRequest.toUseCaseInput(data),
       );
     return { id, email, name, webhook_host: webhookHost };
   }

@@ -4,11 +4,10 @@ import { IUseCase, IUserRepository } from '@domain/core';
 import { UserEntity, WebhookTypes } from '@domain/entities';
 import { Email } from '@domain/value-objects';
 
-export type RegisterUserUseCaseOutput = Omit<
-  RegisterUserUseCaseInput,
-  'password'
-> & { id: string };
-export type RegisterUserUseCaseInput = {
+export type RegisterUserOutput = Omit<RegisterUserInput, 'password'> & {
+  id: string;
+};
+export type RegisterUserInput = {
   name: string;
   email: string;
   password: string;
@@ -16,17 +15,12 @@ export type RegisterUserUseCaseInput = {
 };
 
 export type IRegisterUserUseCase = IUseCase<
-  RegisterUserUseCaseInput,
-  RegisterUserUseCaseOutput
+  RegisterUserInput,
+  RegisterUserOutput
 >;
-export class RegisterUserUseCase implements IRegisterUserUseCase {
+export class RegisterUser implements IRegisterUserUseCase {
   constructor(private readonly userRepository: IUserRepository) {}
-  async execute({
-    name,
-    email,
-    password,
-    webhookHost,
-  }: RegisterUserUseCaseInput) {
+  async execute({ name, email, password, webhookHost }: RegisterUserInput) {
     if (await this.userRepository.exists(new Email(email))) {
       throw new UserAlreadyExistsException();
     }
